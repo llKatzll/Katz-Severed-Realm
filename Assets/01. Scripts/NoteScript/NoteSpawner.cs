@@ -27,13 +27,6 @@ public class NoteSpawner : MonoBehaviour
         HoldTail  // 슬라이드 끝
     }
 
-
-
-    private void Awake()
-    {
-        
-    }
-
     private void Update()
     {
         //For test
