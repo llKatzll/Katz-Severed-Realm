@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2394322115572535820}
   m_Layer: 0
   m_Name: SplashNote
-  m_TagString: Untagged
+  m_TagString: Splash
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

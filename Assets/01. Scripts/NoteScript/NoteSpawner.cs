@@ -14,7 +14,7 @@ public class NoteSpawner : MonoBehaviour
         public string _laneName;
         public NoteType _noteType;
 
-        [Header("Prefab (Ground / Upper / Splash 개별 세팅)")]
+        [Header("Prefab (Ground / Upper / Splash)")]
         public Note _notePrefab;
 
         [Header("Spawn / Hit(=Despawn)")]
@@ -23,17 +23,17 @@ public class NoteSpawner : MonoBehaviour
 
         [HideInInspector] public float _laneSpeed;   // 이 레일 전용 속도
 
-        [Header("Parent (비우면 spawnPoint.parent)")]
+        [Header("Parent (비우면 spawnPoint.parent으로 강제)")]
         public Transform _noteParent;
     }
 
     [Header("Rail List (Ground 4 Upper 4 Splash 1)")]
     [SerializeField] private NoteLane[] _lanes;
 
-    [Header("공통 접근 시간 (노트 스피드 느낌)")]
+    [Header("공통 접근 시간 (노트 스피드)")]
     [SerializeField] private float _approachTime = 4.0f;
 
-    [Header("테스트 스폰")]
+    [Header("테스트")]
     [SerializeField] private float _spawnInterval = 1.0f;
     private float _timer;
 
@@ -42,7 +42,6 @@ public class NoteSpawner : MonoBehaviour
         RecalculateLaneSpeeds();
     }
 
-    // 나중에 옵션에서 노트 스피드 바꾸면 이 함수만 다시 호출하면 됨
     public void RecalculateLaneSpeeds()
     {
         foreach (var lane in _lanes)
@@ -55,8 +54,7 @@ public class NoteSpawner : MonoBehaviour
                 lane._despawnPoint.position
             );
 
-            lane._laneSpeed = dist / _approachTime;   // ★ 핵심
-            // Debug 찍어보면 모든 레일 dist는 다르고, time은 전부 _approachTime 나올 거야
+            lane._laneSpeed = dist / _approachTime;
             Debug.Log($"[Lane:{lane._laneName}] dist={dist:F3}, laneSpeed={lane._laneSpeed:F3}");
         }
     }
@@ -90,7 +88,7 @@ public class NoteSpawner : MonoBehaviour
         var prefab = lane._notePrefab != null ? lane._notePrefab : _defaultNotePrefab;
         if (prefab == null)
         {
-            Debug.LogError($"Rail {lane._laneName} : Note Prefab is NULL!");
+            Debug.LogError($"Rail {lane._laneName} : Note Prefab is NULL bro");
             return;
         }
 

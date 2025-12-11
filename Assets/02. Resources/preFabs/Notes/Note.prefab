@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -356125614831666881}
   m_Layer: 0
   m_Name: Note
-  m_TagString: Untagged
+  m_TagString: Tap
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -111,7 +111,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.8, y: 0.5, z: 1}
+  m_Size: {x: 0.45, y: 0.5, z: 0.7}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &-356125614831666881
 MonoBehaviour:
