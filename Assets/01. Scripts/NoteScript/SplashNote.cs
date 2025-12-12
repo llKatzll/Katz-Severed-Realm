@@ -2,34 +2,26 @@ using UnityEngine;
 
 public class SplashNote : Note
 {
-    [Header("Scale Settings")]
     [SerializeField] private float _startScale = 0.5f;
     [SerializeField] private float _endScale = 3f;
-    [SerializeField] private float _lifeTime = 1.2f;
 
-    private float _elapsed;
-
-    public override void Init(float speed, Transform despawnPoint, NoteSpawner.NoteType noteType)
+    public override void Init(Vector3 spawnPos, Vector3 hitPos, float travelTime, NoteSpawner.NoteType noteType)
     {
-        //Not using rn
-        base.Init(speed, despawnPoint, noteType);
-
-        _elapsed = 0f;
+        base.Init(spawnPos, hitPos, travelTime, noteType);
         transform.localScale = Vector3.one * _startScale;
-    }   
+    }
 
-    //customize only moves
     protected override void Update()
     {
         _elapsed += Time.deltaTime;
+        float t = Mathf.Clamp01(_elapsed / _travelTime);
 
-        float t = Mathf.Clamp01(_elapsed / _lifeTime);
-        float currentScale = Mathf.Lerp(_startScale, _endScale, t);
-        transform.localScale = Vector3.one * currentScale;
+        transform.position = Vector3.Lerp(_spawnPos, _hitPos, t);
 
-        if (_elapsed >= _lifeTime)
-        {
+        float s = Mathf.Lerp(_startScale, _endScale, t);
+        transform.localScale = Vector3.one * s;
+
+        if (t >= 1f)
             Destroy(gameObject);
-        }
     }
 }

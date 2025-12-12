@@ -1668,7 +1668,7 @@ Transform:
   m_GameObject: {fileID: 747966631}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -65}
+  m_LocalPosition: {x: 0, y: 0, z: -35}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2295,7 +2295,7 @@ Transform:
   m_GameObject: {fileID: 1080729755}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0.0000000018626451, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -65}
+  m_LocalPosition: {x: 0, y: 0, z: -35}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2556,65 +2556,51 @@ MonoBehaviour:
     _notePrefab: {fileID: -356125614831666881, guid: 50cdd462fe53c1544856849cd077ead3, type: 3}
     _spawnPoint: {fileID: 1433613122}
     _despawnPoint: {fileID: 302895731}
-    _laneSpeed: 0
     _noteParent: {fileID: 496278706}
   - _laneName: Ground2
     _noteType: 0
     _notePrefab: {fileID: -356125614831666881, guid: 50cdd462fe53c1544856849cd077ead3, type: 3}
     _spawnPoint: {fileID: 2040830743}
     _despawnPoint: {fileID: 1926237126}
-    _laneSpeed: 0
     _noteParent: {fileID: 1645239298}
   - _laneName: Ground3
     _noteType: 0
     _notePrefab: {fileID: -356125614831666881, guid: 50cdd462fe53c1544856849cd077ead3, type: 3}
     _spawnPoint: {fileID: 2107445982}
     _despawnPoint: {fileID: 121105682}
-    _laneSpeed: 0
     _noteParent: {fileID: 650249059}
   - _laneName: Ground4
     _noteType: 0
     _notePrefab: {fileID: -356125614831666881, guid: 50cdd462fe53c1544856849cd077ead3, type: 3}
     _spawnPoint: {fileID: 242266617}
     _despawnPoint: {fileID: 648363248}
-    _laneSpeed: 0
     _noteParent: {fileID: 132760843}
   - _laneName: Upper1
     _noteType: 1
     _notePrefab: {fileID: 9015790616304044342, guid: 1fe615d7e15ae534ab718c41ff8abb9b, type: 3}
     _spawnPoint: {fileID: 1719964236}
     _despawnPoint: {fileID: 1080729756}
-    _laneSpeed: 0
     _noteParent: {fileID: 1653326917}
   - _laneName: Upper2
     _noteType: 1
     _notePrefab: {fileID: 9015790616304044342, guid: 1fe615d7e15ae534ab718c41ff8abb9b, type: 3}
     _spawnPoint: {fileID: 645967339}
     _despawnPoint: {fileID: 1242119140}
-    _laneSpeed: 0
     _noteParent: {fileID: 1300446900}
   - _laneName: Upper3
     _noteType: 1
     _notePrefab: {fileID: 9015790616304044342, guid: 1fe615d7e15ae534ab718c41ff8abb9b, type: 3}
     _spawnPoint: {fileID: 1310526128}
     _despawnPoint: {fileID: 1269146917}
-    _laneSpeed: 0
     _noteParent: {fileID: 17181884}
   - _laneName: Upper4
     _noteType: 1
     _notePrefab: {fileID: 9015790616304044342, guid: 1fe615d7e15ae534ab718c41ff8abb9b, type: 3}
     _spawnPoint: {fileID: 1270147635}
     _despawnPoint: {fileID: 747966632}
-    _laneSpeed: 0
     _noteParent: {fileID: 1031235096}
-  - _laneName: Splash
-    _noteType: 2
-    _notePrefab: {fileID: 2394322115572535820, guid: 983467f507fc82a4cba62e124408d6e0, type: 3}
-    _spawnPoint: {fileID: 1270147635}
-    _despawnPoint: {fileID: 747966632}
-    _laneSpeed: 0
-    _noteParent: {fileID: 0}
-  _approachTime: 3
+  _baseApproachTime: 4
+  _noteSpeed: 1
   _spawnInterval: 1
 --- !u!1 &1191700353
 GameObject:
@@ -2801,7 +2787,7 @@ Transform:
   m_GameObject: {fileID: 1242119139}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -65}
+  m_LocalPosition: {x: 0, y: 0, z: -35}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2832,7 +2818,7 @@ Transform:
   m_GameObject: {fileID: 1269146916}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -65}
+  m_LocalPosition: {x: 0, y: 0, z: -35}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3075,7 +3061,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1338278222
 MonoBehaviour:
   m_ObjectHideFlags: 0

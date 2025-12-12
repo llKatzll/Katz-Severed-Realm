@@ -2,26 +2,31 @@ using UnityEngine;
 
 public class Note : MonoBehaviour
 {
-    protected float _speed;
-    protected Transform _despawnPoint;
+    protected Vector3 _spawnPos;
+    protected Vector3 _hitPos;
+    protected float _travelTime;
+    protected float _elapsed;
     protected NoteSpawner.NoteType _noteType;
 
-    public virtual void Init(float speed, Transform despawnPoint, NoteSpawner.NoteType noteType)
+    public virtual void Init(Vector3 spawnPos, Vector3 hitPos, float travelTime, NoteSpawner.NoteType noteType)
     {
-        _speed = speed;
-        _despawnPoint = despawnPoint;
+        _spawnPos = spawnPos;
+        _hitPos = hitPos;
+        _travelTime = travelTime;
         _noteType = noteType;
+        _elapsed = 0f;
+
+        transform.position = _spawnPos;
     }
 
     protected virtual void Update()
     {
-        //Go downward
-        transform.Translate(Vector3.back * _speed * Time.deltaTime, Space.Self);
+        _elapsed += Time.deltaTime;
+        float t = Mathf.Clamp01(_elapsed / _travelTime);
 
-        if (_despawnPoint != null &&
-            transform.position.z <= _despawnPoint.position.z)
-        {
+        transform.position = Vector3.Lerp(_spawnPos, _hitPos, t);
+
+        if (t >= 1f)
             Destroy(gameObject);
-        }
     }
 }

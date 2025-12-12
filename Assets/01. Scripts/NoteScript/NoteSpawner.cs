@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class NoteSpawner : MonoBehaviour
 {
-    [Header("Default Note Setting (optional)")]
     [SerializeField] private Note _defaultNotePrefab;
 
     public enum NoteType { Ground, Upper, Splash }
@@ -13,51 +12,21 @@ public class NoteSpawner : MonoBehaviour
     {
         public string _laneName;
         public NoteType _noteType;
-
-        [Header("Prefab (Ground / Upper / Splash)")]
         public Note _notePrefab;
-
-        [Header("Spawn / Hit(=Despawn)")]
         public Transform _spawnPoint;
         public Transform _despawnPoint;
-
-        [HideInInspector] public float _laneSpeed;   // 이 레일 전용 속도
-
-        [Header("Parent (비우면 spawnPoint.parent으로 강제)")]
         public Transform _noteParent;
     }
 
-    [Header("Rail List (Ground 4 Upper 4 Splash 1)")]
     [SerializeField] private NoteLane[] _lanes;
 
-    [Header("공통 접근 시간 (노트 스피드)")]
-    [SerializeField] private float _approachTime = 4.0f;
+    [Header("Note Speed Set")]
+    [SerializeField] private float _baseApproachTime = 4.0f;
+    [SerializeField] private float _noteSpeed = 1.0f;
+    private float CurrentApproachTime => _baseApproachTime / _noteSpeed;
 
-    [Header("테스트")]
     [SerializeField] private float _spawnInterval = 1.0f;
     private float _timer;
-
-    private void Awake()
-    {
-        RecalculateLaneSpeeds();
-    }
-
-    public void RecalculateLaneSpeeds()
-    {
-        foreach (var lane in _lanes)
-        {
-            if (!lane._spawnPoint || !lane._despawnPoint)
-                continue;
-
-            float dist = Vector3.Distance(
-                lane._spawnPoint.position,
-                lane._despawnPoint.position
-            );
-
-            lane._laneSpeed = dist / _approachTime;
-            Debug.Log($"[Lane:{lane._laneName}] dist={dist:F3}, laneSpeed={lane._laneSpeed:F3}");
-        }
-    }
 
     private void Update()
     {
@@ -74,10 +43,7 @@ public class NoteSpawner : MonoBehaviour
         foreach (var lane in _lanes)
         {
             if (!lane._spawnPoint || !lane._despawnPoint)
-            {
-                Debug.LogWarning($"Rail {lane._laneName} : Spawn / Despawn 세팅 비어 있음");
                 continue;
-            }
 
             SpawnNote(lane);
         }
@@ -86,21 +52,12 @@ public class NoteSpawner : MonoBehaviour
     private void SpawnNote(NoteLane lane)
     {
         var prefab = lane._notePrefab != null ? lane._notePrefab : _defaultNotePrefab;
-        if (prefab == null)
-        {
-            Debug.LogError($"Rail {lane._laneName} : Note Prefab is NULL bro");
-            return;
-        }
+        if (prefab == null) return;
 
-        Transform parent = lane._noteParent != null
-            ? lane._noteParent
-            : lane._spawnPoint.parent;
+        Transform parent = lane._noteParent != null ? lane._noteParent : lane._spawnPoint.parent;
 
-        var note = Instantiate(prefab,
-            lane._spawnPoint.position,
-            lane._spawnPoint.rotation,
-            parent);
+        var note = Instantiate(prefab, lane._spawnPoint.position, lane._spawnPoint.rotation, parent);
 
-        note.Init(lane._laneSpeed, lane._despawnPoint, lane._noteType);
+        note.Init(lane._spawnPoint.position, lane._despawnPoint.position, CurrentApproachTime, lane._noteType);
     }
 }
