@@ -19,10 +19,12 @@ public class NoteSpawner : MonoBehaviour
 
     [SerializeField] private NoteLane[] _lanes;
 
+    [Header("Note Speed Set")]
     [SerializeField] private float _baseApproachTime = 4.0f;
     [SerializeField] private float _noteSpeed = 1.0f;
-    private float CurrentApproachTime => _baseApproachTime / Mathf.Max(0.0001f, _noteSpeed);
+    private float _currentApproachTime => _baseApproachTime / Mathf.Max(0.0001f, _noteSpeed);
 
+    [Header("Test")]
     [SerializeField] private float _spawnInterval = 1.0f;
     private float _timer;
 
@@ -38,18 +40,19 @@ public class NoteSpawner : MonoBehaviour
 
     private void SpawnAllLanes()
     {
-        float travelTime = CurrentApproachTime;
+        float travelTime = _currentApproachTime;
 
         foreach (var lane in _lanes)
         {
             if (!lane._spawnPoint || !lane._despawnPoint) continue;
 
             var prefab = lane._notePrefab != null ? lane._notePrefab : _defaultNotePrefab;
-            if (prefab == null) continue;
+            if (!prefab) continue;
 
             Transform parent = lane._noteParent != null ? lane._noteParent : lane._spawnPoint.parent;
 
             var note = Instantiate(prefab, lane._spawnPoint.position, lane._spawnPoint.rotation, parent);
+
             note.Init(lane._spawnPoint.position, lane._despawnPoint.position, travelTime, lane._noteType);
         }
     }
