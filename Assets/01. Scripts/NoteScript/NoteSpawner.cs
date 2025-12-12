@@ -5,7 +5,6 @@ public class NoteSpawner : MonoBehaviour
     [SerializeField] private Note _defaultNotePrefab;
 
     public enum NoteType { Ground, Upper, Splash }
-    public enum NoteForm { Tap, HoldHead, HoldBody, HoldTail }
 
     [System.Serializable]
     public class NoteLane
@@ -20,10 +19,9 @@ public class NoteSpawner : MonoBehaviour
 
     [SerializeField] private NoteLane[] _lanes;
 
-    [Header("Note Speed Set")]
     [SerializeField] private float _baseApproachTime = 4.0f;
     [SerializeField] private float _noteSpeed = 1.0f;
-    private float CurrentApproachTime => _baseApproachTime / _noteSpeed;
+    private float CurrentApproachTime => _baseApproachTime / Mathf.Max(0.0001f, _noteSpeed);
 
     [SerializeField] private float _spawnInterval = 1.0f;
     private float _timer;
@@ -40,24 +38,19 @@ public class NoteSpawner : MonoBehaviour
 
     private void SpawnAllLanes()
     {
+        float travelTime = CurrentApproachTime;
+
         foreach (var lane in _lanes)
         {
-            if (!lane._spawnPoint || !lane._despawnPoint)
-                continue;
+            if (!lane._spawnPoint || !lane._despawnPoint) continue;
 
-            SpawnNote(lane);
+            var prefab = lane._notePrefab != null ? lane._notePrefab : _defaultNotePrefab;
+            if (prefab == null) continue;
+
+            Transform parent = lane._noteParent != null ? lane._noteParent : lane._spawnPoint.parent;
+
+            var note = Instantiate(prefab, lane._spawnPoint.position, lane._spawnPoint.rotation, parent);
+            note.Init(lane._spawnPoint.position, lane._despawnPoint.position, travelTime, lane._noteType);
         }
-    }
-
-    private void SpawnNote(NoteLane lane)
-    {
-        var prefab = lane._notePrefab != null ? lane._notePrefab : _defaultNotePrefab;
-        if (prefab == null) return;
-
-        Transform parent = lane._noteParent != null ? lane._noteParent : lane._spawnPoint.parent;
-
-        var note = Instantiate(prefab, lane._spawnPoint.position, lane._spawnPoint.rotation, parent);
-
-        note.Init(lane._spawnPoint.position, lane._despawnPoint.position, CurrentApproachTime, lane._noteType);
     }
 }
