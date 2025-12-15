@@ -1,7 +1,9 @@
+using System;
 using UnityEngine;
 
 public class NoteHitLine : MonoBehaviour
 {
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -12,6 +14,18 @@ public class NoteHitLine : MonoBehaviour
     void Update()
     {
         
+    }
+
+    void Hit()
+    {
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            Debug.Log("A 눌림");
+        }
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            Debug.Log("S 눌림");
+        }
     }
 
     private void OnTriggerEnter(Collider other)

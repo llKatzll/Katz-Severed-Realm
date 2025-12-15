@@ -29,4 +29,9 @@ public class Note : MonoBehaviour
         if (t >= 1f)
             Destroy(gameObject);
     }
+
+    protected float NormalizedTime()
+    {
+        return Mathf.Clamp01(_elapsed / _travelTime);
+    }
 }
