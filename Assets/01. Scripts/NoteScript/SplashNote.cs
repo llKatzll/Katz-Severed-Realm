@@ -8,7 +8,7 @@ public class SplashNote : Note
     public override void Init(Vector3 spawnPos, Vector3 hitPos, float travelTime, NoteSpawner.NoteType noteType)
     {
         base.Init(spawnPos, hitPos, travelTime, noteType);
-        transform.position = _hitPos;
+        transform.position = spawnPos;
         transform.localScale = Vector3.one * _startScale;
     }
 

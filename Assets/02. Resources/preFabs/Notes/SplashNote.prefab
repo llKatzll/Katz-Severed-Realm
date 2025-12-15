@@ -140,4 +140,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SplashNote
   _startScale: 0.5
-  _hitScale: 2.25
+  _endScale: 3.4

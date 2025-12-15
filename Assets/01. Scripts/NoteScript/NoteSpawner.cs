@@ -27,23 +27,58 @@ public class NoteSpawner : MonoBehaviour
     [SerializeField] private float _spawnInterval = 1.0f;
     private float _timer;
 
+    [Header("Random Spawn Option")]
+    [SerializeField] private bool _includeSplashInRandom = false;
+
     private void Update()
     {
         _timer += Time.deltaTime;
         if (_timer >= _spawnInterval)
         {
             _timer -= _spawnInterval;
-            SpawnAllLanes();
+            SpawnRandomLane();
         }
     }
 
-    private void SpawnAllLanes()
+    private void SpawnRandomLane()
     {
-        foreach (var lane in _lanes)
+        int pick = PickRandomLaneIndex();
+        if (pick < 0) return;
+
+        SpawnNote(_lanes[pick]);
+    }
+
+    private int PickRandomLaneIndex()
+    {
+        if (_lanes == null || _lanes.Length == 0) return -1;
+
+        int count = 0;
+        for (int i = 0; i < _lanes.Length; i++)
         {
+            var lane = _lanes[i];
+            if (lane == null) continue;
             if (!lane._spawnPoint || !lane._despawnPoint) continue;
-            SpawnNote(lane);
+            if (!_includeSplashInRandom && lane._noteType == NoteType.Splash) continue;
+
+            count++;
         }
+
+        if (count == 0) return -1;
+
+        int r = Random.Range(0, count);
+
+        for (int i = 0; i < _lanes.Length; i++)
+        {
+            var lane = _lanes[i];
+            if (lane == null) continue;
+            if (!lane._spawnPoint || !lane._despawnPoint) continue;
+            if (!_includeSplashInRandom && lane._noteType == NoteType.Splash) continue;
+
+            if (r == 0) return i;
+            r--;
+        }
+
+        return -1;
     }
 
     private void SpawnNote(NoteLane lane)
@@ -52,11 +87,6 @@ public class NoteSpawner : MonoBehaviour
         if (prefab == null) return;
 
         Transform parent = lane._noteParent != null ? lane._noteParent : lane._spawnPoint.parent;
-
-        if (lane._noteType == NoteType.Splash)
-        {
-            parent = lane._noteParent != null ? lane._noteParent : parent;
-        }
 
         float travelTime = CurrentApproachTime;
 
