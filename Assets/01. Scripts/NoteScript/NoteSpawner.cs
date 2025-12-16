@@ -28,8 +28,7 @@ public class NoteSpawner : MonoBehaviour
     private float _timer;
 
     [Header("Spawn Mode")]
-    [SerializeField] private bool _spawnRandomSingleLane = true;          // 8개 중 1개 랜덤 스폰
-    [SerializeField] private bool _spawnGroundAndSplashTogether = false;  // 그라운드 1 + 스플래시 1 동시 스폰
+    [SerializeField] private bool _spawnRandomSingleLane = true;
     [SerializeField] private bool _avoidSameLaneTwice = true;
 
     private int _lastRandomIndex = -1;
@@ -40,12 +39,6 @@ public class NoteSpawner : MonoBehaviour
         if (_timer < _spawnInterval) return;
 
         _timer -= _spawnInterval;
-
-        if (_spawnGroundAndSplashTogether)
-        {
-            SpawnGroundAndSplash();
-            return;
-        }
 
         if (_spawnRandomSingleLane)
         {
@@ -69,15 +62,6 @@ public class NoteSpawner : MonoBehaviour
 
         _lastRandomIndex = pick;
         SpawnNote(_lanes[pick]);
-    }
-
-    private void SpawnGroundAndSplash()
-    {
-        int groundIndex = PickRandomLaneIndexByType(NoteType.Ground);
-        int splashIndex = PickRandomLaneIndexByType(NoteType.Splash);
-
-        if (groundIndex >= 0) SpawnNote(_lanes[groundIndex]);
-        if (splashIndex >= 0) SpawnNote(_lanes[splashIndex]);
     }
 
     private int PickRandomNonSplashLaneIndex()

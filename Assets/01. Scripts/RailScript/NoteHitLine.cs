@@ -3,6 +3,11 @@ using UnityEngine;
 
 public class NoteHitLine : MonoBehaviour
 {
+    //레일 8개 지정한 키가 각 레일을 담당
+    // ex) A - 1레일 S - 2레일 K - 3레일 L - 4레일 Q - 어퍼1레일 ......
+
+    //키가 입력되었을 경우 판정선과 제일 가까운 노트를 판정해야함 (판정선을 기준으로)
+    //판정 처리 (ms놀음)를 어떻게 처리해야할지가 관건
 
     //판정 세부<최고<일반<주의<피해(콤보브레이크)
     // Severance < Clean < Trace < Fracture < Ruin
@@ -20,6 +25,20 @@ public class NoteHitLine : MonoBehaviour
     // 판정날때마다 Debug로 해당 판정의 이름과 반응속도ms 출력.
 
     // 판정은 뭘로 해야하지? 노트와 판정선 둘다 Collider를 잡고 있어야하나? <- 노트에게 리지드바디 이식
+
+    [SerializeField] private Note _note;
+
+    public enum NoteType { Ground, Upper, Splash } //아직 스플래시 이펙트는 없음
+
+    public enum NoteForm { Tap, HoldHead, HoldBody, HoldTail }
+
+
+    [System.Serializable]
+    public class NoteHitter
+    {
+        //노트의 타입
+        //본래 노트판정선의 위치(이펙트 소환, 판정선등을 위해)
+    }
 
     void Start()
     {
