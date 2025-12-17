@@ -13,9 +13,14 @@ public class NoteSpawner : MonoBehaviour
         public string _laneName;
         public NoteType _noteType;
         public Note _notePrefab;
-        public Transform _spawnPoint;
-        public Transform _despawnPoint;
-        public Transform _noteParent;
+
+        public Transform _space;        // RailControl_i
+        public Transform _spawnPoint;   // SpawnPoint_i
+        public Transform _hitPoint;     // HitRail_i
+        public Transform _despawnPoint; // (유지, 지금은 안 씀)
+
+        public Transform _noteParent;   // Ground는 Rail_i 넣어둔 상태
+        public NoteHitLine _hitLine;    // HitRail_i에 붙은 스크립트
     }
 
     [SerializeField] private NoteLane[] _lanes;
@@ -45,8 +50,6 @@ public class NoteSpawner : MonoBehaviour
             SpawnRandomSingle();
             return;
         }
-
-        // 둘 다 꺼져있으면 아무것도 안 함
     }
 
     private void SpawnRandomSingle()
@@ -71,7 +74,7 @@ public class NoteSpawner : MonoBehaviour
         {
             var lane = _lanes[i];
             if (lane == null) continue;
-            if (!lane._spawnPoint || !lane._despawnPoint) continue;
+            if (!lane._spawnPoint || !lane._hitPoint) continue;
             if (lane._noteType == NoteType.Splash) continue;
             count++;
         }
@@ -83,37 +86,8 @@ public class NoteSpawner : MonoBehaviour
         {
             var lane = _lanes[i];
             if (lane == null) continue;
-            if (!lane._spawnPoint || !lane._despawnPoint) continue;
+            if (!lane._spawnPoint || !lane._hitPoint) continue;
             if (lane._noteType == NoteType.Splash) continue;
-
-            if (r == 0) return i;
-            r--;
-        }
-
-        return -1;
-    }
-
-    private int PickRandomLaneIndexByType(NoteType type)
-    {
-        int count = 0;
-        for (int i = 0; i < _lanes.Length; i++)
-        {
-            var lane = _lanes[i];
-            if (lane == null) continue;
-            if (!lane._spawnPoint || !lane._despawnPoint) continue;
-            if (lane._noteType != type) continue;
-            count++;
-        }
-
-        if (count == 0) return -1;
-
-        int r = Random.Range(0, count);
-        for (int i = 0; i < _lanes.Length; i++)
-        {
-            var lane = _lanes[i];
-            if (lane == null) continue;
-            if (!lane._spawnPoint || !lane._despawnPoint) continue;
-            if (lane._noteType != type) continue;
 
             if (r == 0) return i;
             r--;
@@ -127,22 +101,28 @@ public class NoteSpawner : MonoBehaviour
         var prefab = lane._notePrefab != null ? lane._notePrefab : _defaultNotePrefab;
         if (prefab == null) return;
 
-        Transform parent = lane._noteParent != null ? lane._noteParent : lane._spawnPoint.parent;
-
         float travelTime = CurrentApproachTime;
 
-        Vector3 spawnPos = lane._spawnPoint.position;
-        Vector3 hitPos = lane._despawnPoint.position;
+        Transform space = lane._space != null ? lane._space : lane._spawnPoint.parent;
 
-        if (lane._noteType == NoteType.Splash)
+        // 정리용 부모(네 구조 유지)
+        Transform parent = lane._noteParent != null ? lane._noteParent : null;
+
+        var note = Instantiate(prefab, parent);
+
+        // ★ 통과 이동: despawn이 있으면 무조건 4포인트 InitFollow 사용
+        if (lane._despawnPoint != null)
         {
-            var note = Instantiate(prefab, hitPos, lane._spawnPoint.rotation, parent);
-            note.Init(hitPos, hitPos, travelTime, lane._noteType);
+            note.InitFollow(space, lane._spawnPoint, lane._hitPoint, lane._despawnPoint, travelTime, lane._noteType);
         }
         else
         {
-            var note = Instantiate(prefab, spawnPos, lane._spawnPoint.rotation, parent);
-            note.Init(spawnPos, hitPos, travelTime, lane._noteType);
+            note.InitFollow(space, lane._spawnPoint, lane._hitPoint, travelTime, lane._noteType);
         }
+
+        // 판정선에 레인 타입 알려주기(선택)
+        if (lane._hitLine != null)
+            lane._hitLine.SetLane(lane._noteType);
     }
+
 }

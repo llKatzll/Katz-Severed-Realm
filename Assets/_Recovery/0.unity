@@ -175,8 +175,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.8, y: 3.5, z: 60}
-  m_Center: {x: 0, y: 0, z: 15}
+  m_Size: {x: 0.8, y: 3.5, z: 16}
+  m_Center: {x: 0, y: 0, z: 2}
 --- !u!23 &17181886
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -245,13 +245,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 694936256dd9c7a4c8df37f75f2457af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NoteHitLine
-  _key: 112
-  _userOffsetMs: 0
-  _severanceMs: 35
-  _cleanMs: 75
-  _traceMs: 120
-  _fractureMs: 170
-  _ruinMs: 220
+  _note: {fileID: 0}
 --- !u!1 &55276492
 GameObject:
   m_ObjectHideFlags: 0
@@ -583,7 +577,7 @@ Transform:
   m_GameObject: {fileID: 121105681}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.75, z: -60}
+  m_LocalPosition: {x: 0, y: 0.75, z: -35}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -995,7 +989,7 @@ Transform:
   m_GameObject: {fileID: 302895730}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.75, z: -60}
+  m_LocalPosition: {x: 0, y: 0.75, z: -35}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1080,7 +1074,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -4.5, z: -20}
+  m_LocalPosition: {x: 0, y: -4.5, z: -20.33}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1523,7 +1517,7 @@ Transform:
   m_GameObject: {fileID: 648363247}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.75, z: -60}
+  m_LocalPosition: {x: 0, y: 0.75, z: -35}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1644,7 +1638,7 @@ Transform:
   m_GameObject: {fileID: 747966631}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -60}
+  m_LocalPosition: {x: 0, y: 0, z: -35}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1739,8 +1733,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.8, y: 1, z: 60}
-  m_Center: {x: 0, y: 0.7, z: 15}
+  m_Size: {x: 0.8, y: 1, z: 16}
+  m_Center: {x: 0, y: 0.7, z: 2}
 --- !u!23 &803267086
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1810,13 +1804,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 694936256dd9c7a4c8df37f75f2457af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NoteHitLine
-  _key: 97
-  _userOffsetMs: 0
-  _severanceMs: 35
-  _cleanMs: 75
-  _traceMs: 120
-  _fractureMs: 170
-  _ruinMs: 220
+  _note: {fileID: 0}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -2037,8 +2025,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.8, y: 3.5, z: 60}
-  m_Center: {x: 0, y: 0, z: 15}
+  m_Size: {x: 0.8, y: 3.5, z: 16}
+  m_Center: {x: 0, y: 0, z: 2}
 --- !u!23 &1031235098
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2107,13 +2095,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 694936256dd9c7a4c8df37f75f2457af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NoteHitLine
-  _key: 91
-  _userOffsetMs: 0
-  _severanceMs: 35
-  _cleanMs: 75
-  _traceMs: 120
-  _fractureMs: 170
-  _ruinMs: 220
+  _note: {fileID: 0}
 --- !u!1 &1080729755
 GameObject:
   m_ObjectHideFlags: 0
@@ -2139,7 +2121,7 @@ Transform:
   m_GameObject: {fileID: 1080729755}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0.0000000018626451, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -60}
+  m_LocalPosition: {x: 0, y: 0, z: -35}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2398,78 +2380,54 @@ MonoBehaviour:
   - _laneName: Ground1
     _noteType: 0
     _notePrefab: {fileID: -356125614831666881, guid: 50cdd462fe53c1544856849cd077ead3, type: 3}
-    _space: {fileID: 1897652376}
     _spawnPoint: {fileID: 1433613122}
-    _hitPoint: {fileID: 803267084}
     _despawnPoint: {fileID: 302895731}
     _noteParent: {fileID: 496278706}
-    _hitLine: {fileID: 803267088}
   - _laneName: Ground2
     _noteType: 0
     _notePrefab: {fileID: -356125614831666881, guid: 50cdd462fe53c1544856849cd077ead3, type: 3}
-    _space: {fileID: 1488290273}
     _spawnPoint: {fileID: 2040830743}
-    _hitPoint: {fileID: 1234262236}
     _despawnPoint: {fileID: 1926237126}
     _noteParent: {fileID: 1645239298}
-    _hitLine: {fileID: 1234262240}
   - _laneName: Ground3
     _noteType: 0
     _notePrefab: {fileID: -356125614831666881, guid: 50cdd462fe53c1544856849cd077ead3, type: 3}
-    _space: {fileID: 515536519}
     _spawnPoint: {fileID: 2107445982}
-    _hitPoint: {fileID: 1479421245}
     _despawnPoint: {fileID: 121105682}
     _noteParent: {fileID: 650249059}
-    _hitLine: {fileID: 1479421249}
   - _laneName: Ground4
     _noteType: 0
     _notePrefab: {fileID: -356125614831666881, guid: 50cdd462fe53c1544856849cd077ead3, type: 3}
-    _space: {fileID: 1379952152}
     _spawnPoint: {fileID: 242266617}
-    _hitPoint: {fileID: 1677809514}
     _despawnPoint: {fileID: 648363248}
     _noteParent: {fileID: 132760843}
-    _hitLine: {fileID: 1677809518}
   - _laneName: Upper1
     _noteType: 1
     _notePrefab: {fileID: 9015790616304044342, guid: 1fe615d7e15ae534ab718c41ff8abb9b, type: 3}
-    _space: {fileID: 1317211226}
     _spawnPoint: {fileID: 1719964236}
-    _hitPoint: {fileID: 1653326917}
     _despawnPoint: {fileID: 1080729756}
     _noteParent: {fileID: 1653326917}
-    _hitLine: {fileID: 1653326921}
   - _laneName: Upper2
     _noteType: 1
     _notePrefab: {fileID: 9015790616304044342, guid: 1fe615d7e15ae534ab718c41ff8abb9b, type: 3}
-    _space: {fileID: 1191700354}
     _spawnPoint: {fileID: 645967339}
-    _hitPoint: {fileID: 1300446900}
     _despawnPoint: {fileID: 1242119140}
     _noteParent: {fileID: 1300446900}
-    _hitLine: {fileID: 1300446904}
   - _laneName: Upper3
     _noteType: 1
     _notePrefab: {fileID: 9015790616304044342, guid: 1fe615d7e15ae534ab718c41ff8abb9b, type: 3}
-    _space: {fileID: 1618520632}
     _spawnPoint: {fileID: 1310526128}
-    _hitPoint: {fileID: 17181884}
     _despawnPoint: {fileID: 1269146917}
     _noteParent: {fileID: 17181884}
-    _hitLine: {fileID: 17181888}
   - _laneName: Upper4
     _noteType: 1
     _notePrefab: {fileID: 9015790616304044342, guid: 1fe615d7e15ae534ab718c41ff8abb9b, type: 3}
-    _space: {fileID: 786458310}
     _spawnPoint: {fileID: 1270147635}
-    _hitPoint: {fileID: 1031235096}
     _despawnPoint: {fileID: 747966632}
     _noteParent: {fileID: 1031235096}
-    _hitLine: {fileID: 1031235100}
-  _baseApproachTime: 2.5
-  _noteSpeed: 5
-  _spawnInterval: 0.25
+  _baseApproachTime: 10
+  _noteSpeed: 7
+  _spawnInterval: 0.1
   _spawnRandomSingleLane: 1
   _avoidSameLaneTwice: 1
 --- !u!1 &1191700353
@@ -2561,8 +2519,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.8, y: 1, z: 60}
-  m_Center: {x: 0, y: 0.7, z: 15}
+  m_Size: {x: 0.8, y: 1, z: 16}
+  m_Center: {x: 0, y: 0.7, z: 2}
 --- !u!23 &1234262238
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2632,13 +2590,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 694936256dd9c7a4c8df37f75f2457af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NoteHitLine
-  _key: 115
-  _userOffsetMs: 0
-  _severanceMs: 35
-  _cleanMs: 75
-  _traceMs: 120
-  _fractureMs: 170
-  _ruinMs: 220
+  _note: {fileID: 0}
 --- !u!1 &1242119139
 GameObject:
   m_ObjectHideFlags: 0
@@ -2664,7 +2616,7 @@ Transform:
   m_GameObject: {fileID: 1242119139}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -60}
+  m_LocalPosition: {x: 0, y: 0, z: -35}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2695,7 +2647,7 @@ Transform:
   m_GameObject: {fileID: 1269146916}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -60}
+  m_LocalPosition: {x: 0, y: 0, z: -35}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2788,8 +2740,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.8, y: 3.5, z: 60}
-  m_Center: {x: 0, y: 0, z: 15}
+  m_Size: {x: 0.8, y: 3.5, z: 16}
+  m_Center: {x: 0, y: 0, z: 2}
 --- !u!23 &1300446902
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2858,13 +2810,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 694936256dd9c7a4c8df37f75f2457af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NoteHitLine
-  _key: 119
-  _userOffsetMs: 0
-  _severanceMs: 35
-  _cleanMs: 75
-  _traceMs: 120
-  _fractureMs: 170
-  _ruinMs: 220
+  _note: {fileID: 0}
 --- !u!1 &1310526127
 GameObject:
   m_ObjectHideFlags: 0
@@ -3187,8 +3133,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.8, y: 1, z: 60}
-  m_Center: {x: 0, y: 0.7, z: 15}
+  m_Size: {x: 0.8, y: 1, z: 16}
+  m_Center: {x: 0, y: 0.7, z: 2}
 --- !u!23 &1479421247
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3258,13 +3204,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 694936256dd9c7a4c8df37f75f2457af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NoteHitLine
-  _key: 59
-  _userOffsetMs: 0
-  _severanceMs: 35
-  _cleanMs: 75
-  _traceMs: 120
-  _fractureMs: 170
-  _ruinMs: 220
+  _note: {fileID: 0}
 --- !u!1 &1488290272
 GameObject:
   m_ObjectHideFlags: 0
@@ -3477,8 +3417,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.8, y: 3.5, z: 60}
-  m_Center: {x: 0, y: 0, z: 15}
+  m_Size: {x: 0.8, y: 3.5, z: 16}
+  m_Center: {x: 0, y: 0, z: 2}
 --- !u!23 &1653326919
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3547,13 +3487,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 694936256dd9c7a4c8df37f75f2457af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NoteHitLine
-  _key: 113
-  _userOffsetMs: 0
-  _severanceMs: 35
-  _cleanMs: 75
-  _traceMs: 120
-  _fractureMs: 170
-  _ruinMs: 220
+  _note: {fileID: 0}
 --- !u!1 &1653508745
 GameObject:
   m_ObjectHideFlags: 0
@@ -3712,8 +3646,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.8, y: 1, z: 60}
-  m_Center: {x: 0, y: 0.7, z: 15}
+  m_Size: {x: 0.8, y: 1, z: 16}
+  m_Center: {x: 0, y: 0.7, z: 2}
 --- !u!23 &1677809516
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3783,13 +3717,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 694936256dd9c7a4c8df37f75f2457af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NoteHitLine
-  _key: 39
-  _userOffsetMs: 0
-  _severanceMs: 35
-  _cleanMs: 75
-  _traceMs: 120
-  _fractureMs: 170
-  _ruinMs: 220
+  _note: {fileID: 0}
 --- !u!1 &1719964235
 GameObject:
   m_ObjectHideFlags: 0
@@ -3968,7 +3896,7 @@ Transform:
   m_GameObject: {fileID: 1926237125}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: 0.0000000037252903, w: 1}
-  m_LocalPosition: {x: 0, y: 0.75, z: -60}
+  m_LocalPosition: {x: 0, y: 0.75, z: -35}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
