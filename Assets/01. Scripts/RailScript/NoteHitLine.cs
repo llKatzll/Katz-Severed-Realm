@@ -14,6 +14,10 @@ public class NoteHitLine : MonoBehaviour
     [SerializeField] private float _fractureMs = 250f;
     [SerializeField] private float _ruinMs = 350f;
 
+    [Header("Hit Effect")]
+    [SerializeField] private GameObject _hitFxPrefab;
+    [SerializeField] private float _fxDestroySec = 2.0f;
+
     private readonly List<Note> _notes = new List<Note>(64);
 
     private NoteSpawner.NoteType _laneType;
@@ -22,27 +26,26 @@ public class NoteHitLine : MonoBehaviour
     private void Update()
     {
         CleanupNulls();
-
-        // ★ 아무 것도 안 누르면: ruinMs 지난 뒤 Miss만 찍고 리스트에서만 제거
         AutoMissNoInput();
 
-        // ★ 키 입력 시: 가장 먼저 도착할 노트 1개만 판정(큐처럼)
         if (Input.GetKeyDown(_key))
             JudgeByKeyPress();
     }
 
     private void JudgeByKeyPress()
     {
-        if (_notes.Count == 0) return;
+        if (_notes.Count == 0)
+            return;
 
         double now = AudioSettings.dspTime;
 
-        // "가장 먼저 도착할 노트" 선택(안정적)
         int best = -1;
         double bestExpected = double.MaxValue;
 
         for (int i = 0; i < _notes.Count; i++)
         {
+            if (_notes[i] == null) continue;
+
             double expected = _notes[i].ExpectedHitDspTime;
             if (expected < bestExpected)
             {
@@ -56,26 +59,30 @@ public class NoteHitLine : MonoBehaviour
         Note target = _notes[best];
         double rawMs = (now - target.ExpectedHitDspTime) * 1000.0 + _userOffsetMs;
 
-        //샷건 치지마!
+        // Early shotgun: do not delete future note. Just treat as empty miss.
         if (rawMs < -_ruinMs)
         {
-            Debug.Log($"[{_laneType}] [Miss] Early {System.Math.Abs(rawMs):0.0}ms (raw {rawMs:0.0}ms)");
-
-            _notes.RemoveAt(best);
-            if (target != null) Destroy(target.gameObject);
+            Debug.Log("[" + _laneType + "] [Miss] (empty) Early " +
+                      System.Math.Abs(rawMs).ToString("0.0") + "ms (raw " +
+                      rawMs.ToString("0.0") + "ms)");
             return;
         }
 
         double absMs = System.Math.Abs(rawMs);
-
         bool isMiss = absMs > _ruinMs;
+
         string judge = isMiss ? "Miss" : JudgeName(absMs);
         string earlyLate = rawMs < 0 ? "Early" : "Late";
 
-        Debug.Log($"[{_laneType}] [{judge}] {earlyLate} {System.Math.Abs(rawMs):0.0}ms (raw {rawMs:0.0}ms)");
+        Debug.Log("[" + _laneType + "] [" + judge + "] " + earlyLate + " " +
+                  System.Math.Abs(rawMs).ToString("0.0") + "ms (raw " +
+                  rawMs.ToString("0.0") + "ms)");
 
-        // ★ 입력으로 판정한 노트는 Miss든 뭐든 즉시 삭제
         _notes.RemoveAt(best);
+
+        if (!isMiss)
+            SpawnHitEffect(judge);
+
         if (target != null) Destroy(target.gameObject);
     }
 
@@ -88,25 +95,100 @@ public class NoteHitLine : MonoBehaviour
         for (int i = _notes.Count - 1; i >= 0; i--)
         {
             Note n = _notes[i];
+            if (n == null)
+            {
+                _notes.RemoveAt(i);
+                continue;
+            }
+
             double rawMs = (now - n.ExpectedHitDspTime) * 1000.0 + _userOffsetMs;
 
-            // 무입력 Miss: 노트는 통과해서 계속 가고, 판정만 Miss 처리
+            // No input miss: log only, do not destroy the note (it should keep going)
             if (rawMs > _ruinMs)
             {
                 _notes.RemoveAt(i);
-                Debug.Log($"[{_laneType}] [Miss] (no input) Late {rawMs:0.0}ms");
+                Debug.Log("[" + _laneType + "] [Miss] (no input) Late " + rawMs.ToString("0.0") + "ms");
             }
         }
     }
 
     private string JudgeName(double absMs)
     {
-        if (absMs <= _severanceMs) return "Severance";
-        if (absMs <= _cleanMs) return "Clean";
-        if (absMs <= _traceMs) return "Trace";
-        if (absMs <= _fractureMs) return "Fracture";
-        if (absMs <= _ruinMs) return "Ruin";
-        return "Miss";
+        if (absMs <= _severanceMs) return "Severance"; //퍼펙트++
+        if (absMs <= _cleanMs) return "Clean"; //퍼펙트
+        if (absMs <= _traceMs) return "Trace"; //굿
+        if (absMs <= _fractureMs) return "Fracture"; //배드
+        if (absMs <= _ruinMs) return "Ruin"; //진짜 배드
+        return "Miss"; //미스
+    }
+
+    private void SpawnHitEffect(string judge)
+    {
+        if (_hitFxPrefab == null) return;
+        if (judge == "Miss") return;
+
+        GameObject fx = Instantiate(_hitFxPrefab, transform.position, transform.rotation);
+
+        bool overrideColor = !(_laneType == NoteSpawner.NoteType.Upper && judge == "Severance");
+        if (overrideColor)
+        {
+            Color c = GetJudgeColor(_laneType, judge);
+            ApplyColorToEffect(fx, c);
+        }
+
+        if (_fxDestroySec > 0f)
+            Destroy(fx, _fxDestroySec);
+    }
+
+    private Color GetJudgeColor(NoteSpawner.NoteType laneType, string judge)
+    {
+        if (judge == "Ruin") judge = "Fracture";
+
+        if (laneType == NoteSpawner.NoteType.Ground)
+        {
+            if (judge == "Severance") return Color.white;
+            if (judge == "Clean") return new Color(1.0f, 0.85f, 0.25f);
+            if (judge == "Trace") return new Color(0.25f, 1.0f, 0.45f);
+            if (judge == "Fracture") return new Color(0.75f, 0.25f, 1.0f);
+        }
+        else if (laneType == NoteSpawner.NoteType.Upper)
+        {
+            if (judge == "Clean") return new Color(1.0f, 0.95f, 0.35f);
+            if (judge == "Trace") return new Color(0.30f, 1.0f, 0.55f);
+            if (judge == "Fracture") return new Color(0.75f, 0.25f, 1.0f);
+        }
+
+        return Color.white;
+    }
+
+    private void ApplyColorToEffect(GameObject fxRoot, Color c)
+    {
+        var pss = fxRoot.GetComponentsInChildren<ParticleSystem>(true);
+        for (int i = 0; i < pss.Length; i++)
+        {
+            var ps = pss[i];
+            if (ps == null) continue;
+
+            var main = ps.main;
+            main.startColor = c;
+        }
+
+        var renderers = fxRoot.GetComponentsInChildren<Renderer>(true);
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            var r = renderers[i];
+            if (r == null) continue;
+
+            var mpb = new MaterialPropertyBlock();
+            r.GetPropertyBlock(mpb);
+
+            mpb.SetColor("_BaseColor", c);
+            mpb.SetColor("_Color", c);
+            mpb.SetColor("_TintColor", c);
+            mpb.SetColor("_EmissionColor", c);
+
+            r.SetPropertyBlock(mpb);
+        }
     }
 
     private void CleanupNulls()
@@ -126,6 +208,6 @@ public class NoteHitLine : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        // ★ Exit에서 제거하지 않는다 (Late 판정 안정 + 통과 연출)
+        // Intentionally do nothing.
     }
 }

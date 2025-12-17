@@ -252,6 +252,8 @@ MonoBehaviour:
   _traceMs: 120
   _fractureMs: 170
   _ruinMs: 220
+  _hitFxPrefab: {fileID: 7627631149446542699, guid: 02c83418a8312ac4fb4831963119d47e, type: 3}
+  _fxDestroySec: 2
 --- !u!1 &55276492
 GameObject:
   m_ObjectHideFlags: 0
@@ -1817,6 +1819,8 @@ MonoBehaviour:
   _traceMs: 120
   _fractureMs: 170
   _ruinMs: 220
+  _hitFxPrefab: {fileID: 1258095543897662706, guid: 49f85744ba1e07342b8e0e2d3b7dac30, type: 3}
+  _fxDestroySec: 2
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -2114,6 +2118,8 @@ MonoBehaviour:
   _traceMs: 120
   _fractureMs: 170
   _ruinMs: 220
+  _hitFxPrefab: {fileID: 7627631149446542699, guid: 02c83418a8312ac4fb4831963119d47e, type: 3}
+  _fxDestroySec: 2
 --- !u!1 &1080729755
 GameObject:
   m_ObjectHideFlags: 0
@@ -2469,7 +2475,7 @@ MonoBehaviour:
     _hitLine: {fileID: 1031235100}
   _baseApproachTime: 2.5
   _noteSpeed: 5
-  _spawnInterval: 0.25
+  _spawnInterval: 0.5
   _spawnRandomSingleLane: 1
   _avoidSameLaneTwice: 1
 --- !u!1 &1191700353
@@ -2639,6 +2645,8 @@ MonoBehaviour:
   _traceMs: 120
   _fractureMs: 170
   _ruinMs: 220
+  _hitFxPrefab: {fileID: 1258095543897662706, guid: 49f85744ba1e07342b8e0e2d3b7dac30, type: 3}
+  _fxDestroySec: 2
 --- !u!1 &1242119139
 GameObject:
   m_ObjectHideFlags: 0
@@ -2865,6 +2873,8 @@ MonoBehaviour:
   _traceMs: 120
   _fractureMs: 170
   _ruinMs: 220
+  _hitFxPrefab: {fileID: 7627631149446542699, guid: 02c83418a8312ac4fb4831963119d47e, type: 3}
+  _fxDestroySec: 2
 --- !u!1 &1310526127
 GameObject:
   m_ObjectHideFlags: 0
@@ -3265,6 +3275,8 @@ MonoBehaviour:
   _traceMs: 120
   _fractureMs: 170
   _ruinMs: 220
+  _hitFxPrefab: {fileID: 1258095543897662706, guid: 49f85744ba1e07342b8e0e2d3b7dac30, type: 3}
+  _fxDestroySec: 2
 --- !u!1 &1488290272
 GameObject:
   m_ObjectHideFlags: 0
@@ -3554,6 +3566,8 @@ MonoBehaviour:
   _traceMs: 120
   _fractureMs: 170
   _ruinMs: 220
+  _hitFxPrefab: {fileID: 7627631149446542699, guid: 02c83418a8312ac4fb4831963119d47e, type: 3}
+  _fxDestroySec: 2
 --- !u!1 &1653508745
 GameObject:
   m_ObjectHideFlags: 0
@@ -3790,6 +3804,8 @@ MonoBehaviour:
   _traceMs: 120
   _fractureMs: 170
   _ruinMs: 220
+  _hitFxPrefab: {fileID: 1258095543897662706, guid: 49f85744ba1e07342b8e0e2d3b7dac30, type: 3}
+  _fxDestroySec: 2
 --- !u!1 &1719964235
 GameObject:
   m_ObjectHideFlags: 0
