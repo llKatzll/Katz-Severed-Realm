@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43aeaee020570a04b9c55ac5ab3d504c, type: 3}
+  m_Name: HitFxPalette
+  m_EditorClassIdentifier: Assembly-CSharp::HitFxPaletteSO
+  hitFxPrefab: {fileID: 8163141537363357767, guid: d8e9aae6f5a0e5340a82e4687a67a042, type: 3}
+  fxDestroySec: 0.3
+  ground_Sev: {r: 1, g: 1, b: 1, a: 1}
+  ground_Clea: {r: 1, g: 0.8095238, b: 0, a: 1}
+  ground_Trs: {r: 0, g: 1, b: 0.8088236, a: 1}
+  ground_Frac: {r: 0.62135935, g: 0, b: 1, a: 1}
+  ground_Ru: {r: 1, g: 0, b: 0, a: 1}
+  upper_Sev: {r: 1, g: 0.6745098, b: 0.3647059, a: 1}
+  upper_Clea: {r: 1, g: 0.80784315, b: 0, a: 1}
+  upper_Trs: {r: 0, g: 1, b: 0.80784315, a: 1}
+  upper_Frac: {r: 0.61960787, g: 0, b: 1, a: 1}
+  upper_Ru: {r: 1, g: 0, b: 0, a: 1}
