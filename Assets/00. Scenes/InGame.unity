@@ -128,10 +128,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 17181884}
-  - component: {fileID: 17181888}
   - component: {fileID: 17181885}
   - component: {fileID: 17181887}
   - component: {fileID: 17181886}
+  - component: {fileID: 17181889}
   m_Layer: 0
   m_Name: HitRail_3
   m_TagString: Untagged
@@ -175,7 +175,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.8, y: 3.5, z: 60}
+  m_Size: {x: 0.8, y: 3.5, z: 70}
   m_Center: {x: 0, y: 0, z: 15}
 --- !u!23 &17181886
 MeshRenderer:
@@ -233,7 +233,7 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 17181883}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &17181888
+--- !u!114 &17181889
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -242,19 +242,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 17181883}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 694936256dd9c7a4c8df37f75f2457af, type: 3}
+  m_Script: {fileID: 11500000, guid: 76985a5c8d5381941ae4b1e551b6c458, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NoteHitLine
-  _key: 112
+  m_EditorClassIdentifier: Assembly-CSharp::LaneJudge
+  _laneType: 1
+  _key: 111
   _userOffsetMs: 0
-  _severanceMs: 35
-  _cleanMs: 75
+  _severanceMs: 30
+  _cleanMs: 70
   _traceMs: 120
-  _fractureMs: 170
-  _ruinMs: 220
+  _fractureMs: 250
+  _ruinMs: 350
   _palette: {fileID: 11400000, guid: fcdca554ccc5ee142a66efa1ea55f45a, type: 2}
-  _emptyHitPrefab: {fileID: 0}
-  _emptyFxDestroySec: 0.25
+  _emptyHitPrefab: {fileID: 8163141537363357767, guid: 47e7700bbfea603418096236c0e2bb40, type: 3}
+  _emptyDestroySec: 0.2
 --- !u!1 &55276492
 GameObject:
   m_ObjectHideFlags: 0
@@ -1697,8 +1698,8 @@ GameObject:
   - component: {fileID: 803267084}
   - component: {fileID: 803267087}
   - component: {fileID: 803267086}
+  - component: {fileID: 803267089}
   - component: {fileID: 803267085}
-  - component: {fileID: 803267088}
   m_Layer: 0
   m_Name: HitRail_1
   m_TagString: Untagged
@@ -1742,7 +1743,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.8, y: 1, z: 60}
+  m_Size: {x: 0.8, y: 1, z: 70}
   m_Center: {x: 0, y: 0.7, z: 15}
 --- !u!23 &803267086
 MeshRenderer:
@@ -1801,7 +1802,7 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 803267083}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &803267088
+--- !u!114 &803267089
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1810,19 +1811,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 803267083}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 694936256dd9c7a4c8df37f75f2457af, type: 3}
+  m_Script: {fileID: 11500000, guid: 76985a5c8d5381941ae4b1e551b6c458, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NoteHitLine
+  m_EditorClassIdentifier: Assembly-CSharp::LaneJudge
+  _laneType: 0
   _key: 97
   _userOffsetMs: 0
-  _severanceMs: 35
-  _cleanMs: 75
+  _severanceMs: 30
+  _cleanMs: 70
   _traceMs: 120
-  _fractureMs: 170
-  _ruinMs: 220
+  _fractureMs: 250
+  _ruinMs: 350
   _palette: {fileID: 11400000, guid: fcdca554ccc5ee142a66efa1ea55f45a, type: 2}
-  _emptyHitPrefab: {fileID: 0}
-  _emptyFxDestroySec: 0.25
+  _emptyHitPrefab: {fileID: 8163141537363357767, guid: a28b98217eb767846839462972610979, type: 3}
+  _emptyDestroySec: 0.2
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -2045,86 +2047,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 964053397}
   m_CullTransparentMesh: 1
---- !u!1 &1004478417
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1004478418}
-  - component: {fileID: 1004478421}
-  m_Layer: 0
-  m_Name: Splash_Rail
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1004478418
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1004478417}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 7.235, y: 7.235, z: 7.235}
-  m_ConstrainProportionsScale: 1
-  m_Children: []
-  m_Father: {fileID: 2026075041}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!23 &1004478421
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1004478417}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: b6622b15bf817e544ac795a57e20d66d, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &1031235095
 GameObject:
   m_ObjectHideFlags: 0
@@ -2134,10 +2056,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1031235096}
-  - component: {fileID: 1031235100}
   - component: {fileID: 1031235097}
   - component: {fileID: 1031235099}
   - component: {fileID: 1031235098}
+  - component: {fileID: 1031235101}
   m_Layer: 0
   m_Name: HitRail_4
   m_TagString: Untagged
@@ -2181,7 +2103,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.8, y: 3.5, z: 60}
+  m_Size: {x: 0.8, y: 3.5, z: 70}
   m_Center: {x: 0, y: 0, z: 15}
 --- !u!23 &1031235098
 MeshRenderer:
@@ -2239,7 +2161,7 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1031235095}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1031235100
+--- !u!114 &1031235101
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2248,19 +2170,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 1031235095}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 694936256dd9c7a4c8df37f75f2457af, type: 3}
+  m_Script: {fileID: 11500000, guid: 76985a5c8d5381941ae4b1e551b6c458, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NoteHitLine
-  _key: 91
+  m_EditorClassIdentifier: Assembly-CSharp::LaneJudge
+  _laneType: 1
+  _key: 112
   _userOffsetMs: 0
-  _severanceMs: 35
-  _cleanMs: 75
+  _severanceMs: 30
+  _cleanMs: 70
   _traceMs: 120
-  _fractureMs: 170
-  _ruinMs: 220
+  _fractureMs: 250
+  _ruinMs: 350
   _palette: {fileID: 11400000, guid: fcdca554ccc5ee142a66efa1ea55f45a, type: 2}
-  _emptyHitPrefab: {fileID: 0}
-  _emptyFxDestroySec: 0.25
+  _emptyHitPrefab: {fileID: 8163141537363357767, guid: 47e7700bbfea603418096236c0e2bb40, type: 3}
+  _emptyDestroySec: 0.2
 --- !u!1 &1080729755
 GameObject:
   m_ObjectHideFlags: 0
@@ -2540,85 +2463,99 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 173a2199f8c531740a021984662650ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NoteSpawner
-  _defaultNotePrefab: {fileID: -356125614831666881, guid: 50cdd462fe53c1544856849cd077ead3, type: 3}
+  _defaultTapPrefab: {fileID: -356125614831666881, guid: 50cdd462fe53c1544856849cd077ead3, type: 3}
+  _defaultHoldPrefab: {fileID: 397918541337547926, guid: 0165f1162c5ea564199f7801b8b7b4d9, type: 3}
   _lanes:
   - _laneName: Ground1
     _noteType: 0
-    _notePrefab: {fileID: -356125614831666881, guid: 50cdd462fe53c1544856849cd077ead3, type: 3}
     _space: {fileID: 1897652376}
     _spawnPoint: {fileID: 1433613122}
     _hitPoint: {fileID: 803267084}
     _despawnPoint: {fileID: 302895731}
     _noteParent: {fileID: 496278706}
-    _hitLine: {fileID: 803267088}
+    _judge: {fileID: 803267089}
+    _tapPrefab: {fileID: -356125614831666881, guid: 50cdd462fe53c1544856849cd077ead3, type: 3}
+    _holdPrefab: {fileID: 397918541337547926, guid: 0165f1162c5ea564199f7801b8b7b4d9, type: 3}
   - _laneName: Ground2
     _noteType: 0
-    _notePrefab: {fileID: -356125614831666881, guid: 50cdd462fe53c1544856849cd077ead3, type: 3}
     _space: {fileID: 1488290273}
     _spawnPoint: {fileID: 2040830743}
     _hitPoint: {fileID: 1234262236}
     _despawnPoint: {fileID: 1926237126}
     _noteParent: {fileID: 1645239298}
-    _hitLine: {fileID: 1234262240}
+    _judge: {fileID: 1234262241}
+    _tapPrefab: {fileID: -356125614831666881, guid: 50cdd462fe53c1544856849cd077ead3, type: 3}
+    _holdPrefab: {fileID: 397918541337547926, guid: 0165f1162c5ea564199f7801b8b7b4d9, type: 3}
   - _laneName: Ground3
     _noteType: 0
-    _notePrefab: {fileID: -356125614831666881, guid: 50cdd462fe53c1544856849cd077ead3, type: 3}
     _space: {fileID: 515536519}
     _spawnPoint: {fileID: 2107445982}
     _hitPoint: {fileID: 1479421245}
     _despawnPoint: {fileID: 121105682}
     _noteParent: {fileID: 650249059}
-    _hitLine: {fileID: 1479421249}
+    _judge: {fileID: 1479421250}
+    _tapPrefab: {fileID: -356125614831666881, guid: 50cdd462fe53c1544856849cd077ead3, type: 3}
+    _holdPrefab: {fileID: 397918541337547926, guid: 0165f1162c5ea564199f7801b8b7b4d9, type: 3}
   - _laneName: Ground4
     _noteType: 0
-    _notePrefab: {fileID: -356125614831666881, guid: 50cdd462fe53c1544856849cd077ead3, type: 3}
     _space: {fileID: 1379952152}
     _spawnPoint: {fileID: 242266617}
     _hitPoint: {fileID: 1677809514}
     _despawnPoint: {fileID: 648363248}
     _noteParent: {fileID: 132760843}
-    _hitLine: {fileID: 1677809518}
+    _judge: {fileID: 1677809519}
+    _tapPrefab: {fileID: -356125614831666881, guid: 50cdd462fe53c1544856849cd077ead3, type: 3}
+    _holdPrefab: {fileID: 397918541337547926, guid: 0165f1162c5ea564199f7801b8b7b4d9, type: 3}
   - _laneName: Upper1
     _noteType: 1
-    _notePrefab: {fileID: 9015790616304044342, guid: 1fe615d7e15ae534ab718c41ff8abb9b, type: 3}
     _space: {fileID: 1317211226}
     _spawnPoint: {fileID: 1719964236}
     _hitPoint: {fileID: 1653326917}
     _despawnPoint: {fileID: 1080729756}
     _noteParent: {fileID: 1653326917}
-    _hitLine: {fileID: 1653326921}
+    _judge: {fileID: 1653326922}
+    _tapPrefab: {fileID: 9015790616304044342, guid: 1fe615d7e15ae534ab718c41ff8abb9b, type: 3}
+    _holdPrefab: {fileID: -95660441899865814, guid: 226992d43742dc1498e35420229ec497, type: 3}
   - _laneName: Upper2
     _noteType: 1
-    _notePrefab: {fileID: 9015790616304044342, guid: 1fe615d7e15ae534ab718c41ff8abb9b, type: 3}
     _space: {fileID: 1191700354}
     _spawnPoint: {fileID: 645967339}
     _hitPoint: {fileID: 1300446900}
     _despawnPoint: {fileID: 1242119140}
     _noteParent: {fileID: 1300446900}
-    _hitLine: {fileID: 1300446904}
+    _judge: {fileID: 1300446905}
+    _tapPrefab: {fileID: 9015790616304044342, guid: 1fe615d7e15ae534ab718c41ff8abb9b, type: 3}
+    _holdPrefab: {fileID: -95660441899865814, guid: 226992d43742dc1498e35420229ec497, type: 3}
   - _laneName: Upper3
     _noteType: 1
-    _notePrefab: {fileID: 9015790616304044342, guid: 1fe615d7e15ae534ab718c41ff8abb9b, type: 3}
     _space: {fileID: 1618520632}
     _spawnPoint: {fileID: 1310526128}
     _hitPoint: {fileID: 17181884}
     _despawnPoint: {fileID: 1269146917}
     _noteParent: {fileID: 17181884}
-    _hitLine: {fileID: 17181888}
+    _judge: {fileID: 17181889}
+    _tapPrefab: {fileID: 9015790616304044342, guid: 1fe615d7e15ae534ab718c41ff8abb9b, type: 3}
+    _holdPrefab: {fileID: -95660441899865814, guid: 226992d43742dc1498e35420229ec497, type: 3}
   - _laneName: Upper4
     _noteType: 1
-    _notePrefab: {fileID: 9015790616304044342, guid: 1fe615d7e15ae534ab718c41ff8abb9b, type: 3}
     _space: {fileID: 786458310}
     _spawnPoint: {fileID: 1270147635}
     _hitPoint: {fileID: 1031235096}
     _despawnPoint: {fileID: 747966632}
     _noteParent: {fileID: 1031235096}
-    _hitLine: {fileID: 1031235100}
+    _judge: {fileID: 1031235101}
+    _tapPrefab: {fileID: 9015790616304044342, guid: 1fe615d7e15ae534ab718c41ff8abb9b, type: 3}
+    _holdPrefab: {fileID: -95660441899865814, guid: 226992d43742dc1498e35420229ec497, type: 3}
   _baseApproachTime: 2.5
   _noteSpeed: 5
-  _spawnInterval: 0.5
+  _autoSpawn: 1
+  _spawnInterval: 1
   _spawnRandomSingleLane: 1
   _avoidSameLaneTwice: 1
+  _spawnGroundOnly: 0
+  _spawnForm: 1
+  _holdMinSec: 0.6
+  _holdMaxSec: 1.8
 --- !u!1 &1191700353
 GameObject:
   m_ObjectHideFlags: 0
@@ -2663,8 +2600,8 @@ GameObject:
   - component: {fileID: 1234262236}
   - component: {fileID: 1234262239}
   - component: {fileID: 1234262238}
+  - component: {fileID: 1234262241}
   - component: {fileID: 1234262237}
-  - component: {fileID: 1234262240}
   m_Layer: 0
   m_Name: HitRail_2
   m_TagString: Untagged
@@ -2708,7 +2645,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.8, y: 1, z: 60}
+  m_Size: {x: 0.8, y: 1, z: 70}
   m_Center: {x: 0, y: 0.7, z: 15}
 --- !u!23 &1234262238
 MeshRenderer:
@@ -2767,7 +2704,7 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1234262235}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1234262240
+--- !u!114 &1234262241
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2776,19 +2713,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 1234262235}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 694936256dd9c7a4c8df37f75f2457af, type: 3}
+  m_Script: {fileID: 11500000, guid: 76985a5c8d5381941ae4b1e551b6c458, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NoteHitLine
+  m_EditorClassIdentifier: Assembly-CSharp::LaneJudge
+  _laneType: 0
   _key: 115
   _userOffsetMs: 0
-  _severanceMs: 35
-  _cleanMs: 75
+  _severanceMs: 30
+  _cleanMs: 70
   _traceMs: 120
-  _fractureMs: 170
-  _ruinMs: 220
+  _fractureMs: 250
+  _ruinMs: 350
   _palette: {fileID: 11400000, guid: fcdca554ccc5ee142a66efa1ea55f45a, type: 2}
-  _emptyHitPrefab: {fileID: 0}
-  _emptyFxDestroySec: 0.25
+  _emptyHitPrefab: {fileID: 8163141537363357767, guid: a28b98217eb767846839462972610979, type: 3}
+  _emptyDestroySec: 0.2
 --- !u!1 &1242119139
 GameObject:
   m_ObjectHideFlags: 0
@@ -2891,10 +2829,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1300446900}
-  - component: {fileID: 1300446904}
   - component: {fileID: 1300446901}
   - component: {fileID: 1300446903}
   - component: {fileID: 1300446902}
+  - component: {fileID: 1300446905}
   m_Layer: 0
   m_Name: HitRail_2
   m_TagString: Untagged
@@ -2938,7 +2876,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.8, y: 3.5, z: 60}
+  m_Size: {x: 0.8, y: 3.5, z: 70}
   m_Center: {x: 0, y: 0, z: 15}
 --- !u!23 &1300446902
 MeshRenderer:
@@ -2996,7 +2934,7 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1300446899}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1300446904
+--- !u!114 &1300446905
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3005,19 +2943,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 1300446899}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 694936256dd9c7a4c8df37f75f2457af, type: 3}
+  m_Script: {fileID: 11500000, guid: 76985a5c8d5381941ae4b1e551b6c458, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NoteHitLine
+  m_EditorClassIdentifier: Assembly-CSharp::LaneJudge
+  _laneType: 1
   _key: 119
   _userOffsetMs: 0
-  _severanceMs: 35
-  _cleanMs: 75
+  _severanceMs: 30
+  _cleanMs: 70
   _traceMs: 120
-  _fractureMs: 170
-  _ruinMs: 220
+  _fractureMs: 250
+  _ruinMs: 350
   _palette: {fileID: 11400000, guid: fcdca554ccc5ee142a66efa1ea55f45a, type: 2}
-  _emptyHitPrefab: {fileID: 0}
-  _emptyFxDestroySec: 0.25
+  _emptyHitPrefab: {fileID: 8163141537363357767, guid: 47e7700bbfea603418096236c0e2bb40, type: 3}
+  _emptyDestroySec: 0.2
 --- !u!1 &1310526127
 GameObject:
   m_ObjectHideFlags: 0
@@ -3295,8 +3234,8 @@ GameObject:
   - component: {fileID: 1479421245}
   - component: {fileID: 1479421248}
   - component: {fileID: 1479421247}
+  - component: {fileID: 1479421250}
   - component: {fileID: 1479421246}
-  - component: {fileID: 1479421249}
   m_Layer: 0
   m_Name: HitRail_3
   m_TagString: Untagged
@@ -3340,7 +3279,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.8, y: 1, z: 60}
+  m_Size: {x: 0.8, y: 1, z: 70}
   m_Center: {x: 0, y: 0.7, z: 15}
 --- !u!23 &1479421247
 MeshRenderer:
@@ -3399,7 +3338,7 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1479421244}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1479421249
+--- !u!114 &1479421250
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3408,19 +3347,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 1479421244}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 694936256dd9c7a4c8df37f75f2457af, type: 3}
+  m_Script: {fileID: 11500000, guid: 76985a5c8d5381941ae4b1e551b6c458, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NoteHitLine
-  _key: 59
+  m_EditorClassIdentifier: Assembly-CSharp::LaneJudge
+  _laneType: 0
+  _key: 108
   _userOffsetMs: 0
-  _severanceMs: 35
-  _cleanMs: 75
+  _severanceMs: 30
+  _cleanMs: 70
   _traceMs: 120
-  _fractureMs: 170
-  _ruinMs: 220
+  _fractureMs: 250
+  _ruinMs: 350
   _palette: {fileID: 11400000, guid: fcdca554ccc5ee142a66efa1ea55f45a, type: 2}
-  _emptyHitPrefab: {fileID: 0}
-  _emptyFxDestroySec: 0.25
+  _emptyHitPrefab: {fileID: 8163141537363357767, guid: a28b98217eb767846839462972610979, type: 3}
+  _emptyDestroySec: 0.2
 --- !u!1 &1488290272
 GameObject:
   m_ObjectHideFlags: 0
@@ -3586,10 +3526,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1653326917}
-  - component: {fileID: 1653326921}
   - component: {fileID: 1653326918}
   - component: {fileID: 1653326920}
   - component: {fileID: 1653326919}
+  - component: {fileID: 1653326922}
   m_Layer: 0
   m_Name: HitRail_1
   m_TagString: Untagged
@@ -3633,7 +3573,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.8, y: 3.5, z: 60}
+  m_Size: {x: 0.8, y: 3.5, z: 70}
   m_Center: {x: 0, y: 0, z: 15}
 --- !u!23 &1653326919
 MeshRenderer:
@@ -3691,7 +3631,7 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1653326916}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1653326921
+--- !u!114 &1653326922
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3700,19 +3640,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 1653326916}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 694936256dd9c7a4c8df37f75f2457af, type: 3}
+  m_Script: {fileID: 11500000, guid: 76985a5c8d5381941ae4b1e551b6c458, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NoteHitLine
+  m_EditorClassIdentifier: Assembly-CSharp::LaneJudge
+  _laneType: 1
   _key: 113
   _userOffsetMs: 0
-  _severanceMs: 35
-  _cleanMs: 75
+  _severanceMs: 30
+  _cleanMs: 70
   _traceMs: 120
-  _fractureMs: 170
-  _ruinMs: 220
+  _fractureMs: 250
+  _ruinMs: 350
   _palette: {fileID: 11400000, guid: fcdca554ccc5ee142a66efa1ea55f45a, type: 2}
-  _emptyHitPrefab: {fileID: 0}
-  _emptyFxDestroySec: 0.25
+  _emptyHitPrefab: {fileID: 8163141537363357767, guid: 47e7700bbfea603418096236c0e2bb40, type: 3}
+  _emptyDestroySec: 0.2
 --- !u!1 &1653508745
 GameObject:
   m_ObjectHideFlags: 0
@@ -3827,8 +3768,8 @@ GameObject:
   - component: {fileID: 1677809514}
   - component: {fileID: 1677809517}
   - component: {fileID: 1677809516}
+  - component: {fileID: 1677809519}
   - component: {fileID: 1677809515}
-  - component: {fileID: 1677809518}
   m_Layer: 0
   m_Name: HitRail_4
   m_TagString: Untagged
@@ -3872,7 +3813,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.8, y: 1, z: 60}
+  m_Size: {x: 0.8, y: 1, z: 70}
   m_Center: {x: 0, y: 0.7, z: 15}
 --- !u!23 &1677809516
 MeshRenderer:
@@ -3931,7 +3872,7 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1677809513}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1677809518
+--- !u!114 &1677809519
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3940,19 +3881,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 1677809513}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 694936256dd9c7a4c8df37f75f2457af, type: 3}
+  m_Script: {fileID: 11500000, guid: 76985a5c8d5381941ae4b1e551b6c458, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NoteHitLine
-  _key: 39
+  m_EditorClassIdentifier: Assembly-CSharp::LaneJudge
+  _laneType: 0
+  _key: 59
   _userOffsetMs: 0
-  _severanceMs: 35
-  _cleanMs: 75
+  _severanceMs: 30
+  _cleanMs: 70
   _traceMs: 120
-  _fractureMs: 170
-  _ruinMs: 220
+  _fractureMs: 250
+  _ruinMs: 350
   _palette: {fileID: 11400000, guid: fcdca554ccc5ee142a66efa1ea55f45a, type: 2}
-  _emptyHitPrefab: {fileID: 0}
-  _emptyFxDestroySec: 0.25
+  _emptyHitPrefab: {fileID: 8163141537363357767, guid: a28b98217eb767846839462972610979, type: 3}
+  _emptyDestroySec: 0.2
 --- !u!1 &1719964235
 GameObject:
   m_ObjectHideFlags: 0
@@ -4168,7 +4110,6 @@ Transform:
   m_Children:
   - {fileID: 181766800}
   - {fileID: 910213608}
-  - {fileID: 1004478418}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!1 &2040830742

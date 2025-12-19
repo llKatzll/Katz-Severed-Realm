@@ -1,15 +1,5 @@
 using UnityEngine;
 
-public enum JudgeType
-{
-    Severance,
-    Clean,
-    Trace,
-    Fracture,
-    Ruin,
-    Miss
-}
-
 [CreateAssetMenu(menuName = "Rhythm/Hit FX Palette", fileName = "HitFxPalette")]
 public class HitFxPaletteSO : ScriptableObject
 {

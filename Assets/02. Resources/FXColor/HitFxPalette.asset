@@ -15,12 +15,12 @@ MonoBehaviour:
   hitFxPrefab: {fileID: 8163141537363357767, guid: d8e9aae6f5a0e5340a82e4687a67a042, type: 3}
   fxDestroySec: 0.3
   ground_Sev: {r: 1, g: 1, b: 1, a: 1}
-  ground_Clea: {r: 1, g: 0.8095238, b: 0, a: 1}
-  ground_Trs: {r: 0, g: 1, b: 0.8088236, a: 1}
-  ground_Frac: {r: 0.62135935, g: 0, b: 1, a: 1}
+  ground_Clea: {r: 1, g: 0.8078432, b: 0, a: 1}
+  ground_Trs: {r: 0, g: 1, b: 0.8078432, a: 1}
+  ground_Frac: {r: 0.6196079, g: 0, b: 1, a: 1}
   ground_Ru: {r: 1, g: 0, b: 0, a: 1}
-  upper_Sev: {r: 1, g: 0.6745098, b: 0.3647059, a: 1}
-  upper_Clea: {r: 1, g: 0.80784315, b: 0, a: 1}
-  upper_Trs: {r: 0, g: 1, b: 0.80784315, a: 1}
-  upper_Frac: {r: 0.61960787, g: 0, b: 1, a: 1}
+  upper_Sev: {r: 1, g: 0.6800256, b: 0.3754716, a: 1}
+  upper_Clea: {r: 1, g: 0.8078432, b: 0, a: 1}
+  upper_Trs: {r: 0, g: 1, b: 0.8078432, a: 1}
+  upper_Frac: {r: 0.6196079, g: 0, b: 1, a: 1}
   upper_Ru: {r: 1, g: 0, b: 0, a: 1}
