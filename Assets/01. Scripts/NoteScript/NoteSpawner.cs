@@ -3,12 +3,10 @@ using UnityEngine;
 
 public class NoteSpawner : MonoBehaviour
 {
-    [Header("Prefabs")]
+    [Header("Prefab")]
     [SerializeField] private Note _defaultTapPrefab;
-    [SerializeField] private HoldNote _defaultHoldPrefab;
 
     public enum NoteType { Ground, Upper }
-    public enum NoteForm { Tap, Hold }
 
     [System.Serializable]
     public class NoteLane
@@ -16,7 +14,6 @@ public class NoteSpawner : MonoBehaviour
         public string _laneName;
         public NoteType _noteType;
 
-        public Transform _space;
         public Transform _spawnPoint;
         public Transform _hitPoint;
         public Transform _despawnPoint;
@@ -24,21 +21,23 @@ public class NoteSpawner : MonoBehaviour
         public Transform _noteParent;
         public LaneJudge _judge;
 
-        [Header("Optional Per Lane Prefab Override")]
+        [Header("Optional Per Lane Override")]
         public Note _tapPrefab;
-        public HoldNote _holdPrefab;
+
+        [Header("Visual Offset (Local Y)")]
+        public float _yOffsetLocal; //Ground 0.05, Upper 0
     }
 
     [SerializeField] private NoteLane[] _lanes;
 
     [Header("Timing")]
-    [SerializeField] private float _baseApproachTime = 4.0f;
-    [SerializeField] private float _noteSpeed = 1.0f;
+    [SerializeField] private float _baseApproachTime = 2.5f;
+    [SerializeField] private float _noteSpeed = 5f;
     private float CurrentApproachTime => _baseApproachTime / Mathf.Max(0.0001f, _noteSpeed);
 
-    [Header("Test Auto Spawn")]
+    [Header("Auto Spawn")]
     [SerializeField] private bool _autoSpawn = true;
-    [SerializeField] private float _spawnInterval = 1.0f;
+    [SerializeField] private float _spawnInterval = 0.15f;
     private float _timer;
 
     [Header("Spawn Mode")]
@@ -47,13 +46,6 @@ public class NoteSpawner : MonoBehaviour
 
     [Header("Lane Filter")]
     [SerializeField] private bool _spawnGroundOnly = false;
-
-    [Header("Form")]
-    [SerializeField] private NoteForm _spawnForm = NoteForm.Tap;
-
-    [Header("Hold Test Config")]
-    [SerializeField] private float _holdMinSec = 0.6f;
-    [SerializeField] private float _holdMaxSec = 1.8f;
 
     private int _lastPickedLaneIndex = -1;
 
@@ -94,8 +86,9 @@ public class NoteSpawner : MonoBehaviour
         {
             var lane = _lanes[i];
             if (lane == null) continue;
-            if (lane._spawnPoint == null || lane._hitPoint == null) continue;
-            if (lane._despawnPoint == null) continue; // pass-through always
+
+            if (lane._spawnPoint == null || lane._hitPoint == null || lane._despawnPoint == null)
+                continue;
 
             if (_spawnGroundOnly && lane._noteType != NoteType.Ground)
                 continue;
@@ -115,35 +108,33 @@ public class NoteSpawner : MonoBehaviour
     private void SpawnOnLane(NoteLane lane)
     {
         float travelTime = CurrentApproachTime;
-        Transform space = lane._space != null ? lane._space : lane._spawnPoint.parent;
-        Transform parent = lane._noteParent != null ? lane._noteParent : null;
+
+        Transform parent = lane._noteParent;
 
         LaneJudge judge = lane._judge != null ? lane._judge : lane._hitPoint.GetComponent<LaneJudge>();
-        if (judge != null)
-            judge.SetLaneType(lane._noteType);
+        if (judge != null) judge.SetLaneType(lane._noteType);
 
-        if (_spawnForm == NoteForm.Tap)
-        {
-            Note prefab = lane._tapPrefab != null ? lane._tapPrefab : _defaultTapPrefab;
-            if (prefab == null) return;
+        Note prefab = lane._tapPrefab != null ? lane._tapPrefab : _defaultTapPrefab;
+        if (prefab == null) return;
 
-            Note note = Instantiate(prefab, parent);
-            note.InitFollow(space, lane._spawnPoint, lane._hitPoint, lane._despawnPoint, travelTime, lane._noteType);
+        //월드에 먼저 소환 (부모 상속으로 꼬이는걸 줄이기)
+        Note note = Instantiate(prefab);
 
-            if (judge != null) judge.RegisterTap(note);
-            return;
-        }
+        //판정선 기준 로컬로 경로 세팅
+        //space = hitPoint (판정선)
+        note.InitFollow(
+            lane._hitPoint,
+            lane._spawnPoint,
+            lane._hitPoint,
+            lane._despawnPoint,
+            travelTime,
+            lane._noteType,
+            lane._yOffsetLocal
+        );
 
-        // Hold
-        HoldNote holdPrefab = lane._holdPrefab != null ? lane._holdPrefab : _defaultHoldPrefab;
-        if (holdPrefab == null) return;
+        //나중에 부모 붙이기 (월드 위치 유지)
+        if (parent != null) note.transform.SetParent(parent, true);
 
-        HoldNote hold = Instantiate(holdPrefab, parent);
-        hold.InitFollow(space, lane._spawnPoint, lane._hitPoint, lane._despawnPoint, travelTime, lane._noteType);
-
-        float dur = Random.Range(_holdMinSec, _holdMaxSec);
-        hold.SetupHoldDuration(dur);
-
-        if (judge != null) judge.RegisterHold(hold);
+        if (judge != null) judge.RegisterTap(note);
     }
 }

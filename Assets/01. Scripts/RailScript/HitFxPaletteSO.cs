@@ -1,3 +1,4 @@
+// HitFxPaletteSO.cs (unchanged)
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Rhythm/Hit FX Palette", fileName = "HitFxPalette")]
@@ -21,10 +22,9 @@ public class HitFxPaletteSO : ScriptableObject
     public Color upper_Frac;
     public Color upper_Ru;
 
-    public bool TryGetColor(NoteSpawner.NoteType laneType, JudgeType judge, out Color c, out bool overrideColor)
+    public bool TryGetColor(NoteSpawner.NoteType laneType, JudgeType judge, out Color c)
     {
         c = Color.white;
-        overrideColor = true;
 
         if (judge == JudgeType.Miss)
             return false;

@@ -11,11 +11,11 @@ public class LaneJudge : MonoBehaviour
 
     [Header("Timing (ms)")]
     [SerializeField] private float _userOffsetMs = 0f;
-    [SerializeField] private float _severanceMs = 30f;
-    [SerializeField] private float _cleanMs = 70f;
-    [SerializeField] private float _traceMs = 120f;
-    [SerializeField] private float _fractureMs = 250f;
-    [SerializeField] private float _ruinMs = 350f;
+    [SerializeField] private float _severanceMs = 35f;
+    [SerializeField] private float _cleanMs = 80f;
+    [SerializeField] private float _traceMs = 135f;
+    [SerializeField] private float _fractureMs = 200f;
+    [SerializeField] private float _ruinMs = 300f;
 
     [Header("FX")]
     [SerializeField] private HitFxPaletteSO _palette;
@@ -23,7 +23,6 @@ public class LaneJudge : MonoBehaviour
     [SerializeField] private float _emptyDestroySec = 0.2f;
 
     private readonly List<Note> _tapNotes = new List<Note>(64);
-    private HoldNote _hold;
 
     public void SetLaneType(NoteSpawner.NoteType t) => _laneType = t;
 
@@ -33,63 +32,18 @@ public class LaneJudge : MonoBehaviour
         _tapNotes.Add(n);
     }
 
-    public void RegisterHold(HoldNote h)
-    {
-        if (h == null) return;
-        _hold = h;
-    }
-
     private void Update()
     {
         CleanupDeadTap();
         AutoMissTapNoInput();
 
-        // Hold upkeep checks
-        if (_hold != null && _hold.IsActive && !_hold.IsFailed)
-        {
-            if (!Input.GetKey(_key))
-            {
-                _hold.Fail();
-            }
-            else
-            {
-                double rawTailLateMs = (AudioSettings.dspTime - _hold.TailDspTime) * 1000.0 + _userOffsetMs;
-                if (rawTailLateMs > _ruinMs)
-                {
-                    _hold.Fail();
-                }
-            }
-        }
-
         if (Input.GetKeyDown(_key))
             OnKeyDown();
-
-        if (Input.GetKeyUp(_key))
-            OnKeyUp();
     }
 
     private void OnKeyDown()
     {
-        // If hold exists and not started yet, head judgement first
-        if (_hold != null && !_hold.IsActive && !_hold.IsFailed)
-        {
-            JudgeHoldHead();
-            return;
-        }
-
         JudgeTap();
-    }
-
-    private void OnKeyUp()
-    {
-        // If holding, tail judgement
-        if (_hold != null && _hold.IsActive && !_hold.IsFailed)
-        {
-            JudgeHoldTail();
-            return;
-        }
-
-        SpawnEmptyHit();
     }
 
     private void JudgeTap()
@@ -103,7 +57,7 @@ public class LaneJudge : MonoBehaviour
 
         double rawMs = (AudioSettings.dspTime - target.ExpectedHitDspTime) * 1000.0 + _userOffsetMs;
 
-        // DO NOT SHOTGUN
+        // ¼¦°Ç¹æÁö
         if (rawMs < -_ruinMs)
         {
             SpawnEmptyHit();
@@ -118,52 +72,6 @@ public class LaneJudge : MonoBehaviour
             SpawnHitFx(judge);
 
         Destroy(target.gameObject);
-    }
-
-    private void JudgeHoldHead()
-    {
-        double rawMs = (AudioSettings.dspTime - _hold.HeadDspTime) * 1000.0 + _userOffsetMs;
-
-        if (rawMs < -_ruinMs)
-        {
-            SpawnEmptyHit();
-            return;
-        }
-
-        JudgeType judge = JudgeFromRawMs(rawMs);
-
-        if (judge == JudgeType.Miss)
-        {
-            _hold.Fail();
-            return;
-        }
-
-        // Head success (+1 combo)
-        SpawnHitFx(judge);
-        _hold.StartHold();
-    }
-
-    private void JudgeHoldTail()
-    {
-        double rawMs = (AudioSettings.dspTime - _hold.TailDspTime) * 1000.0 + _userOffsetMs;
-
-        if (rawMs < -_ruinMs)
-        {
-            _hold.Fail();
-            return;
-        }
-
-        JudgeType judge = JudgeFromRawMs(rawMs);
-
-        if (judge == JudgeType.Miss)
-        {
-            _hold.Fail();
-            return;
-        }
-
-        // Tail success (+1 combo)
-        SpawnHitFx(judge);
-        _hold.SuccessAndDestroy();
     }
 
     private JudgeType JudgeFromRawMs(double rawMs)
@@ -186,34 +94,39 @@ public class LaneJudge : MonoBehaviour
 
         GameObject fx = Instantiate(_palette.hitFxPrefab, transform.position, transform.rotation);
 
+        Color c;
+        bool ok = _palette.TryGetColor(_laneType, judge, out c);
 
-        bool doOverride = !(_laneType == NoteSpawner.NoteType.Upper && judge == JudgeType.Severance);
-
-        if (doOverride)
+        if (ok)
         {
-            Color c;
-            bool overrideColor;
-            bool ok = _palette.TryGetColor(_laneType, judge, out c, out overrideColor);
-
-            if (ok)
+            //Renderer MPB
+            var renderers = fx.GetComponentsInChildren<Renderer>(true);
+            for (int i = 0; i < renderers.Length; i++)
             {
+                var r = renderers[i];
+                if (r == null) continue;
 
-                var renderers = fx.GetComponentsInChildren<Renderer>(true);
-                for (int i = 0; i < renderers.Length; i++)
-                {
-                    var r = renderers[i];
-                    if (r == null) continue;
+                var mpb = new MaterialPropertyBlock();
+                r.GetPropertyBlock(mpb);
 
-                    var mpb = new MaterialPropertyBlock();
-                    r.GetPropertyBlock(mpb);
+                mpb.SetColor("_BaseColor", c);
+                mpb.SetColor("_Color", c);
+                mpb.SetColor("_TintColor", c);
+                mpb.SetColor("_EmissionColor", c);
+                mpb.SetColor("_StartColor", c);
 
-                    mpb.SetColor("_BaseColor", c);
-                    mpb.SetColor("_Color", c);
-                    mpb.SetColor("_TintColor", c);
-                    mpb.SetColor("_EmissionColor", c);
+                r.SetPropertyBlock(mpb);
+            }
 
-                    r.SetPropertyBlock(mpb);
-                }
+            //ParticleSystem Main.startColor
+            var pss = fx.GetComponentsInChildren<ParticleSystem>(true);
+            for (int i = 0; i < pss.Length; i++)
+            {
+                var ps = pss[i];
+                if (ps == null) continue;
+
+                var main = ps.main;
+                main.startColor = c;
             }
         }
 

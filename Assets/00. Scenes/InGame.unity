@@ -1636,12 +1636,12 @@ GameObject:
   - component: {fileID: 705346012}
   - component: {fileID: 705346011}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: ThatsPrettyNiceTho
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &705346011
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2575,98 +2575,86 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NoteSpawner
   _defaultTapPrefab: {fileID: -356125614831666881, guid: 50cdd462fe53c1544856849cd077ead3, type: 3}
-  _defaultHoldPrefab: {fileID: 397918541337547926, guid: 0165f1162c5ea564199f7801b8b7b4d9, type: 3}
   _lanes:
   - _laneName: Ground1
     _noteType: 0
-    _space: {fileID: 1897652376}
     _spawnPoint: {fileID: 1433613122}
     _hitPoint: {fileID: 803267084}
     _despawnPoint: {fileID: 302895731}
     _noteParent: {fileID: 496278706}
     _judge: {fileID: 803267089}
     _tapPrefab: {fileID: -356125614831666881, guid: 50cdd462fe53c1544856849cd077ead3, type: 3}
-    _holdPrefab: {fileID: 397918541337547926, guid: 0165f1162c5ea564199f7801b8b7b4d9, type: 3}
+    _yOffsetLocal: 1
   - _laneName: Ground2
     _noteType: 0
-    _space: {fileID: 1488290273}
     _spawnPoint: {fileID: 2040830743}
     _hitPoint: {fileID: 1234262236}
     _despawnPoint: {fileID: 1926237126}
     _noteParent: {fileID: 1645239298}
     _judge: {fileID: 1234262241}
     _tapPrefab: {fileID: -356125614831666881, guid: 50cdd462fe53c1544856849cd077ead3, type: 3}
-    _holdPrefab: {fileID: 397918541337547926, guid: 0165f1162c5ea564199f7801b8b7b4d9, type: 3}
+    _yOffsetLocal: 1
   - _laneName: Ground3
     _noteType: 0
-    _space: {fileID: 515536519}
     _spawnPoint: {fileID: 2107445982}
     _hitPoint: {fileID: 1479421245}
     _despawnPoint: {fileID: 121105682}
     _noteParent: {fileID: 650249059}
     _judge: {fileID: 1479421250}
     _tapPrefab: {fileID: -356125614831666881, guid: 50cdd462fe53c1544856849cd077ead3, type: 3}
-    _holdPrefab: {fileID: 397918541337547926, guid: 0165f1162c5ea564199f7801b8b7b4d9, type: 3}
+    _yOffsetLocal: 1
   - _laneName: Ground4
     _noteType: 0
-    _space: {fileID: 1379952152}
     _spawnPoint: {fileID: 242266617}
     _hitPoint: {fileID: 1677809514}
     _despawnPoint: {fileID: 648363248}
     _noteParent: {fileID: 132760843}
     _judge: {fileID: 1677809519}
     _tapPrefab: {fileID: -356125614831666881, guid: 50cdd462fe53c1544856849cd077ead3, type: 3}
-    _holdPrefab: {fileID: 397918541337547926, guid: 0165f1162c5ea564199f7801b8b7b4d9, type: 3}
+    _yOffsetLocal: 1
   - _laneName: Upper1
     _noteType: 1
-    _space: {fileID: 1317211226}
     _spawnPoint: {fileID: 1719964236}
     _hitPoint: {fileID: 1653326917}
     _despawnPoint: {fileID: 1080729756}
     _noteParent: {fileID: 1653326917}
     _judge: {fileID: 1653326922}
     _tapPrefab: {fileID: 9015790616304044342, guid: 1fe615d7e15ae534ab718c41ff8abb9b, type: 3}
-    _holdPrefab: {fileID: -95660441899865814, guid: 226992d43742dc1498e35420229ec497, type: 3}
+    _yOffsetLocal: 0
   - _laneName: Upper2
     _noteType: 1
-    _space: {fileID: 1191700354}
     _spawnPoint: {fileID: 645967339}
     _hitPoint: {fileID: 1300446900}
     _despawnPoint: {fileID: 1242119140}
     _noteParent: {fileID: 1300446900}
     _judge: {fileID: 1300446905}
     _tapPrefab: {fileID: 9015790616304044342, guid: 1fe615d7e15ae534ab718c41ff8abb9b, type: 3}
-    _holdPrefab: {fileID: -95660441899865814, guid: 226992d43742dc1498e35420229ec497, type: 3}
+    _yOffsetLocal: 0
   - _laneName: Upper3
     _noteType: 1
-    _space: {fileID: 1618520632}
     _spawnPoint: {fileID: 1310526128}
     _hitPoint: {fileID: 17181884}
     _despawnPoint: {fileID: 1269146917}
     _noteParent: {fileID: 17181884}
     _judge: {fileID: 17181889}
     _tapPrefab: {fileID: 9015790616304044342, guid: 1fe615d7e15ae534ab718c41ff8abb9b, type: 3}
-    _holdPrefab: {fileID: -95660441899865814, guid: 226992d43742dc1498e35420229ec497, type: 3}
+    _yOffsetLocal: 0
   - _laneName: Upper4
     _noteType: 1
-    _space: {fileID: 786458310}
     _spawnPoint: {fileID: 1270147635}
     _hitPoint: {fileID: 1031235096}
     _despawnPoint: {fileID: 747966632}
     _noteParent: {fileID: 1031235096}
     _judge: {fileID: 1031235101}
     _tapPrefab: {fileID: 9015790616304044342, guid: 1fe615d7e15ae534ab718c41ff8abb9b, type: 3}
-    _holdPrefab: {fileID: -95660441899865814, guid: 226992d43742dc1498e35420229ec497, type: 3}
+    _yOffsetLocal: 0
   _baseApproachTime: 2.5
   _noteSpeed: 5
   _autoSpawn: 1
   _spawnInterval: 0.15
   _spawnRandomSingleLane: 1
   _avoidSameLaneTwice: 1
-  _spawnGroundOnly: 1
-  _spawnForm: 0
-  _holdMinSec: 0.6
-  _holdMaxSec: 1.8
+  _spawnGroundOnly: 0
 --- !u!1 &1191700353
 GameObject:
   m_ObjectHideFlags: 0
