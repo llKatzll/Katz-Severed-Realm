@@ -11,11 +11,11 @@ public class LaneJudge : MonoBehaviour
 
     [Header("Timing (ms)")]
     [SerializeField] private float _userOffsetMs = 0f;
-    [SerializeField] private float _severanceMs = 35f;
-    [SerializeField] private float _cleanMs = 80f;
-    [SerializeField] private float _traceMs = 135f;
+    [SerializeField] private float _severanceMs = 45f;
+    [SerializeField] private float _cleanMs = 90f;
+    [SerializeField] private float _traceMs = 145f;
     [SerializeField] private float _fractureMs = 200f;
-    [SerializeField] private float _ruinMs = 300f;
+    [SerializeField] private float _ruinMs = 500f;
 
     [Header("FX")]
     [SerializeField] private HitFxPaletteSO _palette;
