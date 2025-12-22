@@ -254,10 +254,6 @@ MonoBehaviour:
   _palette: {fileID: 11400000, guid: fcdca554ccc5ee142a66efa1ea55f45a, type: 2}
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: 47e7700bbfea603418096236c0e2bb40, type: 3}
   _emptyDestroySec: 0.2
-  _holdLoopGroundPrefab: {fileID: 8163141537363357767, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
-  _holdLoopUpperPrefab: {fileID: 8163141537363357767, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
-  _holdLoopAnchor: {fileID: 17181884}
-  _holdLoopStopDelaySec: 0.15
 --- !u!1 &55276492
 GameObject:
   m_ObjectHideFlags: 0
@@ -1940,10 +1936,6 @@ MonoBehaviour:
   _palette: {fileID: 11400000, guid: fcdca554ccc5ee142a66efa1ea55f45a, type: 2}
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: a28b98217eb767846839462972610979, type: 3}
   _emptyDestroySec: 0.2
-  _holdLoopGroundPrefab: {fileID: 8163141537363357767, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
-  _holdLoopUpperPrefab: {fileID: 8163141537363357767, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
-  _holdLoopAnchor: {fileID: 803267084}
-  _holdLoopStopDelaySec: 0.15
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -2301,10 +2293,6 @@ MonoBehaviour:
   _palette: {fileID: 11400000, guid: fcdca554ccc5ee142a66efa1ea55f45a, type: 2}
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: 47e7700bbfea603418096236c0e2bb40, type: 3}
   _emptyDestroySec: 0.2
-  _holdLoopGroundPrefab: {fileID: 8163141537363357767, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
-  _holdLoopUpperPrefab: {fileID: 8163141537363357767, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
-  _holdLoopAnchor: {fileID: 1031235096}
-  _holdLoopStopDelaySec: 0.15
 --- !u!1 &1080729755
 GameObject:
   m_ObjectHideFlags: 0
@@ -2585,7 +2573,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NoteSpawner
   _defaultTapPrefab: {fileID: -356125614831666881, guid: 50cdd462fe53c1544856849cd077ead3, type: 3}
-  _defaultHoldPrefab: {fileID: -1344721013972580664, guid: 0be61d4d42f4647469d510dfabf776b3, type: 3}
   _lanes:
   - _laneName: Ground1
     _noteType: 0
@@ -2595,7 +2582,6 @@ MonoBehaviour:
     _noteParent: {fileID: 1433613122}
     _judge: {fileID: 803267089}
     _tapPrefab: {fileID: -356125614831666881, guid: 50cdd462fe53c1544856849cd077ead3, type: 3}
-    _holdPrefab: {fileID: -1344721013972580664, guid: 0be61d4d42f4647469d510dfabf776b3, type: 3}
     _yOffsetLocal: 1
   - _laneName: Ground2
     _noteType: 0
@@ -2605,7 +2591,6 @@ MonoBehaviour:
     _noteParent: {fileID: 2040830743}
     _judge: {fileID: 1234262241}
     _tapPrefab: {fileID: -356125614831666881, guid: 50cdd462fe53c1544856849cd077ead3, type: 3}
-    _holdPrefab: {fileID: -1344721013972580664, guid: 0be61d4d42f4647469d510dfabf776b3, type: 3}
     _yOffsetLocal: 1
   - _laneName: Ground3
     _noteType: 0
@@ -2615,7 +2600,6 @@ MonoBehaviour:
     _noteParent: {fileID: 2107445982}
     _judge: {fileID: 1479421250}
     _tapPrefab: {fileID: -356125614831666881, guid: 50cdd462fe53c1544856849cd077ead3, type: 3}
-    _holdPrefab: {fileID: -1344721013972580664, guid: 0be61d4d42f4647469d510dfabf776b3, type: 3}
     _yOffsetLocal: 1
   - _laneName: Ground4
     _noteType: 0
@@ -2625,7 +2609,6 @@ MonoBehaviour:
     _noteParent: {fileID: 242266617}
     _judge: {fileID: 1677809519}
     _tapPrefab: {fileID: -356125614831666881, guid: 50cdd462fe53c1544856849cd077ead3, type: 3}
-    _holdPrefab: {fileID: -1344721013972580664, guid: 0be61d4d42f4647469d510dfabf776b3, type: 3}
     _yOffsetLocal: 1
   - _laneName: Upper1
     _noteType: 1
@@ -2635,7 +2618,6 @@ MonoBehaviour:
     _noteParent: {fileID: 1719964236}
     _judge: {fileID: 1653326922}
     _tapPrefab: {fileID: 9015790616304044342, guid: 1fe615d7e15ae534ab718c41ff8abb9b, type: 3}
-    _holdPrefab: {fileID: 899932709157541386, guid: 7537e552b47ad574586741a4f6006b09, type: 3}
     _yOffsetLocal: 0
   - _laneName: Upper2
     _noteType: 1
@@ -2645,7 +2627,6 @@ MonoBehaviour:
     _noteParent: {fileID: 645967339}
     _judge: {fileID: 1300446905}
     _tapPrefab: {fileID: 9015790616304044342, guid: 1fe615d7e15ae534ab718c41ff8abb9b, type: 3}
-    _holdPrefab: {fileID: 899932709157541386, guid: 7537e552b47ad574586741a4f6006b09, type: 3}
     _yOffsetLocal: 0
   - _laneName: Upper3
     _noteType: 1
@@ -2655,7 +2636,6 @@ MonoBehaviour:
     _noteParent: {fileID: 1310526128}
     _judge: {fileID: 17181889}
     _tapPrefab: {fileID: 9015790616304044342, guid: 1fe615d7e15ae534ab718c41ff8abb9b, type: 3}
-    _holdPrefab: {fileID: 899932709157541386, guid: 7537e552b47ad574586741a4f6006b09, type: 3}
     _yOffsetLocal: 0
   - _laneName: Upper4
     _noteType: 1
@@ -2665,18 +2645,15 @@ MonoBehaviour:
     _noteParent: {fileID: 1270147635}
     _judge: {fileID: 1031235101}
     _tapPrefab: {fileID: 9015790616304044342, guid: 1fe615d7e15ae534ab718c41ff8abb9b, type: 3}
-    _holdPrefab: {fileID: 899932709157541386, guid: 7537e552b47ad574586741a4f6006b09, type: 3}
     _yOffsetLocal: 0
-  _baseApproachTime: 2.5
-  _noteSpeed: 5
+  _bpm: 176
+  _approachBeats: 2
+  _hitBeatStep: 1
+  _startBeat: 2
   _autoSpawn: 1
-  _spawnInterval: 2.5
-  _spawnMode: 1
   _spawnRandomSingleLane: 1
   _avoidSameLaneTwice: 1
   _spawnGroundOnly: 0
-  _holdSeconds: 1
-  _preventHoldOverlapOnSameLane: 1
 --- !u!1 &1191700353
 GameObject:
   m_ObjectHideFlags: 0
@@ -2848,10 +2825,6 @@ MonoBehaviour:
   _palette: {fileID: 11400000, guid: fcdca554ccc5ee142a66efa1ea55f45a, type: 2}
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: a28b98217eb767846839462972610979, type: 3}
   _emptyDestroySec: 0.2
-  _holdLoopGroundPrefab: {fileID: 8163141537363357767, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
-  _holdLoopUpperPrefab: {fileID: 8163141537363357767, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
-  _holdLoopAnchor: {fileID: 1234262236}
-  _holdLoopStopDelaySec: 0.15
 --- !u!1 &1242119139
 GameObject:
   m_ObjectHideFlags: 0
@@ -3080,10 +3053,6 @@ MonoBehaviour:
   _palette: {fileID: 11400000, guid: fcdca554ccc5ee142a66efa1ea55f45a, type: 2}
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: 47e7700bbfea603418096236c0e2bb40, type: 3}
   _emptyDestroySec: 0.2
-  _holdLoopGroundPrefab: {fileID: 8163141537363357767, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
-  _holdLoopUpperPrefab: {fileID: 8163141537363357767, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
-  _holdLoopAnchor: {fileID: 1300446900}
-  _holdLoopStopDelaySec: 0.15
 --- !u!1 &1310526127
 GameObject:
   m_ObjectHideFlags: 0
@@ -3490,10 +3459,6 @@ MonoBehaviour:
   _palette: {fileID: 11400000, guid: fcdca554ccc5ee142a66efa1ea55f45a, type: 2}
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: a28b98217eb767846839462972610979, type: 3}
   _emptyDestroySec: 0.2
-  _holdLoopGroundPrefab: {fileID: 8163141537363357767, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
-  _holdLoopUpperPrefab: {fileID: 8163141537363357767, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
-  _holdLoopAnchor: {fileID: 1479421245}
-  _holdLoopStopDelaySec: 0.15
 --- !u!1 &1488290272
 GameObject:
   m_ObjectHideFlags: 0
@@ -3789,10 +3754,6 @@ MonoBehaviour:
   _palette: {fileID: 11400000, guid: fcdca554ccc5ee142a66efa1ea55f45a, type: 2}
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: 47e7700bbfea603418096236c0e2bb40, type: 3}
   _emptyDestroySec: 0.2
-  _holdLoopGroundPrefab: {fileID: 8163141537363357767, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
-  _holdLoopUpperPrefab: {fileID: 8163141537363357767, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
-  _holdLoopAnchor: {fileID: 1653326917}
-  _holdLoopStopDelaySec: 0.15
 --- !u!1 &1653508745
 GameObject:
   m_ObjectHideFlags: 0
@@ -4032,10 +3993,6 @@ MonoBehaviour:
   _palette: {fileID: 11400000, guid: fcdca554ccc5ee142a66efa1ea55f45a, type: 2}
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: a28b98217eb767846839462972610979, type: 3}
   _emptyDestroySec: 0.2
-  _holdLoopGroundPrefab: {fileID: 8163141537363357767, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
-  _holdLoopUpperPrefab: {fileID: 8163141537363357767, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
-  _holdLoopAnchor: {fileID: 1677809514}
-  _holdLoopStopDelaySec: 0.15
 --- !u!1 &1719964235
 GameObject:
   m_ObjectHideFlags: 0

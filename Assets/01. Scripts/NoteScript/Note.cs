@@ -8,8 +8,8 @@ public class Note : MonoBehaviour
 
     protected NoteSpawner.NoteType _noteType;
 
-    protected Transform _space;        // 보통 HitPoint(판정선)
-    protected Transform _rotateSource; // 보통 HitPoint(판정선)
+    protected Transform _space;
+    protected Transform _rotateSource;
 
     protected Vector3 _spawnLocal;
     protected Vector3 _hitLocal;
@@ -65,10 +65,8 @@ public class Note : MonoBehaviour
             _postTime = 0f;
         }
 
-        // 첫 위치 세팅
         transform.position = _space.TransformPoint(_spawnLocal);
 
-        // 첫 회전 세팅: 판정선 각도 유지
         if (_rotateSource != null)
             transform.rotation = _rotateSource.rotation;
     }
@@ -93,12 +91,11 @@ public class Note : MonoBehaviour
 
         transform.position = _space.TransformPoint(localPos);
 
-        // Upper/Ground 모두 동일: 판정선 각도 유지 (레일이 돌면 같이 돈다)
         if (_rotateSource != null)
             transform.rotation = _rotateSource.rotation;
     }
 
-    private void EvaluateLocal(float elapsed, out Vector3 localPos, out bool finished)
+    protected void EvaluateLocal(float elapsed, out Vector3 localPos, out bool finished)
     {
         finished = false;
 
@@ -106,6 +103,7 @@ public class Note : MonoBehaviour
         {
             float t = Mathf.Clamp01(elapsed / _travelTime);
             localPos = Vector3.Lerp(_spawnLocal, _hitLocal, t);
+            if (t >= 1f) finished = true;
             return;
         }
 
@@ -119,7 +117,7 @@ public class Note : MonoBehaviour
         float e2 = elapsed - _travelTime;
         float t2 = Mathf.Clamp01(e2 / Mathf.Max(0.0001f, _postTime));
         localPos = Vector3.Lerp(_hitLocal, _despawnLocal, t2);
-
         if (t2 >= 1f) finished = true;
     }
+
 }

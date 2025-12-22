@@ -11,18 +11,27 @@ public class LaneJudge : MonoBehaviour
 
     [Header("Timing (ms)")]
     [SerializeField] private float _userOffsetMs = 0f;
-    [SerializeField] private float _severanceMs = 45f;
-    [SerializeField] private float _cleanMs = 90f;
-    [SerializeField] private float _traceMs = 145f;
+    [SerializeField] private float _severanceMs = 35f;
+    [SerializeField] private float _cleanMs = 80f;
+    [SerializeField] private float _traceMs = 135f;
     [SerializeField] private float _fractureMs = 200f;
-    [SerializeField] private float _ruinMs = 500f;
+    [SerializeField] private float _ruinMs = 300f;
 
     [Header("FX")]
     [SerializeField] private HitFxPaletteSO _palette;
     [SerializeField] private GameObject _emptyHitPrefab;
     [SerializeField] private float _emptyDestroySec = 0.2f;
 
+    [Header("Hold Loop FX")]
+    [SerializeField] private GameObject _holdLoopGroundPrefab;
+    [SerializeField] private GameObject _holdLoopUpperPrefab;
+    [SerializeField] private Transform _holdLoopAnchor;
+    [SerializeField] private float _holdLoopStopDelaySec = 0.15f;
+
+    private GameObject _holdLoopInstance;
+
     private readonly List<Note> _tapNotes = new List<Note>(64);
+    private HoldNote _hold;
 
     public void SetLaneType(NoteSpawner.NoteType t) => _laneType = t;
 
@@ -32,18 +41,79 @@ public class LaneJudge : MonoBehaviour
         _tapNotes.Add(n);
     }
 
+    public bool RegisterHold(HoldNote h)
+    {
+        if (h == null) return false;
+        if (_hold != null) return false;
+        _hold = h;
+        return true;
+    }
+
     private void Update()
     {
         CleanupDeadTap();
         AutoMissTapNoInput();
 
+        AutoFailHoldNoInputOrLate();
+
         if (Input.GetKeyDown(_key))
             OnKeyDown();
+
+        if (Input.GetKeyUp(_key))
+            OnKeyUp();
+    }
+
+    private void AutoFailHoldNoInputOrLate()
+    {
+        if (_hold == null) return;
+        if (_hold.IsFailed) return;
+
+        if (!_hold.IsActive)
+        {
+            double rawHeadLateMs = (AudioSettings.dspTime - _hold.HeadDspTime) * 1000.0 + _userOffsetMs;
+            if (rawHeadLateMs > _ruinMs)
+            {
+                _hold.Fail();
+                StopHoldLoopFx();
+            }
+            return;
+        }
+
+        if (!Input.GetKey(_key))
+        {
+            _hold.Fail();
+            StopHoldLoopFx();
+            return;
+        }
+
+        double rawTailLateMs = (AudioSettings.dspTime - _hold.TailDspTime) * 1000.0 + _userOffsetMs;
+        if (rawTailLateMs > _ruinMs)
+        {
+            _hold.Fail();
+            StopHoldLoopFx();
+        }
     }
 
     private void OnKeyDown()
     {
+        if (_hold != null && !_hold.IsActive && !_hold.IsFailed)
+        {
+            JudgeHoldHead();
+            return;
+        }
+
         JudgeTap();
+    }
+
+    private void OnKeyUp()
+    {
+        if (_hold != null && _hold.IsActive && !_hold.IsFailed)
+        {
+            JudgeHoldTail();
+            return;
+        }
+
+        SpawnEmptyHit();
     }
 
     private void JudgeTap()
@@ -57,7 +127,6 @@ public class LaneJudge : MonoBehaviour
 
         double rawMs = (AudioSettings.dspTime - target.ExpectedHitDspTime) * 1000.0 + _userOffsetMs;
 
-        // ¼¦°Ç¹æÁö
         if (rawMs < -_ruinMs)
         {
             SpawnEmptyHit();
@@ -72,6 +141,87 @@ public class LaneJudge : MonoBehaviour
             SpawnHitFx(judge);
 
         Destroy(target.gameObject);
+    }
+
+    private void JudgeHoldHead()
+    {
+        double rawMs = (AudioSettings.dspTime - _hold.HeadDspTime) * 1000.0 + _userOffsetMs;
+
+        if (rawMs < -_ruinMs)
+        {
+            SpawnEmptyHit();
+            return;
+        }
+
+        JudgeType judge = JudgeFromRawMs(rawMs);
+
+        if (judge == JudgeType.Miss)
+        {
+            _hold.Fail();
+            StopHoldLoopFx();
+            return;
+        }
+
+        SpawnHitFx(judge);
+        _hold.StartHold();
+        StartHoldLoopFx();
+    }
+
+    private void JudgeHoldTail()
+    {
+        double rawMs = (AudioSettings.dspTime - _hold.TailDspTime) * 1000.0 + _userOffsetMs;
+
+        if (rawMs < -_ruinMs)
+        {
+            _hold.Fail();
+            StopHoldLoopFx();
+            return;
+        }
+
+        JudgeType judge = JudgeFromRawMs(rawMs);
+
+        if (judge == JudgeType.Miss)
+        {
+            _hold.Fail();
+            StopHoldLoopFx();
+            return;
+        }
+
+        SpawnHitFx(judge);
+        StopHoldLoopFx();
+        _hold.SuccessAndDestroy();
+        _hold = null;
+    }
+
+    private void StartHoldLoopFx()
+    {
+        if (_holdLoopInstance != null) return;
+
+        GameObject prefab = null;
+        if (_laneType == NoteSpawner.NoteType.Ground) prefab = _holdLoopGroundPrefab;
+        if (_laneType == NoteSpawner.NoteType.Upper) prefab = _holdLoopUpperPrefab;
+        if (prefab == null) return;
+
+        Transform anchor = _holdLoopAnchor != null ? _holdLoopAnchor : transform;
+
+        _holdLoopInstance = Instantiate(prefab, anchor.position, anchor.rotation);
+        _holdLoopInstance.transform.SetParent(anchor, true);
+    }
+
+    private void StopHoldLoopFx()
+    {
+        if (_holdLoopInstance == null) return;
+
+        var pss = _holdLoopInstance.GetComponentsInChildren<ParticleSystem>(true);
+        for (int i = 0; i < pss.Length; i++)
+        {
+            var ps = pss[i];
+            if (ps == null) continue;
+            ps.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+        }
+
+        Destroy(_holdLoopInstance, Mathf.Max(0f, _holdLoopStopDelaySec));
+        _holdLoopInstance = null;
     }
 
     private JudgeType JudgeFromRawMs(double rawMs)
@@ -99,7 +249,6 @@ public class LaneJudge : MonoBehaviour
 
         if (ok)
         {
-            //Renderer MPB
             var renderers = fx.GetComponentsInChildren<Renderer>(true);
             for (int i = 0; i < renderers.Length; i++)
             {
@@ -118,11 +267,10 @@ public class LaneJudge : MonoBehaviour
                 r.SetPropertyBlock(mpb);
             }
 
-            //ParticleSystem Main.startColor
-            var pss = fx.GetComponentsInChildren<ParticleSystem>(true);
-            for (int i = 0; i < pss.Length; i++)
+            var pss2 = fx.GetComponentsInChildren<ParticleSystem>(true);
+            for (int i = 0; i < pss2.Length; i++)
             {
-                var ps = pss[i];
+                var ps = pss2[i];
                 if (ps == null) continue;
 
                 var main = ps.main;
@@ -193,6 +341,11 @@ public class LaneJudge : MonoBehaviour
         for (int i = _tapNotes.Count - 1; i >= 0; i--)
         {
             if (_tapNotes[i] == null) _tapNotes.RemoveAt(i);
+        }
+
+        if (_holdLoopInstance != null && _hold == null)
+        {
+            StopHoldLoopFx();
         }
     }
 }
