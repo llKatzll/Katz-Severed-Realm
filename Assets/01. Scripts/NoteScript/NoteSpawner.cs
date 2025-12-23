@@ -3,12 +3,8 @@ using UnityEngine;
 
 public class NoteSpawner : MonoBehaviour
 {
-    [Header("Prefabs")]
-    [SerializeField] private Note _defaultTapPrefab;
-    [SerializeField] private HoldNote _defaultHoldPrefab;
-
     public enum NoteType { Ground, Upper }
-    public enum SpawnMode { TapOnly, HoldOnly, Mixed }
+    public enum SpawnForm { Tap, Hold, Mixed }
 
     [System.Serializable]
     public class NoteLane
@@ -29,193 +25,226 @@ public class NoteSpawner : MonoBehaviour
         public float _yOffsetLocal;
     }
 
+    [SerializeField] private RhythmConductor _conductor;
+
+    [SerializeField] private Note _defaultTapPrefab;
+    [SerializeField] private HoldNote _defaultHoldPrefab;
+
     [SerializeField] private NoteLane[] _lanes;
 
-    [Header("Timing")]
-    [SerializeField] private float _baseApproachTime = 2.5f;
-    [SerializeField] private float _noteSpeed = 5f;
-    private float CurrentApproachTime => _baseApproachTime / Mathf.Max(0.0001f, _noteSpeed);
+    [Header("Approach")]
+    [SerializeField] private float _baseApproachBeats = 4f;
+    [SerializeField] private float _noteSpeedMul = 5f;
+    private float ApproachBeats => Mathf.Max(0.0001f, _baseApproachBeats / Mathf.Max(0.0001f, _noteSpeedMul));
 
-    [Header("Auto Spawn")]
+    [Header("Auto Spawn Test")]
     [SerializeField] private bool _autoSpawn = true;
-    [SerializeField] private float _spawnInterval = 0.15f;
-    private float _timer;
+    [SerializeField] private float _spawnIntervalBeats = 0.25f;
 
     [Header("Spawn Mode")]
-    [SerializeField] private SpawnMode _spawnMode = SpawnMode.TapOnly;
     [SerializeField] private bool _spawnRandomSingleLane = true;
     [SerializeField] private bool _avoidSameLaneTwice = true;
 
-    [Header("Lane Filter")]
-    [SerializeField] private bool _spawnGroundOnly = false;
+    [Header("Form")]
+    [SerializeField] private SpawnForm _spawnForm = SpawnForm.Mixed;
 
-    [Header("Hold Config")]
-    [SerializeField] private float _holdSeconds = 1.0f;
+    [Header("Hold")]
     [SerializeField] private bool _preventHoldOverlapOnSameLane = true;
+    [SerializeField] private float _holdBeats = 1f;
 
+    private double _nextHitBeat;
+    private bool _primed;
     private int _lastPickedLaneIndex = -1;
 
-    private readonly Dictionary<int, HoldNote> _aliveHoldByLane = new Dictionary<int, HoldNote>(32);
+    private readonly Dictionary<int, HoldNote> _aliveHoldByLane = new Dictionary<int, HoldNote>(16);
+
+    private void OnValidate()
+    {
+        if (_spawnIntervalBeats <= 0f) _spawnIntervalBeats = 0.0001f;
+        if (_noteSpeedMul <= 0f) _noteSpeedMul = 0.0001f;
+        if (_baseApproachBeats <= 0f) _baseApproachBeats = 0.0001f;
+        if (_holdBeats < 0f) _holdBeats = 0f;
+    }
+
+    private void Start()
+    {
+        PrimeNextBeat();
+    }
+
+    private void OnEnable()
+    {
+        _primed = false;
+        PrimeNextBeat();
+    }
+
+    private void PrimeNextBeat()
+    {
+        if (_primed) return;
+        if (_conductor == null) return;
+
+        _nextHitBeat = _conductor.CurrentBeat + ApproachBeats;
+        _primed = true;
+    }
+
+    private void CleanupHoldDict()
+    {
+        List<int> deadKeys = null;
+
+        foreach (var kv in _aliveHoldByLane)
+        {
+            if (kv.Value == null)
+            {
+                if (deadKeys == null) deadKeys = new List<int>(8);
+                deadKeys.Add(kv.Key);
+            }
+        }
+
+        if (deadKeys != null)
+        {
+            for (int i = 0; i < deadKeys.Count; i++)
+                _aliveHoldByLane.Remove(deadKeys[i]);
+        }
+    }
 
     private void Update()
     {
-        CleanupHoldLocks();
+        CleanupHoldDict();
 
         if (!_autoSpawn) return;
+        if (_conductor == null) return;
+        if (_lanes == null || _lanes.Length == 0) return;
 
-        _timer += Time.deltaTime;
-        if (_timer < _spawnInterval) return;
-        _timer -= _spawnInterval;
+        PrimeNextBeat();
 
+        double nowBeat = _conductor.CurrentBeat;
+        double interval = Mathf.Max(0.0001f, _spawnIntervalBeats);
+
+        int safety = 0;
+        while (nowBeat >= (_nextHitBeat - ApproachBeats))
+        {
+            SpawnOneAtBeat(_nextHitBeat);
+            _nextHitBeat += interval;
+
+            safety++;
+            if (safety > 256) break;
+        }
+    }
+
+    private void SpawnOneAtBeat(double hitBeat)
+    {
+        int laneIndex = PickLaneIndex();
+        if (laneIndex < 0) return;
+
+        var lane = _lanes[laneIndex];
+        if (lane == null) return;
+        if (lane._spawnPoint == null || lane._hitPoint == null || lane._despawnPoint == null) return;
+
+        double headHitDsp = _conductor.DspTimeAtBeat(hitBeat);
+        float travelSec = (float)(ApproachBeats * _conductor.SecPerBeat);
+
+        if (_spawnForm == SpawnForm.Tap)
+        {
+            SpawnTapAtBeat(laneIndex, lane, travelSec, headHitDsp);
+            return;
+        }
+
+        if (_spawnForm == SpawnForm.Hold)
+        {
+            SpawnHoldAtBeat(laneIndex, lane, travelSec, headHitDsp);
+            return;
+        }
+
+        if (Random.value < 0.5f) SpawnTapAtBeat(laneIndex, lane, travelSec, headHitDsp);
+        else SpawnHoldAtBeat(laneIndex, lane, travelSec, headHitDsp);
+    }
+
+    private int PickLaneIndex()
+    {
         if (_spawnRandomSingleLane)
-            SpawnRandomSingle();
-    }
-
-    private void CleanupHoldLocks()
-    {
-        if (_aliveHoldByLane.Count == 0) return;
-
-        var keys = new List<int>(_aliveHoldByLane.Keys);
-        for (int i = 0; i < keys.Count; i++)
         {
-            int laneIndex = keys[i];
-            HoldNote h = _aliveHoldByLane[laneIndex];
-            if (h == null)
-                _aliveHoldByLane.Remove(laneIndex);
-        }
-    }
+            int pick = Random.Range(0, _lanes.Length);
 
-    private void SpawnRandomSingle()
-    {
-        List<int> candidates = BuildCandidateLaneIndices();
-        if (candidates.Count == 0) return;
-
-        int pick = PickIndex(candidates);
-
-        if (_avoidSameLaneTwice && candidates.Count >= 2 && pick == _lastPickedLaneIndex)
-        {
-            int retry = PickIndex(candidates);
-            if (retry != pick) pick = retry;
-        }
-
-        _lastPickedLaneIndex = pick;
-        SpawnOnLane(pick, _lanes[pick]);
-    }
-
-    private List<int> BuildCandidateLaneIndices()
-    {
-        var list = new List<int>(16);
-
-        for (int i = 0; i < _lanes.Length; i++)
-        {
-            var lane = _lanes[i];
-            if (lane == null) continue;
-
-            if (lane._spawnPoint == null || lane._hitPoint == null || lane._despawnPoint == null)
-                continue;
-
-            if (_spawnGroundOnly && lane._noteType != NoteType.Ground)
-                continue;
-
-            if (_spawnMode == SpawnMode.HoldOnly && _preventHoldOverlapOnSameLane)
+            if (_avoidSameLaneTwice && _lanes.Length >= 2 && pick == _lastPickedLaneIndex)
             {
-                if (_aliveHoldByLane.ContainsKey(i))
-                    continue;
+                int retry = Random.Range(0, _lanes.Length);
+                if (retry != pick) pick = retry;
             }
 
-            list.Add(i);
+            _lastPickedLaneIndex = pick;
+            return pick;
         }
 
-        return list;
+        return 0;
     }
 
-    private int PickIndex(List<int> candidates)
+    private LaneJudge GetJudge(NoteLane lane)
     {
-        int r = Random.Range(0, candidates.Count);
-        return candidates[r];
-    }
-
-    private void SpawnOnLane(int laneIndex, NoteLane lane)
-    {
-        float travelTime = CurrentApproachTime;
-
-        Transform parent = lane._noteParent;
-
         LaneJudge judge = lane._judge != null ? lane._judge : lane._hitPoint.GetComponent<LaneJudge>();
         if (judge != null) judge.SetLaneType(lane._noteType);
-
-        if (_spawnMode == SpawnMode.TapOnly)
-        {
-            SpawnTap(lane, parent, judge, travelTime);
-            return;
-        }
-
-        if (_spawnMode == SpawnMode.HoldOnly)
-        {
-            SpawnHold(laneIndex, lane, parent, judge, travelTime);
-            return;
-        }
-
-        if (Random.value < 0.5f)
-            SpawnTap(lane, parent, judge, travelTime);
-        else
-            SpawnHold(laneIndex, lane, parent, judge, travelTime);
+        return judge;
     }
 
-    private void SpawnTap(NoteLane lane, Transform parent, LaneJudge judge, float travelTime)
+    private void SpawnTapAtBeat(int laneIndex, NoteLane lane, float travelSec, double hitDsp)
     {
         Note prefab = lane._tapPrefab != null ? lane._tapPrefab : _defaultTapPrefab;
         if (prefab == null) return;
 
-        Note note = Instantiate(prefab);
+        var judge = GetJudge(lane);
 
+        Note note = Instantiate(prefab);
         note.InitFollow(
             lane._hitPoint,
             lane._spawnPoint,
             lane._hitPoint,
             lane._despawnPoint,
-            travelTime,
+            travelSec,
             lane._noteType,
             lane._yOffsetLocal
         );
 
-        if (parent != null) note.transform.SetParent(parent, true);
+        if (lane._noteParent != null) note.transform.SetParent(lane._noteParent, true);
+
+        note.SetExpectedHitDspTime(hitDsp);
 
         if (judge != null) judge.RegisterTap(note);
     }
 
-    private void SpawnHold(int laneIndex, NoteLane lane, Transform parent, LaneJudge judge, float travelTime)
+    private void SpawnHoldAtBeat(int laneIndex, NoteLane lane, float travelSec, double headHitDsp)
     {
-        if (_preventHoldOverlapOnSameLane && _aliveHoldByLane.ContainsKey(laneIndex))
-            return;
+        if (_preventHoldOverlapOnSameLane)
+        {
+            if (_aliveHoldByLane.ContainsKey(laneIndex) && _aliveHoldByLane[laneIndex] != null)
+                return;
+        }
 
         HoldNote prefab = lane._holdPrefab != null ? lane._holdPrefab : _defaultHoldPrefab;
         if (prefab == null) return;
 
-        HoldNote hold = Instantiate(prefab);
+        var judge = GetJudge(lane);
 
+        HoldNote hold = Instantiate(prefab);
         hold.InitFollow(
             lane._hitPoint,
             lane._spawnPoint,
             lane._hitPoint,
             lane._despawnPoint,
-            travelTime,
+            travelSec,
             lane._noteType,
             lane._yOffsetLocal
         );
 
-        if (parent != null) hold.transform.SetParent(parent, true);
+        if (lane._noteParent != null) hold.transform.SetParent(lane._noteParent, true);
 
-        hold.SetupHoldSeconds(_holdSeconds);
+        hold.SetExpectedHitDspTime(headHitDsp);
+        hold.SetupHoldBeats(_holdBeats, _conductor.SecPerBeat);
 
-        bool registered = true;
         if (judge != null)
-            registered = judge.RegisterHold(hold);
-
-        if (!registered)
         {
-            Destroy(hold.gameObject);
-            return;
+            if (!judge.RegisterHold(hold))
+            {
+                Destroy(hold.gameObject);
+                return;
+            }
         }
 
         _aliveHoldByLane[laneIndex] = hold;

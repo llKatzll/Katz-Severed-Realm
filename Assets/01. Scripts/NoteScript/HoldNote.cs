@@ -2,131 +2,91 @@ using UnityEngine;
 
 public class HoldNote : Note
 {
-    [Header("Parts")]
     [SerializeField] private Transform _head;
     [SerializeField] private Transform _body;
     [SerializeField] private Transform _tail;
     [SerializeField] private Transform _bodyExtra;
 
-    [Header("Hold")]
-    [SerializeField] private float _holdSeconds = 0.2f;
+    private double _holdBeats;
+    private double _secPerBeat;
 
-    public double HeadDspTime { get; private set; }
-    public double TailDspTime { get; private set; }
-
-    public bool IsActive { get; private set; }
-    public bool IsFailed { get; private set; }
-
+    private float _holdLenZ;
     private Vector3 _bodyBaseScale;
     private Vector3 _bodyExtraBaseScale;
 
+    private float _headMeshLenZ = 0.1f;
+    private float _tailMeshLenZ = 0.1f;
+
+    private bool _built;
+
     private void Awake()
     {
-        if (!Application.isPlaying) return;
-
-        IsActive = false;
-        IsFailed = false;
-
         if (_body != null) _bodyBaseScale = _body.localScale;
         if (_bodyExtra != null) _bodyExtraBaseScale = _bodyExtra.localScale;
+
+        _headMeshLenZ = GetMeshLenZ(_head);
+        _tailMeshLenZ = GetMeshLenZ(_tail);
     }
 
-    public void SetupHoldSeconds(float holdSeconds)
+    private float GetMeshLenZ(Transform t)
     {
-        if (!Application.isPlaying) return;
-
-        _holdSeconds = Mathf.Max(0f, holdSeconds);
-
-        HeadDspTime = ExpectedHitDspTime;
-        TailDspTime = HeadDspTime + _holdSeconds;
-
-        // first build apply once
-        ApplyBodyTransformFromTime();
+        if (t == null) return 0.1f;
+        var mf = t.GetComponent<MeshFilter>();
+        if (mf == null || mf.sharedMesh == null) return 0.1f;
+        return Mathf.Max(0.0001f, mf.sharedMesh.bounds.size.z);
     }
 
-    public void StartHold()
+    public void SetupHoldBeats(double holdBeats, double secPerBeat)
     {
-        if (!Application.isPlaying) return;
-        if (IsFailed) return;
-        IsActive = true;
-    }
+        _holdBeats = holdBeats < 0.0 ? 0.0 : holdBeats;
+        _secPerBeat = secPerBeat <= 0.0 ? (60.0 / 120.0) : secPerBeat;
 
-    public void Fail()
-    {
-        if (!Application.isPlaying) return;
-        if (IsFailed) return;
+        double holdSec = _holdBeats * _secPerBeat;
 
-        IsFailed = true;
-        IsActive = false;
-    }
+        float speedZ = GetSpeedLocalZ();
+        _holdLenZ = speedZ * (float)holdSec;
 
-    public void SuccessAndDestroy()
-    {
-        if (!Application.isPlaying) return;
-        Destroy(gameObject);
+        _built = true;
+        ApplyBodyTransform();
     }
 
     protected override void Update()
     {
-        if (!Application.isPlaying) return;
-
-        _elapsed += Time.deltaTime;
         if (_space == null) return;
 
-        Vector3 headLocalPos;
+        float headElapsed = (float)(AudioSettings.dspTime - _spawnDspTime);
+        if (headElapsed < 0f) headElapsed = 0f;
+
+        Vector3 headLocal;
         bool headFinished;
-        EvaluateLocal(_elapsed, out headLocalPos, out headFinished);
+        EvaluateLocal(headElapsed, out headLocal, out headFinished);
 
-        float tailElapsed = _elapsed - _holdSeconds;
-
-        if (tailElapsed < 0f) tailElapsed = 0f;
-
-        Vector3 tailLocalPos;
-        bool tailFinished;
-        EvaluateLocal(tailElapsed, out tailLocalPos, out tailFinished);
-
-        if (_useDespawn)
-        {
-            float tailEnd = _travelTime + _postTime;
-            if (tailElapsed >= tailEnd)
-            {
-                Destroy(gameObject);
-                return;
-            }
-        }
-
-        // apply y offset
-        headLocalPos += Vector3.up * _yOffsetLocal;
-
-        transform.position = _space.TransformPoint(headLocalPos);
+        headLocal.y += _yOffsetLocal;
+        transform.position = _space.TransformPoint(headLocal);
 
         if (_rotateSource != null)
             transform.rotation = _rotateSource.rotation;
 
-        ApplyBodyTransform(headLocalPos, tailLocalPos);
-    }
+        if (_built) ApplyBodyTransform();
 
-    private void ApplyBodyTransformFromTime()
-    {
-        if (_space == null) return;
+        double holdSec = _holdBeats * _secPerBeat;
+        float tailElapsed = headElapsed - (float)holdSec;
+        if (tailElapsed < 0f) return;
 
-        Vector3 headLocalPos;
-        bool headFinished;
-        EvaluateLocal(_elapsed, out headLocalPos, out headFinished);
-
-        float tailElapsed = _elapsed - _holdSeconds;
-        if (tailElapsed < 0f) tailElapsed = 0f;
-
-        Vector3 tailLocalPos;
+        Vector3 tailLocal;
         bool tailFinished;
-        EvaluateLocal(tailElapsed, out tailLocalPos, out tailFinished);
+        EvaluateLocal(tailElapsed, out tailLocal, out tailFinished);
 
-        ApplyBodyTransform(headLocalPos, tailLocalPos);
+        if (tailFinished) Destroy(gameObject);
     }
 
-    private void ApplyBodyTransform(Vector3 headLocalPos, Vector3 tailLocalPos)
+    private void ApplyBodyTransform()
     {
-        Vector3 tailOffsetLocal = (tailLocalPos - headLocalPos);
+        float moveDir = Mathf.Sign(_hitZ - _spawnZ);
+        if (moveDir == 0f) moveDir = 1f;
+
+        float dirToTail = -moveDir;
+        float tailZ = dirToTail * _holdLenZ;
 
         if (_head != null)
         {
@@ -136,31 +96,37 @@ public class HoldNote : Note
 
         if (_tail != null)
         {
-            _tail.localPosition = tailOffsetLocal;
+            _tail.localPosition = new Vector3(0f, 0f, tailZ);
             _tail.localRotation = Quaternion.identity;
         }
 
-        float len = tailOffsetLocal.magnitude;
-        if (len < 0.0001f) len = 0.0001f;
+        float headHalf = _headMeshLenZ * 0.5f;
+        float tailHalf = _tailMeshLenZ * 0.5f;
 
-        Vector3 mid = tailOffsetLocal * 0.5f;
+        float headInnerZ = dirToTail * headHalf;
+        float tailInnerZ = tailZ - dirToTail * tailHalf;
+
+        float bodyLen = Mathf.Abs(tailInnerZ - headInnerZ);
+        float bodyCenterZ = (headInnerZ + tailInnerZ) * 0.5f;
 
         if (_body != null)
         {
-            _body.localPosition = mid;
+            _body.localPosition = new Vector3(0f, 0f, bodyCenterZ);
 
-            Vector3 s = _bodyBaseScale;
-            s.z = len;
-            _body.localScale = s;
+            float meshLenZ = Mathf.Max(0.0001f, GetMeshLenZ(_body));
+            Vector3 sc = _bodyBaseScale;
+            sc.z = Mathf.Max(0.0001f, bodyLen / meshLenZ);
+            _body.localScale = sc;
         }
 
         if (_bodyExtra != null)
         {
-            _bodyExtra.localPosition = mid;
+            _bodyExtra.localPosition = new Vector3(0f, 0f, bodyCenterZ);
 
-            Vector3 s = _bodyExtraBaseScale;
-            s.z = len;
-            _bodyExtra.localScale = s;
+            float meshLenZ = Mathf.Max(0.0001f, GetMeshLenZ(_bodyExtra));
+            Vector3 sc = _bodyExtraBaseScale;
+            sc.z = Mathf.Max(0.0001f, bodyLen / meshLenZ);
+            _bodyExtra.localScale = sc;
         }
     }
 }
