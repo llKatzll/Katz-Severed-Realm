@@ -52,7 +52,6 @@ MonoBehaviour:
   _body: {fileID: 4361621171164021535}
   _tail: {fileID: 6778724136075830273}
   _bodyExtra: {fileID: 8431468545255302235}
-  _holdSeconds: 0.1
 --- !u!1 &2921881011937180933
 GameObject:
   m_ObjectHideFlags: 0
@@ -65,7 +64,6 @@ GameObject:
   - component: {fileID: 950278848574571621}
   - component: {fileID: 4534421913274098116}
   - component: {fileID: 2864854033214669025}
-  - component: {fileID: 6170451107105455847}
   - component: {fileID: 5879147132767040496}
   m_Layer: 0
   m_Name: U_LN_E
@@ -166,18 +164,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.8, y: 1.5, z: 2}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &6170451107105455847
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2921881011937180933}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1a7459686e75a7438a0dcfba86a8afd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Note
 --- !u!54 &5879147132767040496
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -217,7 +203,6 @@ GameObject:
   - component: {fileID: 8274748845325400265}
   - component: {fileID: 4291021839775444789}
   - component: {fileID: 4596608888073842606}
-  - component: {fileID: 6122374221361233094}
   - component: {fileID: 5396163859189298845}
   m_Layer: 0
   m_Name: U_LN_M1
@@ -318,18 +303,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.8, y: 1.5, z: 1.25}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &6122374221361233094
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3224251750444848099}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1a7459686e75a7438a0dcfba86a8afd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Note
 --- !u!54 &5396163859189298845
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -369,7 +342,6 @@ GameObject:
   - component: {fileID: 4639557477693397825}
   - component: {fileID: 4349487402919862227}
   - component: {fileID: 5660960328068229615}
-  - component: {fileID: 4416896062575909484}
   - component: {fileID: 233234798706644681}
   m_Layer: 0
   m_Name: U_LN_S
@@ -470,18 +442,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.8, y: 1.5, z: 2}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4416896062575909484
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4268465630310712376}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1a7459686e75a7438a0dcfba86a8afd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Note
 --- !u!54 &233234798706644681
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -521,7 +481,6 @@ GameObject:
   - component: {fileID: 9117585288854945289}
   - component: {fileID: 4529037200325543018}
   - component: {fileID: 4901302497262986456}
-  - component: {fileID: 4779637116455567062}
   - component: {fileID: 2493168552472354233}
   m_Layer: 0
   m_Name: U_LN_M2
@@ -622,18 +581,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.8, y: 1.5, z: 1.25}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4779637116455567062
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8397980980798866926}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1a7459686e75a7438a0dcfba86a8afd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Note
 --- !u!54 &2493168552472354233
 Rigidbody:
   m_ObjectHideFlags: 0

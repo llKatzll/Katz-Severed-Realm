@@ -10,12 +10,13 @@ public class Note : MonoBehaviour
     protected Transform _space;
     protected Transform _rotateSource;
 
+    protected Vector3 _spawnLocal;
+    protected Vector3 _hitLocal;
+    protected Vector3 _despawnLocal;
+
     protected float _spawnZ;
     protected float _hitZ;
     protected float _despawnZ;
-
-    protected float _fixedX;
-    protected float _fixedY;
 
     protected bool _useDespawn;
     protected float _postTime;
@@ -45,36 +46,40 @@ public class Note : MonoBehaviour
 
         _yOffsetLocal = yOffsetLocal;
 
-        Vector3 spawnLocal = _space.InverseTransformPoint(spawnPoint.position);
-        Vector3 hitLocal = _space.InverseTransformPoint(hitPoint.position);
+        _spawnLocal = _space.InverseTransformPoint(spawnPoint.position);
+        _hitLocal = _space.InverseTransformPoint(hitPoint.position);
 
-        _fixedX = hitLocal.x;
-        _fixedY = hitLocal.y;
+        if (_useDespawn) _despawnLocal = _space.InverseTransformPoint(despawnPoint.position);
+        else _despawnLocal = _hitLocal;
 
-        _spawnZ = spawnLocal.z;
-        _hitZ = hitLocal.z;
+        // Force movement axis to local Z (keep x,y constant)
+        _spawnLocal.x = _hitLocal.x;
+        _spawnLocal.y = _hitLocal.y;
+        _despawnLocal.x = _hitLocal.x;
+        _despawnLocal.y = _hitLocal.y;
+
+        _spawnZ = _spawnLocal.z;
+        _hitZ = _hitLocal.z;
+        _despawnZ = _despawnLocal.z;
 
         if (_useDespawn)
         {
-            Vector3 despawnLocal = _space.InverseTransformPoint(despawnPoint.position);
-            _despawnZ = despawnLocal.z;
-
             float distA = Mathf.Abs(_spawnZ - _hitZ);
-            float speed = distA / _travelTime;
+            float speedZ = distA / Mathf.Max(0.0001f, _travelTime);
 
             float distB = Mathf.Abs(_hitZ - _despawnZ);
-            _postTime = distB / Mathf.Max(0.0001f, speed);
+            _postTime = distB / Mathf.Max(0.0001f, speedZ);
         }
         else
         {
-            _despawnZ = _hitZ;
             _postTime = 0f;
         }
 
         _spawnDspTime = AudioSettings.dspTime;
         ExpectedHitDspTime = _spawnDspTime + _travelTime;
 
-        Vector3 local0 = new Vector3(_fixedX, _fixedY + _yOffsetLocal, _spawnZ);
+        Vector3 local0 = _spawnLocal;
+        local0.y += _yOffsetLocal;
         transform.position = _space.TransformPoint(local0);
 
         if (_rotateSource != null)
@@ -119,7 +124,7 @@ public class Note : MonoBehaviour
         {
             float t = Mathf.Clamp01(elapsed / _travelTime);
             float z = Mathf.Lerp(_spawnZ, _hitZ, t);
-            localPos = new Vector3(_fixedX, _fixedY, z);
+            localPos = new Vector3(_hitLocal.x, _hitLocal.y, z);
             return;
         }
 
@@ -127,14 +132,14 @@ public class Note : MonoBehaviour
         {
             float t = Mathf.Clamp01(elapsed / _travelTime);
             float z = Mathf.Lerp(_spawnZ, _hitZ, t);
-            localPos = new Vector3(_fixedX, _fixedY, z);
+            localPos = new Vector3(_hitLocal.x, _hitLocal.y, z);
             return;
         }
 
         float e2 = elapsed - _travelTime;
         float t2 = Mathf.Clamp01(e2 / Mathf.Max(0.0001f, _postTime));
         float z2 = Mathf.Lerp(_hitZ, _despawnZ, t2);
-        localPos = new Vector3(_fixedX, _fixedY, z2);
+        localPos = new Vector3(_hitLocal.x, _hitLocal.y, z2);
 
         if (t2 >= 1f) finished = true;
     }

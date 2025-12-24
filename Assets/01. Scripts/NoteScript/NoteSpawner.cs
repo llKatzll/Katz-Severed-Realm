@@ -1,3 +1,7 @@
+// NoteSpawner.cs 수정본
+// 추가: GetLaneSpace()
+// 수정: SpawnTapAtBeat / SpawnHoldAtBeat 에서 InitFollow 첫 인자(space) 바꿈
+
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -92,7 +96,8 @@ public class NoteSpawner : MonoBehaviour
 
         foreach (var kv in _aliveHoldByLane)
         {
-            if (kv.Value == null)
+            HoldNote h = kv.Value;
+            if (h == null || h.IsFailed)
             {
                 if (deadKeys == null) deadKeys = new List<int>(8);
                 deadKeys.Add(kv.Key);
@@ -105,6 +110,7 @@ public class NoteSpawner : MonoBehaviour
                 _aliveHoldByLane.Remove(deadKeys[i]);
         }
     }
+
 
     private void Update()
     {
@@ -184,6 +190,13 @@ public class NoteSpawner : MonoBehaviour
         return judge;
     }
 
+    private Transform GetLaneSpace(NoteLane lane)
+    {
+        if (lane == null) return null;
+        return lane._hitPoint;
+    }
+
+
     private void SpawnTapAtBeat(int laneIndex, NoteLane lane, float travelSec, double hitDsp)
     {
         Note prefab = lane._tapPrefab != null ? lane._tapPrefab : _defaultTapPrefab;
@@ -192,8 +205,11 @@ public class NoteSpawner : MonoBehaviour
         var judge = GetJudge(lane);
 
         Note note = Instantiate(prefab);
+
+        Transform space = GetLaneSpace(lane);
+
         note.InitFollow(
-            lane._hitPoint,
+            space,
             lane._spawnPoint,
             lane._hitPoint,
             lane._despawnPoint,
@@ -223,8 +239,11 @@ public class NoteSpawner : MonoBehaviour
         var judge = GetJudge(lane);
 
         HoldNote hold = Instantiate(prefab);
+
+        Transform space = GetLaneSpace(lane);
+
         hold.InitFollow(
-            lane._hitPoint,
+            space,
             lane._spawnPoint,
             lane._hitPoint,
             lane._despawnPoint,

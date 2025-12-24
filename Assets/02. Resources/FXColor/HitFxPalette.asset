@@ -24,3 +24,5 @@ MonoBehaviour:
   upper_Trs: {r: 0, g: 1, b: 0.8078432, a: 1}
   upper_Frac: {r: 0.6196079, g: 0, b: 1, a: 1}
   upper_Ru: {r: 1, g: 0, b: 0, a: 1}
+  ground_HoldFail: {r: 1, g: 0, b: 0, a: 0}
+  upper_HoldFail: {r: 1, g: 0.009989638, b: 0, a: 0}

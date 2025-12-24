@@ -14,7 +14,7 @@ public class LaneJudge : MonoBehaviour
     [SerializeField] private float _severanceMs = 35f;
     [SerializeField] private float _cleanMs = 80f;
     [SerializeField] private float _traceMs = 120f;
-    [SerializeField] private float _fractureMs = 150f;
+    [SerializeField] private float _fractureMs = 155f;
     [SerializeField] private float _ruinMs = 200f;
 
     [Header("FX")]
@@ -98,15 +98,24 @@ public class LaneJudge : MonoBehaviour
 
         if (judge == JudgeType.Miss)
         {
-            _hold.Fail();
+            _hold.Fail(_palette, _laneType);
             StopHoldLoopFx();
+            _hold = null;
             return;
         }
+
 
         // head 성공
         SpawnHitFx(judge);
         _hold.StartHold();
-        StartHoldLoopFx();
+
+        Color c = Color.white;
+        if (_palette != null)
+        {
+            Color tmp;
+            if (_palette.TryGetColor(_laneType, judge, out tmp)) c = tmp;
+        }
+        StartHoldLoopFx(c);
     }
 
     private void TryFinishHoldByTail()
@@ -116,7 +125,7 @@ public class LaneJudge : MonoBehaviour
         // 너무 이른 키업은 실패(네 룰: tail 시점에 keyup)
         if (rawMs < -_ruinMs)
         {
-            _hold.Fail();
+            _hold.Fail(_palette, _laneType);
             StopHoldLoopFx();
             return;
         }
@@ -125,7 +134,7 @@ public class LaneJudge : MonoBehaviour
 
         if (judge == JudgeType.Miss)
         {
-            _hold.Fail();
+            _hold.Fail(_palette, _laneType);
             StopHoldLoopFx();
             return;
         }
@@ -150,7 +159,7 @@ public class LaneJudge : MonoBehaviour
             double rawHeadMs = (now - _hold.HeadDspTime) * 1000.0 + _userOffsetMs;
             if (rawHeadMs > _ruinMs)
             {
-                _hold.Fail();
+                _hold.Fail(_palette, _laneType);
                 StopHoldLoopFx();
             }
             return;
@@ -159,7 +168,7 @@ public class LaneJudge : MonoBehaviour
         // 활성 홀드 중에 키를 놓고 있으면 즉시 fail
         if (!Input.GetKey(_key))
         {
-            _hold.Fail();
+            _hold.Fail(_palette, _laneType);
             StopHoldLoopFx();
             return;
         }
@@ -168,7 +177,7 @@ public class LaneJudge : MonoBehaviour
         double rawTailMs = (now - _hold.TailDspTime) * 1000.0 + _userOffsetMs;
         if (rawTailMs > _ruinMs)
         {
-            _hold.Fail();
+            _hold.Fail(_palette, _laneType);
             StopHoldLoopFx();
         }
     }
@@ -218,7 +227,41 @@ public class LaneJudge : MonoBehaviour
         return JudgeType.Miss;
     }
 
-    private void StartHoldLoopFx()
+    private void ApplyFxColor(GameObject fx, Color c)
+    {
+        if (fx == null) return;
+
+        var renderers = fx.GetComponentsInChildren<Renderer>(true);
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            var r = renderers[i];
+            if (r == null) continue;
+
+            var mpb = new MaterialPropertyBlock();
+            r.GetPropertyBlock(mpb);
+
+            mpb.SetColor("_BaseColor", c);
+            mpb.SetColor("_Color", c);
+            mpb.SetColor("_TintColor", c);
+            mpb.SetColor("_EmissionColor", c);
+            mpb.SetColor("_StartColor", c);
+
+            r.SetPropertyBlock(mpb);
+        }
+
+        var pss = fx.GetComponentsInChildren<ParticleSystem>(true);
+        for (int i = 0; i < pss.Length; i++)
+        {
+            var ps = pss[i];
+            if (ps == null) continue;
+
+            var main = ps.main;
+            main.startColor = c;
+        }
+    }
+
+
+    private void StartHoldLoopFx(Color c)
     {
         if (_holdLoopFx != null) return;
 
@@ -229,6 +272,7 @@ public class LaneJudge : MonoBehaviour
         if (prefab == null) return;
 
         _holdLoopFx = Instantiate(prefab, transform.position, transform.rotation);
+        ApplyFxColor(_holdLoopFx, c);
     }
 
     private void StopHoldLoopFx()

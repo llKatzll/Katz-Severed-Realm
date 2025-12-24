@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 8966187339912851197}
   - component: {fileID: 1038964629886964767}
   - component: {fileID: 911124527039597121}
-  - component: {fileID: 4849736488262887102}
   - component: {fileID: 3931766114324521378}
   m_Layer: 0
   m_Name: G_LN_M
@@ -113,18 +112,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.8, y: 1.5, z: 1.25}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4849736488262887102
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1602829515965037964}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1a7459686e75a7438a0dcfba86a8afd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Note
 --- !u!54 &3931766114324521378
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -164,7 +151,6 @@ GameObject:
   - component: {fileID: 564477372545183251}
   - component: {fileID: 378612849798727483}
   - component: {fileID: 3438056757360386100}
-  - component: {fileID: 3568952913490207184}
   - component: {fileID: 1798187997587716126}
   m_Layer: 0
   m_Name: G_LN_E
@@ -265,18 +251,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.8, y: 1.5, z: 2}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3568952913490207184
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3933115375424780002}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1a7459686e75a7438a0dcfba86a8afd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Note
 --- !u!54 &1798187997587716126
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -355,7 +329,6 @@ MonoBehaviour:
   _body: {fileID: 3830387384161316300}
   _tail: {fileID: 6482017847433481294}
   _bodyExtra: {fileID: 0}
-  _holdSeconds: 1
 --- !u!1 &6969606791122936661
 GameObject:
   m_ObjectHideFlags: 0
@@ -368,7 +341,6 @@ GameObject:
   - component: {fileID: 656523559714994191}
   - component: {fileID: 4388355599999011452}
   - component: {fileID: 358861833183462079}
-  - component: {fileID: 1344082719430088286}
   - component: {fileID: 7170041960723525785}
   m_Layer: 0
   m_Name: G_LN_S
@@ -469,18 +441,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.8, y: 1.5, z: 2}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1344082719430088286
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6969606791122936661}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1a7459686e75a7438a0dcfba86a8afd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Note
 --- !u!54 &7170041960723525785
 Rigidbody:
   m_ObjectHideFlags: 0
