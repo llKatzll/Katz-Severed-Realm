@@ -1,7 +1,3 @@
-// NoteSpawner.cs 수정본
-// 추가: GetLaneSpace()
-// 수정: SpawnTapAtBeat / SpawnHoldAtBeat 에서 InitFollow 첫 인자(space) 바꿈
-
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -82,13 +78,14 @@ public class NoteSpawner : MonoBehaviour
     }
 
     private void PrimeNextBeat()
-    {
-        if (_primed) return;
-        if (_conductor == null) return;
+{
+    if (_primed) return;
+    if (_conductor == null) return;
+    if (!_conductor.Started) return;
 
-        _nextHitBeat = _conductor.CurrentBeat + ApproachBeats;
-        _primed = true;
-    }
+    _nextHitBeat = _conductor.CurrentBeat + ApproachBeats;
+    _primed = true;
+}
 
     private void CleanupHoldDict()
     {
@@ -96,8 +93,7 @@ public class NoteSpawner : MonoBehaviour
 
         foreach (var kv in _aliveHoldByLane)
         {
-            HoldNote h = kv.Value;
-            if (h == null || h.IsFailed)
+            if (kv.Value == null)
             {
                 if (deadKeys == null) deadKeys = new List<int>(8);
                 deadKeys.Add(kv.Key);
@@ -111,13 +107,13 @@ public class NoteSpawner : MonoBehaviour
         }
     }
 
-
     private void Update()
     {
         CleanupHoldDict();
 
         if (!_autoSpawn) return;
         if (_conductor == null) return;
+        if (!_conductor.Started) return;
         if (_lanes == null || _lanes.Length == 0) return;
 
         PrimeNextBeat();
@@ -190,13 +186,6 @@ public class NoteSpawner : MonoBehaviour
         return judge;
     }
 
-    private Transform GetLaneSpace(NoteLane lane)
-    {
-        if (lane == null) return null;
-        return lane._hitPoint;
-    }
-
-
     private void SpawnTapAtBeat(int laneIndex, NoteLane lane, float travelSec, double hitDsp)
     {
         Note prefab = lane._tapPrefab != null ? lane._tapPrefab : _defaultTapPrefab;
@@ -205,11 +194,8 @@ public class NoteSpawner : MonoBehaviour
         var judge = GetJudge(lane);
 
         Note note = Instantiate(prefab);
-
-        Transform space = GetLaneSpace(lane);
-
         note.InitFollow(
-            space,
+            lane._hitPoint,
             lane._spawnPoint,
             lane._hitPoint,
             lane._despawnPoint,
@@ -239,11 +225,8 @@ public class NoteSpawner : MonoBehaviour
         var judge = GetJudge(lane);
 
         HoldNote hold = Instantiate(prefab);
-
-        Transform space = GetLaneSpace(lane);
-
         hold.InitFollow(
-            space,
+            lane._hitPoint,
             lane._spawnPoint,
             lane._hitPoint,
             lane._despawnPoint,

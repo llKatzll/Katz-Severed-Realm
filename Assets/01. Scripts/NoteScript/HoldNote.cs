@@ -16,16 +16,13 @@ public class HoldNote : Note
     private double _holdBeats;
     private double _secPerBeat;
 
-    private float _holdLenZ;
+    private float _holdLen;
     private Vector3 _bodyBaseScale;
     private Vector3 _bodyExtraBaseScale;
 
     private bool _built;
 
-    private float _moveSignZ;
-    private float _speedZ;
     private float _speedLocal;
-
     private Vector3 _postDirLocal;
 
     private Renderer[] _renderers;
@@ -78,40 +75,27 @@ public class HoldNote : Note
         _holdBeats = holdBeats < 0.0 ? 0.0 : holdBeats;
         _secPerBeat = secPerBeat <= 0.0 ? (60.0 / 120.0) : secPerBeat;
 
-        _moveSignZ = Mathf.Sign(_hitZ - _spawnZ);
-        if (_moveSignZ == 0f) _moveSignZ = 1f;
-
-        _speedZ = GetSpeedLocalZ();
-
-        float distA = Vector3.Distance(_spawnLocal, _hitLocal);
-        _speedLocal = distA / Mathf.Max(0.0001f, _travelTime);
+        _speedLocal = GetSpeedLocal();
 
         if (_useDespawn)
         {
             Vector3 dir = (_despawnLocal - _hitLocal);
             if (dir.sqrMagnitude < 0.000001f) dir = (_hitLocal - _spawnLocal);
+            if (dir.sqrMagnitude < 0.000001f) dir = _axisLocal;
             _postDirLocal = dir.normalized;
         }
         else
         {
-            _postDirLocal = Vector3.forward;
+            _postDirLocal = _axisLocal;
         }
 
         double holdSec = _holdBeats * _secPerBeat;
-        _holdLenZ = _speedZ * (float)holdSec;
+        _holdLen = _speedLocal * (float)holdSec;
 
         _built = true;
 
         SyncDspTimes();
         ApplyBodyTransform();
-
-        //Å×½ºÆ®·Î ¾Æ²¸µÒ
-        //Debug.Log(
-        //   "spawnLocal=" + _spawnLocal +
-        //   " hitLocal=" + _hitLocal +
-        //   " despawnLocal=" + _despawnLocal
-        //);
-
     }
 
     private void SyncDspTimes()
@@ -224,20 +208,23 @@ public class HoldNote : Note
         if (!_useDespawn)
             return;
 
-        float tailLocalZ = (_tail != null) ? _tail.localPosition.z : (-_moveSignZ * _holdLenZ);
-        float tailFrontOffset = GetEdgeOffsetZ(_tail, _moveSignZ);
+        // tail front position in note-local space
+        Vector3 tailPivotLocal = headLocal + ((_tail != null) ? _tail.localPosition : Vector3.back * _holdLen);
 
-        float tailFrontZ = headLocal.z + tailLocalZ + tailFrontOffset;
+        float edgeZ = GetEdgeOffsetZ(_tail, _moveSignS);
+        Vector3 tailFrontLocal = tailPivotLocal + new Vector3(0f, 0f, edgeZ);
 
-        bool tailReached = (_moveSignZ > 0f) ? (tailFrontZ >= _despawnZ) : (tailFrontZ <= _despawnZ);
+        float tailFrontS = Vector3.Dot(tailFrontLocal, _axisLocal);
+
+        bool tailReached = (_moveSignS > 0f) ? (tailFrontS >= _despawnS) : (tailFrontS <= _despawnS);
         if (tailReached)
             Destroy(gameObject);
     }
 
     private void ApplyBodyTransform()
     {
-        float dirToTail = -_moveSignZ;
-        float tailZ = dirToTail * _holdLenZ;
+        // visual model assumes note-local z is the forward axis
+        float tailZ = -_moveSignS * _holdLen;
 
         if (_head != null)
         {
@@ -251,8 +238,8 @@ public class HoldNote : Note
             _tail.localRotation = Quaternion.identity;
         }
 
-        float headInnerZ = GetEdgeOffsetZ(_head, dirToTail);
-        float tailInnerZ = tailZ + GetEdgeOffsetZ(_tail, -dirToTail);
+        float headInnerZ = GetEdgeOffsetZ(_head, -_moveSignS);
+        float tailInnerZ = tailZ + GetEdgeOffsetZ(_tail, _moveSignS);
 
         float bodyLen = Mathf.Abs(tailInnerZ - headInnerZ);
         float bodyCenterZ = (headInnerZ + tailInnerZ) * 0.5f;
@@ -282,10 +269,5 @@ public class HoldNote : Note
             sc.z = Mathf.Max(0.0001f, bodyLen / meshLenZ);
             _bodyExtra.localScale = sc;
         }
-    }
-
-    private void OnDestroy()
-    {
-        Debug.Log("HoldNote destroyed: " + name);
     }
 }

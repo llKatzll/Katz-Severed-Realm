@@ -3,8 +3,6 @@ using UnityEngine;
 public class Note : MonoBehaviour
 {
     protected float _travelTime;
-    protected float _elapsed;
-
     protected NoteSpawner.NoteType _noteType;
 
     protected Transform _space;
@@ -14,10 +12,6 @@ public class Note : MonoBehaviour
     protected Vector3 _hitLocal;
     protected Vector3 _despawnLocal;
 
-    protected float _spawnZ;
-    protected float _hitZ;
-    protected float _despawnZ;
-
     protected bool _useDespawn;
     protected float _postTime;
 
@@ -25,6 +19,13 @@ public class Note : MonoBehaviour
 
     protected double _spawnDspTime;
     public double ExpectedHitDspTime { get; protected set; }
+
+    // projection axis (spawn -> hit)
+    protected Vector3 _axisLocal;
+    protected float _spawnS;
+    protected float _hitS;
+    protected float _despawnS;
+    protected float _moveSignS;
 
     public void InitFollow(
         Transform space,
@@ -49,26 +50,31 @@ public class Note : MonoBehaviour
         _spawnLocal = _space.InverseTransformPoint(spawnPoint.position);
         _hitLocal = _space.InverseTransformPoint(hitPoint.position);
 
-        if (_useDespawn) _despawnLocal = _space.InverseTransformPoint(despawnPoint.position);
-        else _despawnLocal = _hitLocal;
+        if (_useDespawn)
+            _despawnLocal = _space.InverseTransformPoint(despawnPoint.position);
+        else
+            _despawnLocal = _hitLocal;
 
-        // Force movement axis to local Z (keep x,y constant)
-        _spawnLocal.x = _hitLocal.x;
-        _spawnLocal.y = _hitLocal.y;
-        _despawnLocal.x = _hitLocal.x;
-        _despawnLocal.y = _hitLocal.y;
+        // axis
+        Vector3 axis = _hitLocal - _spawnLocal;
+        if (axis.sqrMagnitude < 0.000001f) axis = Vector3.forward;
+        _axisLocal = axis.normalized;
 
-        _spawnZ = _spawnLocal.z;
-        _hitZ = _hitLocal.z;
-        _despawnZ = _despawnLocal.z;
+        _spawnS = Vector3.Dot(_spawnLocal, _axisLocal);
+        _hitS = Vector3.Dot(_hitLocal, _axisLocal);
+        _despawnS = Vector3.Dot(_despawnLocal, _axisLocal);
+
+        _moveSignS = Mathf.Sign(_hitS - _spawnS);
+        if (_moveSignS == 0f) _moveSignS = 1f;
+
+        // post time based on world distance (stable)
+        float distA = Vector3.Distance(_spawnLocal, _hitLocal);
+        float speed = distA / _travelTime;
 
         if (_useDespawn)
         {
-            float distA = Mathf.Abs(_spawnZ - _hitZ);
-            float speedZ = distA / Mathf.Max(0.0001f, _travelTime);
-
-            float distB = Mathf.Abs(_hitZ - _despawnZ);
-            _postTime = distB / Mathf.Max(0.0001f, speedZ);
+            float distB = Vector3.Distance(_hitLocal, _despawnLocal);
+            _postTime = distB / Mathf.Max(0.0001f, speed);
         }
         else
         {
@@ -96,12 +102,12 @@ public class Note : MonoBehaviour
     {
         if (_space == null) return;
 
-        _elapsed = (float)(AudioSettings.dspTime - _spawnDspTime);
-        if (_elapsed < 0f) _elapsed = 0f;
+        float elapsed = (float)(AudioSettings.dspTime - _spawnDspTime);
+        if (elapsed < 0f) elapsed = 0f;
 
         Vector3 localPos;
         bool finished;
-        EvaluateLocal(_elapsed, out localPos, out finished);
+        EvaluateLocal(elapsed, out localPos, out finished);
 
         if (finished)
         {
@@ -123,30 +129,27 @@ public class Note : MonoBehaviour
         if (!_useDespawn)
         {
             float t = Mathf.Clamp01(elapsed / _travelTime);
-            float z = Mathf.Lerp(_spawnZ, _hitZ, t);
-            localPos = new Vector3(_hitLocal.x, _hitLocal.y, z);
+            localPos = Vector3.Lerp(_spawnLocal, _hitLocal, t);
             return;
         }
 
         if (elapsed <= _travelTime)
         {
             float t = Mathf.Clamp01(elapsed / _travelTime);
-            float z = Mathf.Lerp(_spawnZ, _hitZ, t);
-            localPos = new Vector3(_hitLocal.x, _hitLocal.y, z);
+            localPos = Vector3.Lerp(_spawnLocal, _hitLocal, t);
             return;
         }
 
         float e2 = elapsed - _travelTime;
         float t2 = Mathf.Clamp01(e2 / Mathf.Max(0.0001f, _postTime));
-        float z2 = Mathf.Lerp(_hitZ, _despawnZ, t2);
-        localPos = new Vector3(_hitLocal.x, _hitLocal.y, z2);
+        localPos = Vector3.Lerp(_hitLocal, _despawnLocal, t2);
 
         if (t2 >= 1f) finished = true;
     }
 
-    public float GetSpeedLocalZ()
+    public float GetSpeedLocal()
     {
-        float distA = Mathf.Abs(_spawnZ - _hitZ);
+        float distA = Vector3.Distance(_spawnLocal, _hitLocal);
         return distA / Mathf.Max(0.0001f, _travelTime);
     }
 }
