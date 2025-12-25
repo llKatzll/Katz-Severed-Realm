@@ -25,7 +25,7 @@ public class LaneJudge : MonoBehaviour
     [Header("Hold Loop FX")]
     [SerializeField] private GameObject _holdLoopFxGroundPrefab;
     [SerializeField] private GameObject _holdLoopFxUpperPrefab;
-    [SerializeField] private float _holdLoopFxDestroySec = 0.2f;
+    [SerializeField] private float _holdLoopFxDestroySec = 0.1f;
 
     private GameObject _holdLoopFx;
 
