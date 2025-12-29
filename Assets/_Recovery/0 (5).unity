@@ -246,24 +246,17 @@ MonoBehaviour:
   _laneType: 1
   _key: 111
   _userOffsetMs: 0
-  _severanceMs: 35
-  _cleanMs: 80
+  _severanceMs: 30
+  _cleanMs: 70
   _traceMs: 120
-  _fractureMs: 155
-  _ruinMs: 200
+  _fractureMs: 250
+  _ruinMs: 350
   _palette: {fileID: 11400000, guid: fcdca554ccc5ee142a66efa1ea55f45a, type: 2}
-  _tapHitFxPrefab: {fileID: 8163141537363357767, guid: d8e9aae6f5a0e5340a82e4687a67a042, type: 3}
-  _tapHitFxDestroySec: 0.3
-  _holdHeadFxPrefab: {fileID: 8430663150762934430, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
-  _holdHeadFxDestroySec: 0.2
-  _holdTailFxPrefab: {fileID: 1953410223531933535, guid: 99249b3bd6770cc4e9a0cd8abf9b9d2f, type: 3}
-  _holdTailFxDestroySec: 0.2
-  _holdLoopFxGroundPrefab: {fileID: 8017308452861690929, guid: 3233726abf1301748b4300c466199b2b, type: 3}
-  _holdLoopFxUpperPrefab: {fileID: 8017308452861690929, guid: 3233726abf1301748b4300c466199b2b, type: 3}
-  _holdLoopFxStopDestroySec: 0.2
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: 47e7700bbfea603418096236c0e2bb40, type: 3}
   _emptyDestroySec: 0.2
-  _debugTail: 1
+  _holdLoopFxGroundPrefab: {fileID: 0}
+  _holdLoopFxUpperPrefab: {fileID: 8163141537363357767, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
+  _holdLoopFxDestroySec: 0.2
 --- !u!1 &55276492
 GameObject:
   m_ObjectHideFlags: 0
@@ -1938,24 +1931,17 @@ MonoBehaviour:
   _laneType: 0
   _key: 97
   _userOffsetMs: 0
-  _severanceMs: 35
-  _cleanMs: 80
+  _severanceMs: 30
+  _cleanMs: 70
   _traceMs: 120
-  _fractureMs: 155
-  _ruinMs: 200
+  _fractureMs: 250
+  _ruinMs: 350
   _palette: {fileID: 11400000, guid: fcdca554ccc5ee142a66efa1ea55f45a, type: 2}
-  _tapHitFxPrefab: {fileID: 8163141537363357767, guid: d8e9aae6f5a0e5340a82e4687a67a042, type: 3}
-  _tapHitFxDestroySec: 0.3
-  _holdHeadFxPrefab: {fileID: 8430663150762934430, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
-  _holdHeadFxDestroySec: 0.2
-  _holdTailFxPrefab: {fileID: 1953410223531933535, guid: 99249b3bd6770cc4e9a0cd8abf9b9d2f, type: 3}
-  _holdTailFxDestroySec: 0.2
-  _holdLoopFxGroundPrefab: {fileID: 8017308452861690929, guid: 3233726abf1301748b4300c466199b2b, type: 3}
-  _holdLoopFxUpperPrefab: {fileID: 8017308452861690929, guid: 3233726abf1301748b4300c466199b2b, type: 3}
-  _holdLoopFxStopDestroySec: 0.2
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: a28b98217eb767846839462972610979, type: 3}
   _emptyDestroySec: 0.2
-  _debugTail: 1
+  _holdLoopFxGroundPrefab: {fileID: 8163141537363357767, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
+  _holdLoopFxUpperPrefab: {fileID: 0}
+  _holdLoopFxDestroySec: 0.2
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -2303,24 +2289,17 @@ MonoBehaviour:
   _laneType: 1
   _key: 112
   _userOffsetMs: 0
-  _severanceMs: 35
-  _cleanMs: 80
+  _severanceMs: 30
+  _cleanMs: 70
   _traceMs: 120
-  _fractureMs: 155
-  _ruinMs: 200
+  _fractureMs: 250
+  _ruinMs: 350
   _palette: {fileID: 11400000, guid: fcdca554ccc5ee142a66efa1ea55f45a, type: 2}
-  _tapHitFxPrefab: {fileID: 8163141537363357767, guid: d8e9aae6f5a0e5340a82e4687a67a042, type: 3}
-  _tapHitFxDestroySec: 0.3
-  _holdHeadFxPrefab: {fileID: 8430663150762934430, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
-  _holdHeadFxDestroySec: 0.2
-  _holdTailFxPrefab: {fileID: 1953410223531933535, guid: 99249b3bd6770cc4e9a0cd8abf9b9d2f, type: 3}
-  _holdTailFxDestroySec: 0.2
-  _holdLoopFxGroundPrefab: {fileID: 8017308452861690929, guid: 3233726abf1301748b4300c466199b2b, type: 3}
-  _holdLoopFxUpperPrefab: {fileID: 8017308452861690929, guid: 3233726abf1301748b4300c466199b2b, type: 3}
-  _holdLoopFxStopDestroySec: 0.2
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: 47e7700bbfea603418096236c0e2bb40, type: 3}
   _emptyDestroySec: 0.2
-  _debugTail: 1
+  _holdLoopFxGroundPrefab: {fileID: 0}
+  _holdLoopFxUpperPrefab: {fileID: 8163141537363357767, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
+  _holdLoopFxDestroySec: 0.2
 --- !u!1 &1038989766
 GameObject:
   m_ObjectHideFlags: 0
@@ -2733,12 +2712,12 @@ MonoBehaviour:
   _baseApproachBeats: 2
   _noteSpeedMul: 2
   _autoSpawn: 1
-  _spawnIntervalBeats: 0.5
+  _spawnIntervalBeats: 0.25
   _spawnRandomSingleLane: 1
   _avoidSameLaneTwice: 1
   _spawnForm: 1
   _preventHoldOverlapOnSameLane: 1
-  _holdBeats: 1
+  _holdBeats: 0.1
 --- !u!1 &1191700353
 GameObject:
   m_ObjectHideFlags: 0
@@ -2902,24 +2881,17 @@ MonoBehaviour:
   _laneType: 0
   _key: 115
   _userOffsetMs: 0
-  _severanceMs: 35
-  _cleanMs: 80
+  _severanceMs: 30
+  _cleanMs: 70
   _traceMs: 120
-  _fractureMs: 155
-  _ruinMs: 200
+  _fractureMs: 250
+  _ruinMs: 350
   _palette: {fileID: 11400000, guid: fcdca554ccc5ee142a66efa1ea55f45a, type: 2}
-  _tapHitFxPrefab: {fileID: 8163141537363357767, guid: d8e9aae6f5a0e5340a82e4687a67a042, type: 3}
-  _tapHitFxDestroySec: 0.3
-  _holdHeadFxPrefab: {fileID: 8430663150762934430, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
-  _holdHeadFxDestroySec: 0.2
-  _holdTailFxPrefab: {fileID: 1953410223531933535, guid: 99249b3bd6770cc4e9a0cd8abf9b9d2f, type: 3}
-  _holdTailFxDestroySec: 0.2
-  _holdLoopFxGroundPrefab: {fileID: 8017308452861690929, guid: 3233726abf1301748b4300c466199b2b, type: 3}
-  _holdLoopFxUpperPrefab: {fileID: 8017308452861690929, guid: 3233726abf1301748b4300c466199b2b, type: 3}
-  _holdLoopFxStopDestroySec: 0.2
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: a28b98217eb767846839462972610979, type: 3}
   _emptyDestroySec: 0.2
-  _debugTail: 1
+  _holdLoopFxGroundPrefab: {fileID: 8163141537363357767, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
+  _holdLoopFxUpperPrefab: {fileID: 0}
+  _holdLoopFxDestroySec: 0.2
 --- !u!1 &1242119139
 GameObject:
   m_ObjectHideFlags: 0
@@ -3140,24 +3112,17 @@ MonoBehaviour:
   _laneType: 1
   _key: 119
   _userOffsetMs: 0
-  _severanceMs: 35
-  _cleanMs: 80
+  _severanceMs: 30
+  _cleanMs: 70
   _traceMs: 120
-  _fractureMs: 155
-  _ruinMs: 200
+  _fractureMs: 250
+  _ruinMs: 350
   _palette: {fileID: 11400000, guid: fcdca554ccc5ee142a66efa1ea55f45a, type: 2}
-  _tapHitFxPrefab: {fileID: 8163141537363357767, guid: d8e9aae6f5a0e5340a82e4687a67a042, type: 3}
-  _tapHitFxDestroySec: 0.3
-  _holdHeadFxPrefab: {fileID: 8430663150762934430, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
-  _holdHeadFxDestroySec: 0.2
-  _holdTailFxPrefab: {fileID: 1953410223531933535, guid: 99249b3bd6770cc4e9a0cd8abf9b9d2f, type: 3}
-  _holdTailFxDestroySec: 0.2
-  _holdLoopFxGroundPrefab: {fileID: 8017308452861690929, guid: 3233726abf1301748b4300c466199b2b, type: 3}
-  _holdLoopFxUpperPrefab: {fileID: 8017308452861690929, guid: 3233726abf1301748b4300c466199b2b, type: 3}
-  _holdLoopFxStopDestroySec: 0.2
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: 47e7700bbfea603418096236c0e2bb40, type: 3}
   _emptyDestroySec: 0.2
-  _debugTail: 1
+  _holdLoopFxGroundPrefab: {fileID: 0}
+  _holdLoopFxUpperPrefab: {fileID: 8163141537363357767, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
+  _holdLoopFxDestroySec: 0.2
 --- !u!1 &1310526127
 GameObject:
   m_ObjectHideFlags: 0
@@ -3556,24 +3521,17 @@ MonoBehaviour:
   _laneType: 0
   _key: 108
   _userOffsetMs: 0
-  _severanceMs: 35
-  _cleanMs: 80
+  _severanceMs: 30
+  _cleanMs: 70
   _traceMs: 120
-  _fractureMs: 155
-  _ruinMs: 200
+  _fractureMs: 250
+  _ruinMs: 350
   _palette: {fileID: 11400000, guid: fcdca554ccc5ee142a66efa1ea55f45a, type: 2}
-  _tapHitFxPrefab: {fileID: 8163141537363357767, guid: d8e9aae6f5a0e5340a82e4687a67a042, type: 3}
-  _tapHitFxDestroySec: 0.3
-  _holdHeadFxPrefab: {fileID: 8430663150762934430, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
-  _holdHeadFxDestroySec: 0.2
-  _holdTailFxPrefab: {fileID: 1953410223531933535, guid: 99249b3bd6770cc4e9a0cd8abf9b9d2f, type: 3}
-  _holdTailFxDestroySec: 0.2
-  _holdLoopFxGroundPrefab: {fileID: 8017308452861690929, guid: 3233726abf1301748b4300c466199b2b, type: 3}
-  _holdLoopFxUpperPrefab: {fileID: 8017308452861690929, guid: 3233726abf1301748b4300c466199b2b, type: 3}
-  _holdLoopFxStopDestroySec: 0.2
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: a28b98217eb767846839462972610979, type: 3}
   _emptyDestroySec: 0.2
-  _debugTail: 1
+  _holdLoopFxGroundPrefab: {fileID: 8163141537363357767, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
+  _holdLoopFxUpperPrefab: {fileID: 0}
+  _holdLoopFxDestroySec: 0.2
 --- !u!1 &1488290272
 GameObject:
   m_ObjectHideFlags: 0
@@ -3861,24 +3819,17 @@ MonoBehaviour:
   _laneType: 1
   _key: 113
   _userOffsetMs: 0
-  _severanceMs: 35
-  _cleanMs: 80
+  _severanceMs: 30
+  _cleanMs: 70
   _traceMs: 120
-  _fractureMs: 155
-  _ruinMs: 200
+  _fractureMs: 250
+  _ruinMs: 350
   _palette: {fileID: 11400000, guid: fcdca554ccc5ee142a66efa1ea55f45a, type: 2}
-  _tapHitFxPrefab: {fileID: 8163141537363357767, guid: d8e9aae6f5a0e5340a82e4687a67a042, type: 3}
-  _tapHitFxDestroySec: 0.3
-  _holdHeadFxPrefab: {fileID: 8430663150762934430, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
-  _holdHeadFxDestroySec: 0.2
-  _holdTailFxPrefab: {fileID: 1953410223531933535, guid: 99249b3bd6770cc4e9a0cd8abf9b9d2f, type: 3}
-  _holdTailFxDestroySec: 0.2
-  _holdLoopFxGroundPrefab: {fileID: 8017308452861690929, guid: 3233726abf1301748b4300c466199b2b, type: 3}
-  _holdLoopFxUpperPrefab: {fileID: 8017308452861690929, guid: 3233726abf1301748b4300c466199b2b, type: 3}
-  _holdLoopFxStopDestroySec: 0.2
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: 47e7700bbfea603418096236c0e2bb40, type: 3}
   _emptyDestroySec: 0.2
-  _debugTail: 1
+  _holdLoopFxGroundPrefab: {fileID: 0}
+  _holdLoopFxUpperPrefab: {fileID: 8163141537363357767, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
+  _holdLoopFxDestroySec: 0.2
 --- !u!1 &1653508745
 GameObject:
   m_ObjectHideFlags: 0
@@ -4110,24 +4061,17 @@ MonoBehaviour:
   _laneType: 0
   _key: 59
   _userOffsetMs: 0
-  _severanceMs: 35
-  _cleanMs: 80
+  _severanceMs: 30
+  _cleanMs: 70
   _traceMs: 120
-  _fractureMs: 155
-  _ruinMs: 200
+  _fractureMs: 250
+  _ruinMs: 350
   _palette: {fileID: 11400000, guid: fcdca554ccc5ee142a66efa1ea55f45a, type: 2}
-  _tapHitFxPrefab: {fileID: 8163141537363357767, guid: d8e9aae6f5a0e5340a82e4687a67a042, type: 3}
-  _tapHitFxDestroySec: 0.3
-  _holdHeadFxPrefab: {fileID: 8430663150762934430, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
-  _holdHeadFxDestroySec: 0.2
-  _holdTailFxPrefab: {fileID: 1953410223531933535, guid: 99249b3bd6770cc4e9a0cd8abf9b9d2f, type: 3}
-  _holdTailFxDestroySec: 0.2
-  _holdLoopFxGroundPrefab: {fileID: 8017308452861690929, guid: 3233726abf1301748b4300c466199b2b, type: 3}
-  _holdLoopFxUpperPrefab: {fileID: 8017308452861690929, guid: 3233726abf1301748b4300c466199b2b, type: 3}
-  _holdLoopFxStopDestroySec: 0.2
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: a28b98217eb767846839462972610979, type: 3}
   _emptyDestroySec: 0.2
-  _debugTail: 1
+  _holdLoopFxGroundPrefab: {fileID: 8163141537363357767, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
+  _holdLoopFxUpperPrefab: {fileID: 0}
+  _holdLoopFxDestroySec: 0.2
 --- !u!1 &1719964235
 GameObject:
   m_ObjectHideFlags: 0

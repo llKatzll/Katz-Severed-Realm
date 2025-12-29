@@ -1,9 +1,10 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class LaneJudge : MonoBehaviour
 {
-    [Header("Lane")]
+    [Header("Lane (fallback only)")]
     [SerializeField] private NoteSpawner.NoteType _laneType = NoteSpawner.NoteType.Ground;
 
     [Header("Input")]
@@ -17,21 +18,38 @@ public class LaneJudge : MonoBehaviour
     [SerializeField] private float _fractureMs = 155f;
     [SerializeField] private float _ruinMs = 200f;
 
-    [Header("FX")]
+    [Header("Palette")]
     [SerializeField] private HitFxPaletteSO _palette;
+
+    [Header("Tap FX")]
+    [SerializeField] private GameObject _tapHitFxPrefab;
+    [SerializeField] private float _tapHitFxDestroySec = 0.3f;
+
+    [Header("Hold FX (3 Prefabs)")]
+    [SerializeField] private GameObject _holdHeadFxPrefab;
+    [SerializeField] private float _holdHeadFxDestroySec = 0.3f;
+
+    [SerializeField] private GameObject _holdTailFxPrefab;
+    [SerializeField] private float _holdTailFxDestroySec = 0.3f;
+
+    [SerializeField] private GameObject _holdLoopFxGroundPrefab;
+    [SerializeField] private GameObject _holdLoopFxUpperPrefab;
+    [SerializeField] private float _holdLoopFxStopDestroySec = 0.2f;
+
+    [Header("Empty Hit")]
     [SerializeField] private GameObject _emptyHitPrefab;
     [SerializeField] private float _emptyDestroySec = 0.2f;
 
-    [Header("Hold Loop FX")]
-    [SerializeField] private GameObject _holdLoopFxGroundPrefab;
-    [SerializeField] private GameObject _holdLoopFxUpperPrefab;
-    [SerializeField] private float _holdLoopFxDestroySec = 0.1f;
+    [Header("Debug Tail")]
+    [SerializeField] private bool _debugTail = true;
 
     private GameObject _holdLoopFx;
-
     private readonly List<Note> _tapNotes = new List<Note>(64);
+    private HoldNote _hold;
 
-    private HoldNote _hold; // 한 레일엔 1개만
+    private bool _tailDetectedLogged;
+    private double _tailDetectedRawMs;
+    private double _tailDetectedDsp;
 
     public void SetLaneType(NoteSpawner.NoteType t) => _laneType = t;
 
@@ -45,7 +63,13 @@ public class LaneJudge : MonoBehaviour
     {
         if (h == null) return false;
         if (_hold != null) return false;
+
         _hold = h;
+
+        _tailDetectedLogged = false;
+        _tailDetectedRawMs = 0.0;
+        _tailDetectedDsp = 0.0;
+
         return true;
     }
 
@@ -63,20 +87,17 @@ public class LaneJudge : MonoBehaviour
 
     private void OnKeyDown()
     {
-        // hold가 있고 아직 활성 전이면 head 판정 시도
         if (_hold != null && !_hold.IsFailed && !_hold.IsActive)
         {
             TryStartHoldByHead();
             return;
         }
 
-        // 그 외는 탭 판정
         JudgeTap();
     }
 
     private void OnKeyUp()
     {
-        // hold 활성 중이면 tail 판정
         if (_hold != null && !_hold.IsFailed && _hold.IsActive)
         {
             TryFinishHoldByTail();
@@ -85,9 +106,12 @@ public class LaneJudge : MonoBehaviour
 
     private void TryStartHoldByHead()
     {
+        if (_hold == null) return;
+
+        NoteSpawner.NoteType laneType = _hold.NoteType;
+
         double rawMs = (AudioSettings.dspTime - _hold.HeadDspTime) * 1000.0 + _userOffsetMs;
 
-        // 너무 이른 샷건 방지
         if (rawMs < -_ruinMs)
         {
             SpawnEmptyHit();
@@ -98,35 +122,47 @@ public class LaneJudge : MonoBehaviour
 
         if (judge == JudgeType.Miss)
         {
-            _hold.Fail(_palette, _laneType);
+            _hold.Fail(_palette, laneType);
             StopHoldLoopFx();
             _hold = null;
             return;
         }
 
-
-        // head 성공
-        SpawnHitFx(judge);
+        SpawnHoldHeadFx(judge, laneType);
         _hold.StartHold();
 
-        Color c = Color.white;
-        if (_palette != null)
-        {
-            Color tmp;
-            if (_palette.TryGetColor(_laneType, judge, out tmp)) c = tmp;
-        }
-        StartHoldLoopFx(c);
+        Color c = GetJudgeColor(laneType, judge);
+        StartHoldLoopFx(c, laneType);
     }
 
     private void TryFinishHoldByTail()
     {
-        double rawMs = (AudioSettings.dspTime - _hold.TailDspTime) * 1000.0 + _userOffsetMs;
+        if (_hold == null) return;
 
-        // 너무 이른 키업은 실패(네 룰: tail 시점에 keyup)
+        NoteSpawner.NoteType laneType = _hold.NoteType;
+
+        double nowDsp = AudioSettings.dspTime;
+        double rawMs = (nowDsp - _hold.TailDspTime) * 1000.0 + _userOffsetMs;
+
+        if (_debugTail)
+        {
+            Debug.Log(
+                "TailReleaseAttempt"
+                + " lane=" + laneType
+                + " nowDsp=" + nowDsp.ToString("F6")
+                + " tailDsp=" + _hold.TailDspTime.ToString("F6")
+                + " rawTailMs=" + rawMs.ToString("F2")
+                + " sevMs=" + _severanceMs.ToString("F1")
+                + " ruinMs=" + _ruinMs.ToString("F1")
+            );
+        }
+
+        // too early release -> fail
         if (rawMs < -_ruinMs)
         {
-            _hold.Fail(_palette, _laneType);
+            _hold.Fail(_palette, laneType);
             StopHoldLoopFx();
+            _hold = null;
             return;
         }
 
@@ -134,13 +170,13 @@ public class LaneJudge : MonoBehaviour
 
         if (judge == JudgeType.Miss)
         {
-            _hold.Fail(_palette, _laneType);
+            _hold.Fail(_palette, laneType);
             StopHoldLoopFx();
+            _hold = null;
             return;
         }
 
-        // tail 성공
-        SpawnHitFx(judge);
+        SpawnHoldTailFx(judge, laneType);
         StopHoldLoopFx();
         _hold.SuccessAndDestroy();
         _hold = null;
@@ -149,43 +185,89 @@ public class LaneJudge : MonoBehaviour
     private void AutoFailHoldRules()
     {
         if (_hold == null) return;
-        if (_hold.IsFailed) return;
+        if (_hold.IsFailed) { StopHoldLoopFx(); _hold = null; return; }
 
+        NoteSpawner.NoteType laneType = _hold.NoteType;
         double now = AudioSettings.dspTime;
 
-        // head 미입력으로 지나가면 fail
+        // head not started yet: if you miss the head window -> fail
         if (!_hold.IsActive)
         {
             double rawHeadMs = (now - _hold.HeadDspTime) * 1000.0 + _userOffsetMs;
             if (rawHeadMs > _ruinMs)
             {
-                _hold.Fail(_palette, _laneType);
+                _hold.Fail(_palette, laneType);
                 StopHoldLoopFx();
+                _hold = null;
             }
             return;
         }
 
-        // 활성 홀드 중에 키를 놓고 있으면 즉시 fail
+        // active hold: if key is not held -> fail immediately
         if (!Input.GetKey(_key))
         {
-            _hold.Fail(_palette, _laneType);
+            _hold.Fail(_palette, laneType);
             StopHoldLoopFx();
+            _hold = null;
             return;
         }
 
-        // tail 지나쳤는데도 아직 잡고 있으면 fail (네 룰)
         double rawTailMs = (now - _hold.TailDspTime) * 1000.0 + _userOffsetMs;
-        if (rawTailMs > _ruinMs)
+
+        if (_debugTail)
         {
-            _hold.Fail(_palette, _laneType);
-            StopHoldLoopFx();
+            Debug.Log("HoldTick lane=" + laneType + " rawTailMs=" + rawTailMs.ToString("F2"));
+
+            if (!_tailDetectedLogged && Math.Abs(rawTailMs) <= _severanceMs)
+            {
+                _tailDetectedLogged = true;
+                _tailDetectedRawMs = rawTailMs;
+                _tailDetectedDsp = now;
+
+                Debug.Log(
+                    "TailDetected"
+                    + " lane=" + laneType
+                    + " nowDsp=" + now.ToString("F6")
+                    + " tailDsp=" + _hold.TailDspTime.ToString("F6")
+                    + " rawTailMs=" + rawTailMs.ToString("F2")
+                    + " sevWindowMs=" + _severanceMs.ToString("F1")
+                );
+            }
         }
+
+        // NEW RULE:
+        // once tail time is reached, if the key is still held, auto resolve tail
+        if (rawTailMs >= 0.0)
+        {
+            JudgeType judge = JudgeFromRawMs(rawTailMs);
+
+            if (judge == JudgeType.Miss)
+            {
+                _hold.Fail(_palette, laneType);
+                StopHoldLoopFx();
+                _hold = null;
+                return;
+            }
+
+            SpawnHoldTailFx(judge, laneType);
+            StopHoldLoopFx();
+            _hold.SuccessAndDestroy();
+            _hold = null;
+            return;
+        }
+
+        // while rawTailMs < 0, just keep holding (no fail here)
     }
 
     private void CleanupDeadHold()
     {
         if (_hold == null) return;
-        if (_hold.gameObject == null) _hold = null;
+
+        if (_hold.gameObject == null)
+        {
+            _hold = null;
+            _tailDetectedLogged = false;
+        }
     }
 
     private void JudgeTap()
@@ -210,14 +292,14 @@ public class LaneJudge : MonoBehaviour
         RemoveTap(target);
 
         if (judge != JudgeType.Miss)
-            SpawnHitFx(judge);
+            SpawnTapHitFx(judge, target.NoteType);
 
         Destroy(target.gameObject);
     }
 
     private JudgeType JudgeFromRawMs(double rawMs)
     {
-        double absMs = System.Math.Abs(rawMs);
+        double absMs = Math.Abs(rawMs);
 
         if (absMs <= _severanceMs) return JudgeType.Severance;
         if (absMs <= _cleanMs) return JudgeType.Clean;
@@ -225,6 +307,27 @@ public class LaneJudge : MonoBehaviour
         if (absMs <= _fractureMs) return JudgeType.Fracture;
         if (absMs <= _ruinMs) return JudgeType.Ruin;
         return JudgeType.Miss;
+    }
+
+    private Color GetJudgeColor(NoteSpawner.NoteType laneType, JudgeType judge)
+    {
+        Color c = Color.white;
+
+        if (_palette == null)
+        {
+            Debug.LogWarning("PaletteMissing lane=" + laneType + " judge=" + judge);
+            return c;
+        }
+
+        Color tmp;
+        bool ok = _palette.TryGetColor(laneType, judge, out tmp);
+        if (!ok)
+        {
+            Debug.LogWarning("PaletteColorMissing lane=" + laneType + " judge=" + judge);
+            return c;
+        }
+
+        return tmp;
     }
 
     private void ApplyFxColor(GameObject fx, Color c)
@@ -247,6 +350,19 @@ public class LaneJudge : MonoBehaviour
             mpb.SetColor("_StartColor", c);
 
             r.SetPropertyBlock(mpb);
+
+            var mats = r.materials;
+            for (int m = 0; m < mats.Length; m++)
+            {
+                var mat = mats[m];
+                if (mat == null) continue;
+
+                if (mat.HasProperty("_BaseColor")) mat.SetColor("_BaseColor", c);
+                if (mat.HasProperty("_Color")) mat.SetColor("_Color", c);
+                if (mat.HasProperty("_TintColor")) mat.SetColor("_TintColor", c);
+                if (mat.HasProperty("_EmissionColor")) mat.SetColor("_EmissionColor", c);
+                if (mat.HasProperty("_StartColor")) mat.SetColor("_StartColor", c);
+            }
         }
 
         var pss = fx.GetComponentsInChildren<ParticleSystem>(true);
@@ -257,17 +373,67 @@ public class LaneJudge : MonoBehaviour
 
             var main = ps.main;
             main.startColor = c;
+
+            var col = ps.colorOverLifetime;
+            if (col.enabled) col.color = new ParticleSystem.MinMaxGradient(c);
+
+            var bySpeed = ps.colorBySpeed;
+            if (bySpeed.enabled) bySpeed.color = new ParticleSystem.MinMaxGradient(c);
+
+            var trails = ps.trails;
+            if (trails.enabled) trails.colorOverLifetime = new ParticleSystem.MinMaxGradient(c);
         }
     }
 
+    private void SpawnTapHitFx(JudgeType judge, NoteSpawner.NoteType laneType)
+    {
+        if (judge == JudgeType.Miss) return;
 
-    private void StartHoldLoopFx(Color c)
+        GameObject prefab = _tapHitFxPrefab != null ? _tapHitFxPrefab : (_palette != null ? _palette.hitFxPrefab : null);
+        if (prefab == null) return;
+
+        GameObject fx = Instantiate(prefab, transform.position, transform.rotation);
+
+        Color c = GetJudgeColor(laneType, judge);
+        ApplyFxColor(fx, c);
+
+        float life = _tapHitFxDestroySec > 0f ? _tapHitFxDestroySec : (_palette != null ? _palette.fxDestroySec : 0.3f);
+        if (life > 0f) Destroy(fx, life);
+    }
+
+    private void SpawnHoldHeadFx(JudgeType judge, NoteSpawner.NoteType laneType)
+    {
+        if (judge == JudgeType.Miss) return;
+        if (_holdHeadFxPrefab == null) return;
+
+        GameObject fx = Instantiate(_holdHeadFxPrefab, transform.position, transform.rotation);
+
+        Color c = GetJudgeColor(laneType, judge);
+        ApplyFxColor(fx, c);
+
+        if (_holdHeadFxDestroySec > 0f) Destroy(fx, _holdHeadFxDestroySec);
+    }
+
+    private void SpawnHoldTailFx(JudgeType judge, NoteSpawner.NoteType laneType)
+    {
+        if (judge == JudgeType.Miss) return;
+        if (_holdTailFxPrefab == null) return;
+
+        GameObject fx = Instantiate(_holdTailFxPrefab, transform.position, transform.rotation);
+
+        Color c = GetJudgeColor(laneType, judge);
+        ApplyFxColor(fx, c);
+
+        if (_holdTailFxDestroySec > 0f) Destroy(fx, _holdTailFxDestroySec);
+    }
+
+    private void StartHoldLoopFx(Color c, NoteSpawner.NoteType laneType)
     {
         if (_holdLoopFx != null) return;
 
         GameObject prefab = null;
-        if (_laneType == NoteSpawner.NoteType.Ground) prefab = _holdLoopFxGroundPrefab;
-        else if (_laneType == NoteSpawner.NoteType.Upper) prefab = _holdLoopFxUpperPrefab;
+        if (laneType == NoteSpawner.NoteType.Ground) prefab = _holdLoopFxGroundPrefab;
+        else if (laneType == NoteSpawner.NoteType.Upper) prefab = _holdLoopFxUpperPrefab;
 
         if (prefab == null) return;
 
@@ -279,56 +445,10 @@ public class LaneJudge : MonoBehaviour
     {
         if (_holdLoopFx == null) return;
 
-        if (_holdLoopFxDestroySec > 0f) Destroy(_holdLoopFx, _holdLoopFxDestroySec);
+        if (_holdLoopFxStopDestroySec > 0f) Destroy(_holdLoopFx, _holdLoopFxStopDestroySec);
         else Destroy(_holdLoopFx);
 
         _holdLoopFx = null;
-    }
-
-    private void SpawnHitFx(JudgeType judge)
-    {
-        if (_palette == null) return;
-        if (_palette.hitFxPrefab == null) return;
-        if (judge == JudgeType.Miss) return;
-
-        GameObject fx = Instantiate(_palette.hitFxPrefab, transform.position, transform.rotation);
-
-        Color c;
-        bool ok = _palette.TryGetColor(_laneType, judge, out c);
-
-        if (ok)
-        {
-            var renderers = fx.GetComponentsInChildren<Renderer>(true);
-            for (int i = 0; i < renderers.Length; i++)
-            {
-                var r = renderers[i];
-                if (r == null) continue;
-
-                var mpb = new MaterialPropertyBlock();
-                r.GetPropertyBlock(mpb);
-
-                mpb.SetColor("_BaseColor", c);
-                mpb.SetColor("_Color", c);
-                mpb.SetColor("_TintColor", c);
-                mpb.SetColor("_EmissionColor", c);
-                mpb.SetColor("_StartColor", c);
-
-                r.SetPropertyBlock(mpb);
-            }
-
-            var pss = fx.GetComponentsInChildren<ParticleSystem>(true);
-            for (int i = 0; i < pss.Length; i++)
-            {
-                var ps = pss[i];
-                if (ps == null) continue;
-
-                var main = ps.main;
-                main.startColor = c;
-            }
-        }
-
-        if (_palette.fxDestroySec > 0f)
-            Destroy(fx, _palette.fxDestroySec);
     }
 
     private void SpawnEmptyHit()

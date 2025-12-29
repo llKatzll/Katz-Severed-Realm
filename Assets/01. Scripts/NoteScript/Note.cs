@@ -20,12 +20,13 @@ public class Note : MonoBehaviour
     protected double _spawnDspTime;
     public double ExpectedHitDspTime { get; protected set; }
 
-    // projection axis (spawn -> hit)
+    // projection axis (spawn -> hit
     protected Vector3 _axisLocal;
     protected float _spawnS;
     protected float _hitS;
     protected float _despawnS;
     protected float _moveSignS;
+    public NoteSpawner.NoteType NoteType => _noteType;
 
     public void InitFollow(
         Transform space,
