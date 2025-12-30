@@ -18,6 +18,9 @@ public class LaneJudge : MonoBehaviour
     [SerializeField] private float _fractureMs = 155f;
     [SerializeField] private float _ruinMs = 200f;
 
+    [Header("Hold Judge Bonus (ms)")]
+    [SerializeField] private float _holdJudgeBonusMs = 5f; // Hold is easier than Tap (+5ms)
+
     [Header("Palette")]
     [SerializeField] private HitFxPaletteSO _palette;
 
@@ -47,9 +50,6 @@ public class LaneJudge : MonoBehaviour
     private readonly List<Note> _tapNotes = new List<Note>(64);
     private HoldNote _hold;
 
-    private bool _tailDetectedLogged;
-    private double _tailDetectedRawMs;
-    private double _tailDetectedDsp;
 
     public void SetLaneType(NoteSpawner.NoteType t) => _laneType = t;
 
@@ -66,10 +66,6 @@ public class LaneJudge : MonoBehaviour
 
         _hold = h;
 
-        _tailDetectedLogged = false;
-        _tailDetectedRawMs = 0.0;
-        _tailDetectedDsp = 0.0;
-
         return true;
     }
 
@@ -79,7 +75,11 @@ public class LaneJudge : MonoBehaviour
         AutoMissTapNoInput();
 
         CleanupDeadHold();
-        AutoFailHoldRules();
+
+        // IMPORTANT:
+        // - No auto "tail success" processing.
+        // - But if player keeps holding past tail without KeyUp, it becomes Miss and loop FX must stop.
+        AutoFailHoldIfTailIgnored();
 
         if (Input.GetKeyDown(_key)) OnKeyDown();
         if (Input.GetKeyUp(_key)) OnKeyUp();
@@ -104,6 +104,12 @@ public class LaneJudge : MonoBehaviour
         }
     }
 
+    private double HoldSevMs => _severanceMs + _holdJudgeBonusMs;
+    private double HoldCleanMs => _cleanMs + _holdJudgeBonusMs;
+    private double HoldTraceMs => _traceMs + _holdJudgeBonusMs;
+    private double HoldFractureMs => _fractureMs + _holdJudgeBonusMs;
+    private double HoldRuinMs => _ruinMs + _holdJudgeBonusMs;
+
     private void TryStartHoldByHead()
     {
         if (_hold == null) return;
@@ -112,13 +118,14 @@ public class LaneJudge : MonoBehaviour
 
         double rawMs = (AudioSettings.dspTime - _hold.HeadDspTime) * 1000.0 + _userOffsetMs;
 
-        if (rawMs < -_ruinMs)
+        // Hold uses wider window (tap + bonus)
+        if (rawMs < -HoldRuinMs)
         {
             SpawnEmptyHit();
             return;
         }
 
-        JudgeType judge = JudgeFromRawMs(rawMs);
+        JudgeType judge = JudgeFromRawMsHold(rawMs);
 
         if (judge == JudgeType.Miss)
         {
@@ -129,6 +136,7 @@ public class LaneJudge : MonoBehaviour
         }
 
         SpawnHoldHeadFx(judge, laneType);
+
         _hold.StartHold();
 
         Color c = GetJudgeColor(laneType, judge);
@@ -144,119 +152,55 @@ public class LaneJudge : MonoBehaviour
         double nowDsp = AudioSettings.dspTime;
         double rawMs = (nowDsp - _hold.TailDspTime) * 1000.0 + _userOffsetMs;
 
-        if (_debugTail)
-        {
-            Debug.Log(
-                "TailReleaseAttempt"
-                + " lane=" + laneType
-                + " nowDsp=" + nowDsp.ToString("F6")
-                + " tailDsp=" + _hold.TailDspTime.ToString("F6")
-                + " rawTailMs=" + rawMs.ToString("F2")
-                + " sevMs=" + _severanceMs.ToString("F1")
-                + " ruinMs=" + _ruinMs.ToString("F1")
-            );
-        }
+        Debug.LogWarning("TailJudge lane=" + laneType + " nowDsp=" + nowDsp.ToString("F6") + " tailDsp=" + _hold.TailDspTime.ToString("F6") + " rawMs=" + rawMs.ToString("F2"));
 
-        // too early release -> fail
-        if (rawMs < -_ruinMs)
+
+        
+        if (rawMs < -HoldRuinMs)
         {
             _hold.Fail(_palette, laneType);
             StopHoldLoopFx();
-            _hold = null;
             return;
         }
 
-        JudgeType judge = JudgeFromRawMs(rawMs);
+        JudgeType judge = JudgeFromRawMsHold(rawMs);
 
         if (judge == JudgeType.Miss)
         {
             _hold.Fail(_palette, laneType);
             StopHoldLoopFx();
-            _hold = null;
             return;
         }
 
         SpawnHoldTailFx(judge, laneType);
+
         StopHoldLoopFx();
         _hold.SuccessAndDestroy();
         _hold = null;
     }
 
-    private void AutoFailHoldRules()
+
+    private void AutoFailHoldIfTailIgnored()
     {
         if (_hold == null) return;
-        if (_hold.IsFailed) { StopHoldLoopFx(); _hold = null; return; }
+        if (_hold.IsFailed) return;
+        if (!_hold.IsActive) return;
 
-        NoteSpawner.NoteType laneType = _hold.NoteType;
+        if (!Input.GetKey(_key)) return;
+
         double now = AudioSettings.dspTime;
-
-        // head not started yet: if you miss the head window -> fail
-        if (!_hold.IsActive)
-        {
-            double rawHeadMs = (now - _hold.HeadDspTime) * 1000.0 + _userOffsetMs;
-            if (rawHeadMs > _ruinMs)
-            {
-                _hold.Fail(_palette, laneType);
-                StopHoldLoopFx();
-                _hold = null;
-            }
-            return;
-        }
-
-        // active hold: if key is not held -> fail immediately
-        if (!Input.GetKey(_key))
-        {
-            _hold.Fail(_palette, laneType);
-            StopHoldLoopFx();
-            _hold = null;
-            return;
-        }
-
         double rawTailMs = (now - _hold.TailDspTime) * 1000.0 + _userOffsetMs;
 
-        if (_debugTail)
+        // tail missed (held too long) => fail + stop FX
+        if (rawTailMs > HoldRuinMs)
         {
-            Debug.Log("HoldTick lane=" + laneType + " rawTailMs=" + rawTailMs.ToString("F2"));
+            NoteSpawner.NoteType laneType = _hold.NoteType;
 
-            if (!_tailDetectedLogged && Math.Abs(rawTailMs) <= _severanceMs)
-            {
-                _tailDetectedLogged = true;
-                _tailDetectedRawMs = rawTailMs;
-                _tailDetectedDsp = now;
-
-                Debug.Log(
-                    "TailDetected"
-                    + " lane=" + laneType
-                    + " nowDsp=" + now.ToString("F6")
-                    + " tailDsp=" + _hold.TailDspTime.ToString("F6")
-                    + " rawTailMs=" + rawTailMs.ToString("F2")
-                    + " sevWindowMs=" + _severanceMs.ToString("F1")
-                );
-            }
-        }
-
-        // NEW RULE:
-        // once tail time is reached, if the key is still held, auto resolve tail
-        if (rawTailMs >= 0.0)
-        {
-            JudgeType judge = JudgeFromRawMs(rawTailMs);
-
-            if (judge == JudgeType.Miss)
-            {
-                _hold.Fail(_palette, laneType);
-                StopHoldLoopFx();
-                _hold = null;
-                return;
-            }
-
-            SpawnHoldTailFx(judge, laneType);
+            _hold.Fail(_palette, laneType);
             StopHoldLoopFx();
-            _hold.SuccessAndDestroy();
-            _hold = null;
-            return;
-        }
 
-        // while rawTailMs < 0, just keep holding (no fail here)
+            _hold = null;
+        }
     }
 
     private void CleanupDeadHold()
@@ -266,7 +210,6 @@ public class LaneJudge : MonoBehaviour
         if (_hold.gameObject == null)
         {
             _hold = null;
-            _tailDetectedLogged = false;
         }
     }
 
@@ -306,6 +249,18 @@ public class LaneJudge : MonoBehaviour
         if (absMs <= _traceMs) return JudgeType.Trace;
         if (absMs <= _fractureMs) return JudgeType.Fracture;
         if (absMs <= _ruinMs) return JudgeType.Ruin;
+        return JudgeType.Miss;
+    }
+
+    private JudgeType JudgeFromRawMsHold(double rawMs)
+    {
+        double absMs = Math.Abs(rawMs);
+
+        if (absMs <= HoldSevMs) return JudgeType.Severance;
+        if (absMs <= HoldCleanMs) return JudgeType.Clean;
+        if (absMs <= HoldTraceMs) return JudgeType.Trace;
+        if (absMs <= HoldFractureMs) return JudgeType.Fracture;
+        if (absMs <= HoldRuinMs) return JudgeType.Ruin;
         return JudgeType.Miss;
     }
 
