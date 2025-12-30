@@ -135,7 +135,7 @@ public class LaneJudge : MonoBehaviour
         if (ComboUI.I != null)
         {
             float bpm = 120f;
-            RhythmConductor rhy = FindObjectOfType<RhythmConductor>();
+            RhythmConductor rhy = FindObjectOfType<RhythmConductor>(); //그건 비주얼스튜디오 생각이고 이거 제대로 된다고!
             if (rhy != null) bpm = (float)rhy.Bpm;
 
             bool breaks = (judge == JudgeType.Ruin || judge == JudgeType.Miss);

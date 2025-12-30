@@ -27,14 +27,47 @@ public class HoldNote : Note
     private Vector3 _postDirLocal;
 
     private Renderer[] _renderers;
-
-    // FIX: lock lateral (xy drift prevention)
     private Vector3 _lateralLocal;
+
+    //클리핑 관련 =======
+    private Material _bodyMaterial;
+    private Material _bodyExtraMaterial;
+    private Material _tailMaterial;
+
+    private static readonly int _ClipCenterID = Shader.PropertyToID("_ClipCenter");
+    private static readonly int _ClipRadiusID = Shader.PropertyToID("_ClipRadius");
+    private static readonly int _ClipEnabledID = Shader.PropertyToID("_ClipEnabled");
+    //========
 
     private void Awake()
     {
-        if (_body != null) _bodyBaseScale = _body.localScale;
-        if (_bodyExtra != null) _bodyExtraBaseScale = _bodyExtra.localScale;
+        if (_body != null)
+        {
+            _bodyBaseScale = _body.localScale;
+
+            // 추가: Material 인스턴스 생성
+            var renderer = _body.GetComponent<Renderer>();
+            if (renderer != null)
+                _bodyMaterial = renderer.material;
+        }
+
+        if (_bodyExtra != null)
+        {
+            _bodyExtraBaseScale = _bodyExtra.localScale;
+
+            // 추가: Material 인스턴스 생성
+            var renderer = _bodyExtra.GetComponent<Renderer>();
+            if (renderer != null)
+                _bodyExtraMaterial = renderer.material;
+        }
+
+        // 추가: Tail Material
+        if (_tail != null)
+        {
+            var renderer = _tail.GetComponent<Renderer>();
+            if (renderer != null)
+                _tailMaterial = renderer.material;
+        }
 
         _renderers = GetComponentsInChildren<Renderer>(true);
 
@@ -43,6 +76,7 @@ public class HoldNote : Note
         _built = false;
     }
 
+    
     private static bool TryGetMeshZ(Transform t, out float minZ, out float maxZ)
     {
         minZ = -0.05f;
@@ -89,13 +123,11 @@ public class HoldNote : Note
 
         _speedLocal = GetSpeedLocal();
 
-        // FIX: lock lateral component based on spawn position (prevents xy drift)
         Vector3 axisN = GetAxisNLocal();
         _lateralLocal = _spawnLocal - axisN * Vector3.Dot(_spawnLocal, axisN);
 
         if (_useDespawn)
         {
-            // FIX: keep post direction on axis only (avoid xy drift after hit)
             float dirS = Vector3.Dot((_despawnLocal - _hitLocal), axisN);
             if (Mathf.Abs(dirS) < 0.000001f) dirS = Vector3.Dot((_hitLocal - _spawnLocal), axisN);
             float sign = (dirS >= 0f) ? 1f : -1f;
@@ -109,8 +141,6 @@ public class HoldNote : Note
         double holdSecD = _holdBeats * _secPerBeat;
         float holdSec = (float)holdSecD;
 
-        // --- FIX: compute hold length in world units, then convert to local z units.
-        // This removes "double length" caused by prefab/parent scaling.
         float worldDistA = 0f;
         float worldSpeed = 0f;
 
@@ -129,7 +159,6 @@ public class HoldNote : Note
         if (worldPerLocalZ < 0.000001f) worldPerLocalZ = 1f;
 
         _holdLen = holdWorldLen / worldPerLocalZ;
-        // --- end FIX
 
         _built = true;
 
@@ -157,10 +186,61 @@ public class HoldNote : Note
             Destroy(_head.gameObject);
             _head = null;
         }
+
+        //클리핑 활성화
+        EnableClipping(true);
     }
+
+    //클리핑 관련 메서드 =====
+    private void EnableClipping(bool enabled)
+    {
+        float value = enabled ? 1f : 0f;
+
+        if (_bodyMaterial != null)
+            _bodyMaterial.SetFloat(_ClipEnabledID, value);
+
+        if (_bodyExtraMaterial != null)
+            _bodyExtraMaterial.SetFloat(_ClipEnabledID, value);
+
+        if (_tailMaterial != null)
+            _tailMaterial.SetFloat(_ClipEnabledID, value);
+    }
+
+    private void UpdateClipping()
+    {
+        if (_space == null) return;
+
+        // 판정선 월드 위치
+        Vector3 hitWorldPos = _space.TransformPoint(_hitLocal);
+
+        // 클리핑 반경 (조절 가능)
+        float clipRadius = 0.5f;
+
+        if (_bodyMaterial != null)
+        {
+            _bodyMaterial.SetVector(_ClipCenterID, hitWorldPos);
+            _bodyMaterial.SetFloat(_ClipRadiusID, clipRadius);
+        }
+
+        if (_bodyExtraMaterial != null)
+        {
+            _bodyExtraMaterial.SetVector(_ClipCenterID, hitWorldPos);
+            _bodyExtraMaterial.SetFloat(_ClipRadiusID, clipRadius);
+        }
+
+        if (_tailMaterial != null)
+        {
+            _tailMaterial.SetVector(_ClipCenterID, hitWorldPos);
+            _tailMaterial.SetFloat(_ClipRadiusID, clipRadius);
+        }
+    }
+    // ===================================
 
     public void SuccessAndDestroy()
     {
+        // 클리핑 비활성화
+        EnableClipping(false);
+
         if (_tail != null)
         {
             Destroy(_tail.gameObject);
@@ -177,6 +257,9 @@ public class HoldNote : Note
         IsFailed = true;
         IsActive = false;
 
+        // 클리핑 비활성화 (실패 시 전체 보이게)
+        EnableClipping(false);
+
         if (palette != null)
         {
             Color c;
@@ -187,9 +270,6 @@ public class HoldNote : Note
 
     private void ApplyTint(Color c)
     {
-        // Renderer는 제거 (필요없음)
-
-        // ParticleSystem만 처리
         var pss = GetComponentsInChildren<ParticleSystem>(true);
         foreach (var ps in pss)
         {
@@ -265,6 +345,10 @@ public class HoldNote : Note
 
         if (_built)
             ApplyBodyTransform();
+
+        // Hold 활성화 시 클리핑 업뎃
+        if (IsActive && !IsFailed)
+            UpdateClipping();
 
         if (!_useDespawn)
             return;
