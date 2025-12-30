@@ -7,8 +7,6 @@ public class HoldNote : Note
     [SerializeField] private Transform _tail;
     [SerializeField] private Transform _bodyExtra;
 
-    [Header("Timing Option")] //il dan feel yo up suh
-
     public double HeadDspTime { get; private set; }
     public double TailDspTime { get; private set; }
 
@@ -93,8 +91,30 @@ public class HoldNote : Note
             _postDirLocal = _axisLocal;
         }
 
-        double holdSec = _holdBeats * _secPerBeat;
-        _holdLen = _speedLocal * (float)holdSec;
+        double holdSecD = _holdBeats * _secPerBeat;
+        float holdSec = (float)holdSecD;
+
+        // --- FIX: compute hold length in world units, then convert to local z units.
+        // This removes "double length" caused by prefab/parent scaling.
+        float worldDistA = 0f;
+        float worldSpeed = 0f;
+
+        if (_space != null)
+        {
+            Vector3 wSpawn = _space.TransformPoint(_spawnLocal);
+            Vector3 wHit = _space.TransformPoint(_hitLocal);
+            worldDistA = Vector3.Distance(wSpawn, wHit);
+        }
+
+        worldSpeed = worldDistA / Mathf.Max(0.0001f, _travelTime);
+
+        float holdWorldLen = worldSpeed * Mathf.Max(0f, holdSec);
+
+        float worldPerLocalZ = transform.TransformVector(Vector3.forward).magnitude;
+        if (worldPerLocalZ < 0.000001f) worldPerLocalZ = 1f;
+
+        _holdLen = holdWorldLen / worldPerLocalZ;
+        // --- end FIX
 
         _built = true;
 
@@ -106,7 +126,6 @@ public class HoldNote : Note
     {
         HeadDspTime = ExpectedHitDspTime;
 
-        // Always chart-based. Do not shift by press time.
         double chartTail = HeadDspTime + (_holdBeats * _secPerBeat);
         TailDspTime = chartTail;
     }
@@ -116,7 +135,6 @@ public class HoldNote : Note
         if (IsFailed) return;
         IsActive = true;
 
-        // Always keep chart-based TailDspTime.
         SyncDspTimes();
 
         if (_head != null)

@@ -2731,7 +2731,7 @@ MonoBehaviour:
     _holdPrefab: {fileID: 899932709157541386, guid: 7537e552b47ad574586741a4f6006b09, type: 3}
     _yOffsetLocal: 0
   _baseApproachBeats: 2
-  _noteSpeedMul: 2
+  _noteSpeedMul: 0.5
   _autoSpawn: 1
   _spawnIntervalBeats: 0.5
   _spawnRandomSingleLane: 1
