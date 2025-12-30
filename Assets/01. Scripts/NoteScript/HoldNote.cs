@@ -28,6 +28,9 @@ public class HoldNote : Note
 
     private Renderer[] _renderers;
 
+    // FIX: lock lateral (xy drift prevention)
+    private Vector3 _lateralLocal;
+
     private void Awake()
     {
         if (_body != null) _bodyBaseScale = _body.localScale;
@@ -72,6 +75,13 @@ public class HoldNote : Note
         SyncDspTimes();
     }
 
+    private Vector3 GetAxisNLocal()
+    {
+        Vector3 a = _axisLocal;
+        if (a.sqrMagnitude < 0.000001f) a = Vector3.forward;
+        return a.normalized;
+    }
+
     public void SetupHoldBeats(double holdBeats, double secPerBeat)
     {
         _holdBeats = holdBeats < 0.0 ? 0.0 : holdBeats;
@@ -79,16 +89,21 @@ public class HoldNote : Note
 
         _speedLocal = GetSpeedLocal();
 
+        // FIX: lock lateral component based on spawn position (prevents xy drift)
+        Vector3 axisN = GetAxisNLocal();
+        _lateralLocal = _spawnLocal - axisN * Vector3.Dot(_spawnLocal, axisN);
+
         if (_useDespawn)
         {
-            Vector3 dir = (_despawnLocal - _hitLocal);
-            if (dir.sqrMagnitude < 0.000001f) dir = (_hitLocal - _spawnLocal);
-            if (dir.sqrMagnitude < 0.000001f) dir = _axisLocal;
-            _postDirLocal = dir.normalized;
+            // FIX: keep post direction on axis only (avoid xy drift after hit)
+            float dirS = Vector3.Dot((_despawnLocal - _hitLocal), axisN);
+            if (Mathf.Abs(dirS) < 0.000001f) dirS = Vector3.Dot((_hitLocal - _spawnLocal), axisN);
+            float sign = (dirS >= 0f) ? 1f : -1f;
+            _postDirLocal = axisN * sign;
         }
         else
         {
-            _postDirLocal = _axisLocal;
+            _postDirLocal = axisN;
         }
 
         double holdSecD = _holdBeats * _secPerBeat;
@@ -172,59 +187,65 @@ public class HoldNote : Note
 
     private void ApplyTint(Color c)
     {
-        if (_renderers != null)
-        {
-            for (int i = 0; i < _renderers.Length; i++)
-            {
-                var r = _renderers[i];
-                if (r == null) continue;
+        // Renderer는 제거 (필요없음)
 
-                var mpb = new MaterialPropertyBlock();
-                r.GetPropertyBlock(mpb);
-
-                mpb.SetColor("_BaseColor", c);
-                mpb.SetColor("_Color", c);
-                mpb.SetColor("_TintColor", c);
-                mpb.SetColor("_EmissionColor", c);
-                mpb.SetColor("_StartColor", c);
-
-                r.SetPropertyBlock(mpb);
-            }
-        }
-
+        // ParticleSystem만 처리
         var pss = GetComponentsInChildren<ParticleSystem>(true);
-        for (int i = 0; i < pss.Length; i++)
+        foreach (var ps in pss)
         {
-            var ps = pss[i];
             if (ps == null) continue;
+
             var main = ps.main;
-            main.startColor = c;
+            main.startColor = new ParticleSystem.MinMaxGradient(c);
+
+            var col = ps.colorOverLifetime;
+            if (col.enabled)
+            {
+                Gradient newGrad = new Gradient();
+                newGrad.SetKeys(
+                    new GradientColorKey[] { new GradientColorKey(c, 0f), new GradientColorKey(c, 1f) },
+                    new GradientAlphaKey[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(0f, 1f) }
+                );
+                col.color = new ParticleSystem.MinMaxGradient(newGrad);
+            }
         }
     }
 
     private Vector3 EvaluateHeadLocalUnclamped(float elapsed)
     {
+        Vector3 axisN = GetAxisNLocal();
+
+        float spawnS = Vector3.Dot(_spawnLocal, axisN);
+        float hitS = Vector3.Dot(_hitLocal, axisN);
+        float despawnS = Vector3.Dot(_despawnLocal, axisN);
+
         if (!_useDespawn)
         {
             float t = Mathf.Clamp01(elapsed / _travelTime);
-            return Vector3.Lerp(_spawnLocal, _hitLocal, t);
+            float s = Mathf.Lerp(spawnS, hitS, t);
+            return _lateralLocal + axisN * s;
         }
 
         if (elapsed <= _travelTime)
         {
             float t = Mathf.Clamp01(elapsed / _travelTime);
-            return Vector3.Lerp(_spawnLocal, _hitLocal, t);
+            float s = Mathf.Lerp(spawnS, hitS, t);
+            return _lateralLocal + axisN * s;
         }
 
         if (elapsed <= (_travelTime + _postTime))
         {
             float e2 = elapsed - _travelTime;
             float t2 = Mathf.Clamp01(e2 / Mathf.Max(0.0001f, _postTime));
-            return Vector3.Lerp(_hitLocal, _despawnLocal, t2);
+            float s = Mathf.Lerp(hitS, despawnS, t2);
+            return _lateralLocal + axisN * s;
         }
 
         float extra = elapsed - (_travelTime + _postTime);
-        return _despawnLocal + (_postDirLocal * _speedLocal * extra);
+
+        float sign = (Vector3.Dot(_postDirLocal, axisN) >= 0f) ? 1f : -1f;
+        float sExtra = despawnS + (sign * _speedLocal * extra);
+        return _lateralLocal + axisN * sExtra;
     }
 
     protected override void Update()

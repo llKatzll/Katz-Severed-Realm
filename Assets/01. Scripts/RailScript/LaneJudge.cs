@@ -19,7 +19,7 @@ public class LaneJudge : MonoBehaviour
     [SerializeField] private float _ruinMs = 200f;
 
     [Header("Hold Judge Bonus (ms)")]
-    [SerializeField] private float _holdJudgeBonusMs = 5f; // Hold is easier than Tap (+5ms)
+    [SerializeField] private float _holdJudgeBonusMs = 10f;
 
     [Header("Palette")]
     [SerializeField] private HitFxPaletteSO _palette;
@@ -43,13 +43,9 @@ public class LaneJudge : MonoBehaviour
     [SerializeField] private GameObject _emptyHitPrefab;
     [SerializeField] private float _emptyDestroySec = 0.2f;
 
-    [Header("Debug Tail")]
-    [SerializeField] private bool _debugTail = true;
-
     private GameObject _holdLoopFx;
     private readonly List<Note> _tapNotes = new List<Note>(64);
     private HoldNote _hold;
-
 
     public void SetLaneType(NoteSpawner.NoteType t) => _laneType = t;
 
@@ -65,7 +61,6 @@ public class LaneJudge : MonoBehaviour
         if (_hold != null) return false;
 
         _hold = h;
-
         return true;
     }
 
@@ -75,10 +70,8 @@ public class LaneJudge : MonoBehaviour
         AutoMissTapNoInput();
 
         CleanupDeadHold();
+        AutoMissHoldNoInput();
 
-        // IMPORTANT:
-        // - No auto "tail success" processing.
-        // - But if player keeps holding past tail without KeyUp, it becomes Miss and loop FX must stop.
         AutoFailHoldIfTailIgnored();
 
         if (Input.GetKeyDown(_key)) OnKeyDown();
@@ -118,7 +111,6 @@ public class LaneJudge : MonoBehaviour
 
         double rawMs = (AudioSettings.dspTime - _hold.HeadDspTime) * 1000.0 + _userOffsetMs;
 
-        // Hold uses wider window (tap + bonus)
         if (rawMs < -HoldRuinMs)
         {
             SpawnEmptyHit();
@@ -131,11 +123,24 @@ public class LaneJudge : MonoBehaviour
         {
             _hold.Fail(_palette, laneType);
             StopHoldLoopFx();
+
+            if (ComboUI.I != null) ComboUI.I.OnHoldFail("Miss");
+
             _hold = null;
             return;
         }
 
         SpawnHoldHeadFx(judge, laneType);
+
+        if (ComboUI.I != null)
+        {
+            float bpm = 120f;
+            RhythmConductor rhy = FindObjectOfType<RhythmConductor>();
+            if (rhy != null) bpm = (float)rhy.Bpm;
+
+            bool breaks = (judge == JudgeType.Ruin || judge == JudgeType.Miss);
+            ComboUI.I.OnHoldStart(judge.ToString(), breaks, bpm, _key);
+        }
 
         _hold.StartHold();
 
@@ -152,14 +157,13 @@ public class LaneJudge : MonoBehaviour
         double nowDsp = AudioSettings.dspTime;
         double rawMs = (nowDsp - _hold.TailDspTime) * 1000.0 + _userOffsetMs;
 
-        Debug.LogWarning("TailJudge lane=" + laneType + " nowDsp=" + nowDsp.ToString("F6") + " tailDsp=" + _hold.TailDspTime.ToString("F6") + " rawMs=" + rawMs.ToString("F2"));
-
-
-        
         if (rawMs < -HoldRuinMs)
         {
             _hold.Fail(_palette, laneType);
             StopHoldLoopFx();
+
+            if (ComboUI.I != null) ComboUI.I.OnHoldFail("Miss");
+
             return;
         }
 
@@ -169,16 +173,46 @@ public class LaneJudge : MonoBehaviour
         {
             _hold.Fail(_palette, laneType);
             StopHoldLoopFx();
+
+            if (ComboUI.I != null) ComboUI.I.OnHoldFail("Miss");
+
             return;
         }
 
         SpawnHoldTailFx(judge, laneType);
+
+        if (ComboUI.I != null)
+        {
+            bool breaks = (judge == JudgeType.Ruin || judge == JudgeType.Miss);
+            ComboUI.I.OnHoldEnd(judge.ToString(), breaks);
+        }
 
         StopHoldLoopFx();
         _hold.SuccessAndDestroy();
         _hold = null;
     }
 
+    private void AutoMissHoldNoInput()
+    {
+        if (_hold == null) return;
+        if (_hold.IsFailed) return;
+        if (_hold.IsActive) return;
+
+        double now = AudioSettings.dspTime;
+        double rawHeadMs = (now - _hold.HeadDspTime) * 1000.0 + _userOffsetMs;
+
+        if (rawHeadMs > HoldRuinMs)
+        {
+            NoteSpawner.NoteType laneType = _hold.NoteType;
+
+            _hold.Fail(_palette, laneType);
+            StopHoldLoopFx();
+
+            if (ComboUI.I != null) ComboUI.I.OnHoldFail("Miss");
+
+            _hold = null;
+        }
+    }
 
     private void AutoFailHoldIfTailIgnored()
     {
@@ -191,13 +225,14 @@ public class LaneJudge : MonoBehaviour
         double now = AudioSettings.dspTime;
         double rawTailMs = (now - _hold.TailDspTime) * 1000.0 + _userOffsetMs;
 
-        // tail missed (held too long) => fail + stop FX
         if (rawTailMs > HoldRuinMs)
         {
             NoteSpawner.NoteType laneType = _hold.NoteType;
 
             _hold.Fail(_palette, laneType);
             StopHoldLoopFx();
+
+            if (ComboUI.I != null) ComboUI.I.OnHoldFail("Miss");
 
             _hold = null;
         }
@@ -231,6 +266,12 @@ public class LaneJudge : MonoBehaviour
         }
 
         JudgeType judge = JudgeFromRawMs(rawMs);
+
+        if (ComboUI.I != null)
+        {
+            bool breaks = (judge == JudgeType.Ruin || judge == JudgeType.Miss);
+            ComboUI.I.OnTapResult(judge.ToString(), breaks);
+        }
 
         RemoveTap(target);
 
@@ -269,18 +310,13 @@ public class LaneJudge : MonoBehaviour
         Color c = Color.white;
 
         if (_palette == null)
-        {
-            Debug.LogWarning("PaletteMissing lane=" + laneType + " judge=" + judge);
             return c;
-        }
 
         Color tmp;
         bool ok = _palette.TryGetColor(laneType, judge, out tmp);
+
         if (!ok)
-        {
-            Debug.LogWarning("PaletteColorMissing lane=" + laneType + " judge=" + judge);
             return c;
-        }
 
         return tmp;
     }
@@ -289,54 +325,41 @@ public class LaneJudge : MonoBehaviour
     {
         if (fx == null) return;
 
-        var renderers = fx.GetComponentsInChildren<Renderer>(true);
-        for (int i = 0; i < renderers.Length; i++)
-        {
-            var r = renderers[i];
-            if (r == null) continue;
-
-            var mpb = new MaterialPropertyBlock();
-            r.GetPropertyBlock(mpb);
-
-            mpb.SetColor("_BaseColor", c);
-            mpb.SetColor("_Color", c);
-            mpb.SetColor("_TintColor", c);
-            mpb.SetColor("_EmissionColor", c);
-            mpb.SetColor("_StartColor", c);
-
-            r.SetPropertyBlock(mpb);
-
-            var mats = r.materials;
-            for (int m = 0; m < mats.Length; m++)
-            {
-                var mat = mats[m];
-                if (mat == null) continue;
-
-                if (mat.HasProperty("_BaseColor")) mat.SetColor("_BaseColor", c);
-                if (mat.HasProperty("_Color")) mat.SetColor("_Color", c);
-                if (mat.HasProperty("_TintColor")) mat.SetColor("_TintColor", c);
-                if (mat.HasProperty("_EmissionColor")) mat.SetColor("_EmissionColor", c);
-                if (mat.HasProperty("_StartColor")) mat.SetColor("_StartColor", c);
-            }
-        }
-
         var pss = fx.GetComponentsInChildren<ParticleSystem>(true);
-        for (int i = 0; i < pss.Length; i++)
+        foreach (var ps in pss)
         {
-            var ps = pss[i];
             if (ps == null) continue;
 
             var main = ps.main;
-            main.startColor = c;
+            main.startColor = new ParticleSystem.MinMaxGradient(c);
 
             var col = ps.colorOverLifetime;
-            if (col.enabled) col.color = new ParticleSystem.MinMaxGradient(c);
+            if (col.enabled)
+            {
+                Gradient newGrad = new Gradient();
+                newGrad.SetKeys(
+                    new GradientColorKey[] { new GradientColorKey(c, 0f), new GradientColorKey(c, 1f) },
+                    new GradientAlphaKey[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(0f, 1f) }
+                );
+                col.color = new ParticleSystem.MinMaxGradient(newGrad);
+            }
 
-            var bySpeed = ps.colorBySpeed;
-            if (bySpeed.enabled) bySpeed.color = new ParticleSystem.MinMaxGradient(c);
+            var colSpeed = ps.colorBySpeed;
+            if (colSpeed.enabled)
+            {
+                colSpeed.color = new ParticleSystem.MinMaxGradient(c);
+            }
 
             var trails = ps.trails;
-            if (trails.enabled) trails.colorOverLifetime = new ParticleSystem.MinMaxGradient(c);
+            if (trails.enabled)
+            {
+                Gradient trailGrad = new Gradient();
+                trailGrad.SetKeys(
+                    new GradientColorKey[] { new GradientColorKey(c, 0f), new GradientColorKey(c, 1f) },
+                    new GradientAlphaKey[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(0f, 1f) }
+                );
+                trails.colorOverLifetime = new ParticleSystem.MinMaxGradient(trailGrad);
+            }
         }
     }
 
@@ -456,6 +479,9 @@ public class LaneJudge : MonoBehaviour
             if (rawMs > _ruinMs)
             {
                 _tapNotes.RemoveAt(i);
+
+                if (ComboUI.I != null)
+                    ComboUI.I.OnTapResult("Miss", true);
             }
         }
     }

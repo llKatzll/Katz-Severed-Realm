@@ -251,6 +251,7 @@ MonoBehaviour:
   _traceMs: 120
   _fractureMs: 155
   _ruinMs: 200
+  _holdJudgeBonusMs: 5
   _palette: {fileID: 11400000, guid: fcdca554ccc5ee142a66efa1ea55f45a, type: 2}
   _tapHitFxPrefab: {fileID: 8163141537363357767, guid: d8e9aae6f5a0e5340a82e4687a67a042, type: 3}
   _tapHitFxDestroySec: 0.3
@@ -263,7 +264,6 @@ MonoBehaviour:
   _holdLoopFxStopDestroySec: 0.2
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: 47e7700bbfea603418096236c0e2bb40, type: 3}
   _emptyDestroySec: 0.2
-  _debugTail: 1
 --- !u!1 &55276492
 GameObject:
   m_ObjectHideFlags: 0
@@ -1943,6 +1943,7 @@ MonoBehaviour:
   _traceMs: 120
   _fractureMs: 155
   _ruinMs: 200
+  _holdJudgeBonusMs: 5
   _palette: {fileID: 11400000, guid: fcdca554ccc5ee142a66efa1ea55f45a, type: 2}
   _tapHitFxPrefab: {fileID: 8163141537363357767, guid: d8e9aae6f5a0e5340a82e4687a67a042, type: 3}
   _tapHitFxDestroySec: 0.3
@@ -1955,7 +1956,6 @@ MonoBehaviour:
   _holdLoopFxStopDestroySec: 0.2
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: a28b98217eb767846839462972610979, type: 3}
   _emptyDestroySec: 0.2
-  _debugTail: 1
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -2308,6 +2308,7 @@ MonoBehaviour:
   _traceMs: 120
   _fractureMs: 155
   _ruinMs: 200
+  _holdJudgeBonusMs: 5
   _palette: {fileID: 11400000, guid: fcdca554ccc5ee142a66efa1ea55f45a, type: 2}
   _tapHitFxPrefab: {fileID: 8163141537363357767, guid: d8e9aae6f5a0e5340a82e4687a67a042, type: 3}
   _tapHitFxDestroySec: 0.3
@@ -2320,7 +2321,6 @@ MonoBehaviour:
   _holdLoopFxStopDestroySec: 0.2
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: 47e7700bbfea603418096236c0e2bb40, type: 3}
   _emptyDestroySec: 0.2
-  _debugTail: 1
 --- !u!1 &1038989766
 GameObject:
   m_ObjectHideFlags: 0
@@ -2691,7 +2691,7 @@ MonoBehaviour:
     _holdPrefab: {fileID: -1344721013972580664, guid: 0be61d4d42f4647469d510dfabf776b3, type: 3}
     _yOffsetLocal: 1
   - _laneName: Upper1
-    _noteType: 0
+    _noteType: 1
     _spawnPoint: {fileID: 1719964236}
     _hitPoint: {fileID: 1653326917}
     _despawnPoint: {fileID: 1080729756}
@@ -2701,7 +2701,7 @@ MonoBehaviour:
     _holdPrefab: {fileID: 899932709157541386, guid: 7537e552b47ad574586741a4f6006b09, type: 3}
     _yOffsetLocal: 0
   - _laneName: Upper2
-    _noteType: 0
+    _noteType: 1
     _spawnPoint: {fileID: 645967339}
     _hitPoint: {fileID: 1300446900}
     _despawnPoint: {fileID: 1242119140}
@@ -2711,7 +2711,7 @@ MonoBehaviour:
     _holdPrefab: {fileID: 899932709157541386, guid: 7537e552b47ad574586741a4f6006b09, type: 3}
     _yOffsetLocal: 0
   - _laneName: Upper3
-    _noteType: 0
+    _noteType: 1
     _spawnPoint: {fileID: 1310526128}
     _hitPoint: {fileID: 17181884}
     _despawnPoint: {fileID: 1269146917}
@@ -2721,7 +2721,7 @@ MonoBehaviour:
     _holdPrefab: {fileID: 899932709157541386, guid: 7537e552b47ad574586741a4f6006b09, type: 3}
     _yOffsetLocal: 0
   - _laneName: Upper4
-    _noteType: 0
+    _noteType: 1
     _spawnPoint: {fileID: 1270147635}
     _hitPoint: {fileID: 1031235096}
     _despawnPoint: {fileID: 747966632}
@@ -2733,10 +2733,10 @@ MonoBehaviour:
   _baseApproachBeats: 2
   _noteSpeedMul: 2
   _autoSpawn: 1
-  _spawnIntervalBeats: 0.25
-  _spawnRandomSingleLane: 0
+  _spawnIntervalBeats: 1
+  _spawnRandomSingleLane: 1
   _avoidSameLaneTwice: 1
-  _spawnForm: 1
+  _spawnForm: 2
   _preventHoldOverlapOnSameLane: 1
   _holdBeats: 1
 --- !u!1 &1191700353
@@ -2907,6 +2907,7 @@ MonoBehaviour:
   _traceMs: 120
   _fractureMs: 155
   _ruinMs: 200
+  _holdJudgeBonusMs: 5
   _palette: {fileID: 11400000, guid: fcdca554ccc5ee142a66efa1ea55f45a, type: 2}
   _tapHitFxPrefab: {fileID: 8163141537363357767, guid: d8e9aae6f5a0e5340a82e4687a67a042, type: 3}
   _tapHitFxDestroySec: 0.3
@@ -2919,7 +2920,6 @@ MonoBehaviour:
   _holdLoopFxStopDestroySec: 0.2
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: a28b98217eb767846839462972610979, type: 3}
   _emptyDestroySec: 0.2
-  _debugTail: 1
 --- !u!1 &1242119139
 GameObject:
   m_ObjectHideFlags: 0
@@ -2950,6 +2950,57 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1191700354}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1255481617
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1255481619}
+  - component: {fileID: 1255481618}
+  m_Layer: 0
+  m_Name: COMBO_Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1255481618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1255481617}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffcdeec93818104438e8a39dc375d84e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ComboUI
+  _comboText: {fileID: 185954371}
+  _judgeText: {fileID: 964053399}
+  _holdTickMul: 8
+  _minTickSec: 0.02
+  _useSmoothDisplay: 1
+  _displayCountPerSec: 60
+  _logHoldTick: 0
+--- !u!4 &1255481619
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1255481617}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1269146916
 GameObject:
@@ -3145,6 +3196,7 @@ MonoBehaviour:
   _traceMs: 120
   _fractureMs: 155
   _ruinMs: 200
+  _holdJudgeBonusMs: 5
   _palette: {fileID: 11400000, guid: fcdca554ccc5ee142a66efa1ea55f45a, type: 2}
   _tapHitFxPrefab: {fileID: 8163141537363357767, guid: d8e9aae6f5a0e5340a82e4687a67a042, type: 3}
   _tapHitFxDestroySec: 0.3
@@ -3157,7 +3209,6 @@ MonoBehaviour:
   _holdLoopFxStopDestroySec: 0.2
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: 47e7700bbfea603418096236c0e2bb40, type: 3}
   _emptyDestroySec: 0.2
-  _debugTail: 1
 --- !u!1 &1310526127
 GameObject:
   m_ObjectHideFlags: 0
@@ -3561,6 +3612,7 @@ MonoBehaviour:
   _traceMs: 120
   _fractureMs: 155
   _ruinMs: 200
+  _holdJudgeBonusMs: 5
   _palette: {fileID: 11400000, guid: fcdca554ccc5ee142a66efa1ea55f45a, type: 2}
   _tapHitFxPrefab: {fileID: 8163141537363357767, guid: d8e9aae6f5a0e5340a82e4687a67a042, type: 3}
   _tapHitFxDestroySec: 0.3
@@ -3573,7 +3625,6 @@ MonoBehaviour:
   _holdLoopFxStopDestroySec: 0.2
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: a28b98217eb767846839462972610979, type: 3}
   _emptyDestroySec: 0.2
-  _debugTail: 1
 --- !u!1 &1488290272
 GameObject:
   m_ObjectHideFlags: 0
@@ -3866,6 +3917,7 @@ MonoBehaviour:
   _traceMs: 120
   _fractureMs: 155
   _ruinMs: 200
+  _holdJudgeBonusMs: 5
   _palette: {fileID: 11400000, guid: fcdca554ccc5ee142a66efa1ea55f45a, type: 2}
   _tapHitFxPrefab: {fileID: 8163141537363357767, guid: d8e9aae6f5a0e5340a82e4687a67a042, type: 3}
   _tapHitFxDestroySec: 0.3
@@ -3878,7 +3930,6 @@ MonoBehaviour:
   _holdLoopFxStopDestroySec: 0.2
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: 47e7700bbfea603418096236c0e2bb40, type: 3}
   _emptyDestroySec: 0.2
-  _debugTail: 1
 --- !u!1 &1653508745
 GameObject:
   m_ObjectHideFlags: 0
@@ -4115,6 +4166,7 @@ MonoBehaviour:
   _traceMs: 120
   _fractureMs: 155
   _ruinMs: 200
+  _holdJudgeBonusMs: 5
   _palette: {fileID: 11400000, guid: fcdca554ccc5ee142a66efa1ea55f45a, type: 2}
   _tapHitFxPrefab: {fileID: 8163141537363357767, guid: d8e9aae6f5a0e5340a82e4687a67a042, type: 3}
   _tapHitFxDestroySec: 0.3
@@ -4127,7 +4179,6 @@ MonoBehaviour:
   _holdLoopFxStopDestroySec: 0.2
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: a28b98217eb767846839462972610979, type: 3}
   _emptyDestroySec: 0.2
-  _debugTail: 1
 --- !u!1 &1719964235
 GameObject:
   m_ObjectHideFlags: 0
@@ -4419,6 +4470,7 @@ SceneRoots:
   - {fileID: 92614243}
   - {fileID: 1130633025}
   - {fileID: 1038989768}
+  - {fileID: 1255481619}
   - {fileID: 1161246399}
   - {fileID: 2026075041}
   - {fileID: 516172090}

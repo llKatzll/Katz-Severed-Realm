@@ -24,7 +24,6 @@ public class HitFxPaletteSO : ScriptableObject
     public bool TryGetColor(NoteSpawner.NoteType laneType, JudgeType judge, out Color c)
     {
         c = Color.white;
-
         if (judge == JudgeType.Miss) return false;
 
         if (laneType == NoteSpawner.NoteType.Ground)
