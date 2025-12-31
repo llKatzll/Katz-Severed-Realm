@@ -26,14 +26,11 @@ public class HoldNote : Note
     private float _speedLocal;
     private Vector3 _postDirLocal;
 
-    private Renderer[] _renderers;
     private Vector3 _lateralLocal;
 
-    // Hold timing
     private double _totalHoldDuration;
     private double _holdStartDspTime;
 
-    // For preserving body length when released mid-hold
     private float _savedBodyLen = -1f;
 
     private void Awake()
@@ -180,7 +177,6 @@ public class HoldNote : Note
     {
         if (IsFailed) return;
 
-        // Save current body length before failing
         if (IsActive && _totalHoldDuration > 0)
         {
             double elapsed = AudioSettings.dspTime - _holdStartDspTime;
@@ -263,7 +259,6 @@ public class HoldNote : Note
     {
         if (_space == null) return;
 
-        //제발 따라붙어라
         float headElapsed = (float)(AudioSettings.dspTime - _spawnDspTime);
         if (headElapsed < 0f) headElapsed = 0f;
 
@@ -281,7 +276,6 @@ public class HoldNote : Note
         if (!_useDespawn)
             return;
 
-        // Check if tail reached despawn
         if (_tail != null && _space != null)
         {
             Vector3 tailWorldPos = _tail.position;
@@ -307,20 +301,16 @@ public class HoldNote : Note
         Vector3 tailDirLocal = Vector3.forward * tailSign;
         Quaternion rot = Quaternion.FromToRotation(Vector3.forward, tailDirLocal);
 
-        // Head position
         Vector3 headLocalPos = Vector3.zero;
 
-        // Tail position
         Vector3 tailLocalPos = tailDirLocal * _holdLen;
 
-        // Head transform
         if (_head != null)
         {
             _head.localPosition = headLocalPos;
             _head.localRotation = rot;
         }
 
-        // Tail transform
         if (_tail != null)
         {
             _tail.localPosition = tailLocalPos;
@@ -330,12 +320,10 @@ public class HoldNote : Note
         float fullBodyLen = _holdLen;
         float currentBodyLen = fullBodyLen;
 
-        // Body center calculation
         Vector3 bodyCenter;
 
         if (IsActive && !IsFailed)
         {
-            // Time-based: calculate how much body should shrink
             double now = AudioSettings.dspTime;
             double elapsed = now - HeadDspTime;
             double totalDuration = TailDspTime - HeadDspTime;

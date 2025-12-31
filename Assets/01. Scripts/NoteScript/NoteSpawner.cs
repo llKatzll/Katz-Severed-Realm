@@ -52,6 +52,10 @@ public class NoteSpawner : MonoBehaviour
     [SerializeField] private bool _preventHoldOverlapOnSameLane = true;
     [SerializeField] private float _holdBeats = 1f;
 
+    [Header("Dimension")]
+    [SerializeField] private DimensionType _currentSpawnDimension = DimensionType.Dismaller;
+    [SerializeField] private bool _randomizeDimension = false;
+
     private double _nextHitBeat;
     private bool _primed;
     private int _lastPickedLaneIndex = -1;
@@ -78,14 +82,14 @@ public class NoteSpawner : MonoBehaviour
     }
 
     private void PrimeNextBeat()
-{
-    if (_primed) return;
-    if (_conductor == null) return;
-    if (!_conductor.Started) return;
+    {
+        if (_primed) return;
+        if (_conductor == null) return;
+        if (!_conductor.Started) return;
 
-    _nextHitBeat = _conductor.CurrentBeat + ApproachBeats;
-    _primed = true;
-}
+        _nextHitBeat = _conductor.CurrentBeat + ApproachBeats;
+        _primed = true;
+    }
 
     private void CleanupHoldDict()
     {
@@ -132,6 +136,22 @@ public class NoteSpawner : MonoBehaviour
         }
     }
 
+    private DimensionType GetSpawnDimension()
+    {
+        if (_randomizeDimension)
+        {
+            return (Random.value < 0.5f) ? DimensionType.Dismaller : DimensionType.Separation;
+        }
+        return _currentSpawnDimension;
+    }
+
+    // Set the dimension for upcoming spawned notes
+    public void SetSpawnDimension(DimensionType dimension)
+    {
+        _currentSpawnDimension = dimension;
+        Debug.Log("[NoteSpawner] Spawn dimension set to: " + dimension);
+    }
+
     private void SpawnOneAtBeat(double hitBeat)
     {
         int laneIndex = PickLaneIndex();
@@ -144,20 +164,22 @@ public class NoteSpawner : MonoBehaviour
         double headHitDsp = _conductor.DspTimeAtBeat(hitBeat);
         float travelSec = (float)(ApproachBeats * _conductor.SecPerBeat);
 
+        DimensionType noteDim = GetSpawnDimension();
+
         if (_spawnForm == SpawnForm.Tap)
         {
-            SpawnTapAtBeat(laneIndex, lane, travelSec, headHitDsp);
+            SpawnTapAtBeat(laneIndex, lane, travelSec, headHitDsp, noteDim);
             return;
         }
 
         if (_spawnForm == SpawnForm.Hold)
         {
-            SpawnHoldAtBeat(laneIndex, lane, travelSec, headHitDsp);
+            SpawnHoldAtBeat(laneIndex, lane, travelSec, headHitDsp, noteDim);
             return;
         }
 
-        if (Random.value < 0.5f) SpawnTapAtBeat(laneIndex, lane, travelSec, headHitDsp);
-        else SpawnHoldAtBeat(laneIndex, lane, travelSec, headHitDsp);
+        if (Random.value < 0.5f) SpawnTapAtBeat(laneIndex, lane, travelSec, headHitDsp, noteDim);
+        else SpawnHoldAtBeat(laneIndex, lane, travelSec, headHitDsp, noteDim);
     }
 
     private int PickLaneIndex()
@@ -186,7 +208,7 @@ public class NoteSpawner : MonoBehaviour
         return judge;
     }
 
-    private void SpawnTapAtBeat(int laneIndex, NoteLane lane, float travelSec, double hitDsp)
+    private void SpawnTapAtBeat(int laneIndex, NoteLane lane, float travelSec, double hitDsp, DimensionType dimension)
     {
         Note prefab = lane._tapPrefab != null ? lane._tapPrefab : _defaultTapPrefab;
         if (prefab == null) return;
@@ -194,6 +216,7 @@ public class NoteSpawner : MonoBehaviour
         var judge = GetJudge(lane);
 
         Note note = Instantiate(prefab);
+        note.SetDimension(dimension);
         note.InitFollow(
             lane._hitPoint,
             lane._spawnPoint,
@@ -211,7 +234,7 @@ public class NoteSpawner : MonoBehaviour
         if (judge != null) judge.RegisterTap(note);
     }
 
-    private void SpawnHoldAtBeat(int laneIndex, NoteLane lane, float travelSec, double headHitDsp)
+    private void SpawnHoldAtBeat(int laneIndex, NoteLane lane, float travelSec, double headHitDsp, DimensionType dimension)
     {
         if (_preventHoldOverlapOnSameLane)
         {
@@ -225,6 +248,7 @@ public class NoteSpawner : MonoBehaviour
         var judge = GetJudge(lane);
 
         HoldNote hold = Instantiate(prefab);
+        hold.SetDimension(dimension);
         hold.InitFollow(
             lane._hitPoint,
             lane._spawnPoint,

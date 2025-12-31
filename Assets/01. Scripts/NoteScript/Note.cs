@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class Note : MonoBehaviour
 {
+    [Header("Dimension")]
+    [SerializeField] private DimensionType _dimension = DimensionType.Dismaller;
+
     protected float _travelTime;
     protected NoteSpawner.NoteType _noteType;
 
@@ -20,13 +23,26 @@ public class Note : MonoBehaviour
     protected double _spawnDspTime;
     public double ExpectedHitDspTime { get; protected set; }
 
-    // projection axis (spawn -> hit
+    // projection axis (spawn -> hit)
     protected Vector3 _axisLocal;
     protected float _spawnS;
     protected float _hitS;
     protected float _despawnS;
     protected float _moveSignS;
+
     public NoteSpawner.NoteType NoteType => _noteType;
+    public DimensionType Dimension => _dimension;
+
+    // Wrong dimension visual state
+    private bool _isShowingWrongDimension;
+    private GameObject _noiseEffectInstance;
+    [System.NonSerialized] protected Renderer[] _renderers;
+    private Color[] _originalColors;
+
+    public void SetDimension(DimensionType dim)
+    {
+        _dimension = dim;
+    }
 
     public void InitFollow(
         Transform space,
@@ -91,6 +107,105 @@ public class Note : MonoBehaviour
 
         if (_rotateSource != null)
             transform.rotation = _rotateSource.rotation;
+
+        // Cache renderers for dimension effects
+        CacheRenderers();
+
+        // Subscribe to dimension changes
+        if (DimensionManager.I != null)
+        {
+            DimensionManager.I.OnDimensionChanged += OnDimensionChanged;
+            UpdateWrongDimensionVisual();
+        }
+    }
+
+    private void CacheRenderers()
+    {
+        _renderers = GetComponentsInChildren<Renderer>(true);
+        _originalColors = new Color[_renderers.Length];
+
+        for (int i = 0; i < _renderers.Length; i++)
+        {
+            if (_renderers[i] != null && _renderers[i].material != null)
+            {
+                _originalColors[i] = _renderers[i].material.color;
+            }
+        }
+    }
+
+    private void OnDimensionChanged(DimensionType newDimension)
+    {
+        UpdateWrongDimensionVisual();
+    }
+
+    protected virtual void UpdateWrongDimensionVisual()
+    {
+        if (DimensionManager.I == null) return;
+
+        bool shouldShowWrong = DimensionManager.I.IsNoteInWrongDimension(_dimension);
+
+        if (shouldShowWrong && !_isShowingWrongDimension)
+        {
+            // Show wrong dimension effect
+            ApplyWrongDimensionColor();
+            SpawnNoiseEffect();
+            _isShowingWrongDimension = true;
+        }
+        else if (!shouldShowWrong && _isShowingWrongDimension)
+        {
+            // Restore normal appearance
+            RestoreOriginalColor();
+            DestroyNoiseEffect();
+            _isShowingWrongDimension = false;
+        }
+    }
+
+    private void ApplyWrongDimensionColor()
+    {
+        if (DimensionManager.I == null) return;
+
+        Color wrongColor = DimensionManager.I.GetWrongDimensionColor(_dimension);
+
+        for (int i = 0; i < _renderers.Length; i++)
+        {
+            if (_renderers[i] != null && _renderers[i].material != null)
+            {
+                _renderers[i].material.color = wrongColor;
+            }
+        }
+    }
+
+    private void RestoreOriginalColor()
+    {
+        for (int i = 0; i < _renderers.Length; i++)
+        {
+            if (_renderers[i] != null && _renderers[i].material != null && i < _originalColors.Length)
+            {
+                _renderers[i].material.color = _originalColors[i];
+            }
+        }
+    }
+
+    private void SpawnNoiseEffect()
+    {
+        if (DimensionManager.I == null) return;
+        if (_noiseEffectInstance != null) return;
+
+        GameObject noisePrefab = DimensionManager.I.GetWrongDimensionNoisePrefab(_dimension, false);
+        if (noisePrefab != null)
+        {
+            _noiseEffectInstance = Instantiate(noisePrefab, transform);
+            _noiseEffectInstance.transform.localPosition = Vector3.zero;
+        }
+    }
+
+    private void DestroyNoiseEffect()
+    {
+        if (_noiseEffectInstance != null)
+        {
+            Destroy(_noiseEffectInstance);
+            _noiseEffectInstance = null;
+        }
     }
 
     public void SetExpectedHitDspTime(double hitDspTime)
@@ -152,5 +267,16 @@ public class Note : MonoBehaviour
     {
         float distA = Vector3.Distance(_spawnLocal, _hitLocal);
         return distA / Mathf.Max(0.0001f, _travelTime);
+    }
+
+    protected virtual void OnDestroy()
+    {
+        // Unsubscribe from dimension changes
+        if (DimensionManager.I != null)
+        {
+            DimensionManager.I.OnDimensionChanged -= OnDimensionChanged;
+        }
+
+        DestroyNoiseEffect();
     }
 }

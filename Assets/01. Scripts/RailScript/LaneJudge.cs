@@ -43,6 +43,9 @@ public class LaneJudge : MonoBehaviour
     [SerializeField] private GameObject _emptyHitPrefab;
     [SerializeField] private float _emptyDestroySec = 0.2f;
 
+    [Header("Debug")]
+    [SerializeField] private bool _enableDimensionDebug = false;
+
     private GameObject _holdLoopFx;
     private readonly List<Note> _tapNotes = new List<Note>(64);
     private HoldNote _hold;
@@ -109,6 +112,15 @@ public class LaneJudge : MonoBehaviour
 
         NoteSpawner.NoteType laneType = _hold.NoteType;
 
+        if (!CanJudgeNoteDimension(_hold.Dimension, false))
+        {
+            if (_enableDimensionDebug)
+                Debug.Log("[LaneJudge] Hold start blocked - wrong dimension: " + _hold.Dimension);
+
+            SpawnEmptyHit();
+            return;
+        }
+
         double rawMs = (AudioSettings.dspTime - _hold.HeadDspTime) * 1000.0 + _userOffsetMs;
 
         if (rawMs < -HoldRuinMs)
@@ -135,7 +147,7 @@ public class LaneJudge : MonoBehaviour
         if (ComboUI.I != null)
         {
             float bpm = 120f;
-            RhythmConductor rhy = FindObjectOfType<RhythmConductor>(); //그건 비주얼스튜디오 생각이고 이거 제대로 된다고!
+            RhythmConductor rhy = FindObjectOfType<RhythmConductor>();
             if (rhy != null) bpm = (float)rhy.Bpm;
 
             bool breaks = (judge == JudgeType.Ruin || judge == JudgeType.Miss);
@@ -154,6 +166,8 @@ public class LaneJudge : MonoBehaviour
 
         NoteSpawner.NoteType laneType = _hold.NoteType;
 
+        // Note: Hold in progress - dimension agnostic (always judgeable)
+        // CanJudgeNoteDimension(_hold.Dimension, true) would return true
         double nowDsp = AudioSettings.dspTime;
         double rawMs = (nowDsp - _hold.TailDspTime) * 1000.0 + _userOffsetMs;
 
@@ -257,6 +271,19 @@ public class LaneJudge : MonoBehaviour
             return;
         }
 
+        if (!CanJudgeNoteDimension(target.Dimension, false))
+        {
+            if (_enableDimensionDebug)
+                Debug.Log("[LaneJudge] Tap blocked - wrong dimension: " + target.Dimension);
+
+            // Wrong dimension = forced Miss
+            if (ComboUI.I != null)
+                ComboUI.I.OnTapResult("Miss", true);
+
+            SpawnEmptyHit();
+            return;
+        }
+
         double rawMs = (AudioSettings.dspTime - target.ExpectedHitDspTime) * 1000.0 + _userOffsetMs;
 
         if (rawMs < -_ruinMs)
@@ -279,6 +306,12 @@ public class LaneJudge : MonoBehaviour
             SpawnTapHitFx(judge, target.NoteType);
 
         Destroy(target.gameObject);
+    }
+
+    private bool CanJudgeNoteDimension(DimensionType noteDimension, bool isLongNoteInProgress)
+    {
+        if (DimensionManager.I == null) return true; // No dimension system = always ok
+        return DimensionManager.I.CanJudgeNote(noteDimension, isLongNoteInProgress);
     }
 
     private JudgeType JudgeFromRawMs(double rawMs)
