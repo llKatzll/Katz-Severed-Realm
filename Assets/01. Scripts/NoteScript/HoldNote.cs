@@ -29,45 +29,20 @@ public class HoldNote : Note
     private Renderer[] _renderers;
     private Vector3 _lateralLocal;
 
-    //클리핑 관련 =======
-    private Material _bodyMaterial;
-    private Material _bodyExtraMaterial;
-    private Material _tailMaterial;
+    // Hold timing
+    private double _totalHoldDuration;
+    private double _holdStartDspTime;
 
-    private static readonly int _ClipCenterID = Shader.PropertyToID("_ClipCenter");
-    private static readonly int _ClipRadiusID = Shader.PropertyToID("_ClipRadius");
-    private static readonly int _ClipEnabledID = Shader.PropertyToID("_ClipEnabled");
-    //========
+    // For preserving body length when released mid-hold
+    private float _savedBodyLen = -1f;
 
     private void Awake()
     {
         if (_body != null)
-        {
             _bodyBaseScale = _body.localScale;
 
-            // 추가: Material 인스턴스 생성
-            var renderer = _body.GetComponent<Renderer>();
-            if (renderer != null)
-                _bodyMaterial = renderer.material;
-        }
-
         if (_bodyExtra != null)
-        {
             _bodyExtraBaseScale = _bodyExtra.localScale;
-
-            // 추가: Material 인스턴스 생성
-            var renderer = _bodyExtra.GetComponent<Renderer>();
-            if (renderer != null)
-                _bodyExtraMaterial = renderer.material;
-        }
-
-        // 추가: Tail Material
-        if (_tail != null)
-        {
-            var renderer = _tail.GetComponent<Renderer>();
-            if (renderer != null)
-                _tailMaterial = renderer.material;
-        }
 
         _renderers = GetComponentsInChildren<Renderer>(true);
 
@@ -76,7 +51,6 @@ public class HoldNote : Note
         _built = false;
     }
 
-    
     private static bool TryGetMeshZ(Transform t, out float minZ, out float maxZ)
     {
         minZ = -0.05f;
@@ -138,8 +112,8 @@ public class HoldNote : Note
             _postDirLocal = axisN;
         }
 
-        double holdSecD = _holdBeats * _secPerBeat;
-        float holdSec = (float)holdSecD;
+        float holdSec = (float)(_holdBeats * _secPerBeat);
+        _totalHoldDuration = holdSec;
 
         float worldDistA = 0f;
         float worldSpeed = 0f;
@@ -179,6 +153,9 @@ public class HoldNote : Note
         if (IsFailed) return;
         IsActive = true;
 
+        _holdStartDspTime = AudioSettings.dspTime;
+        _savedBodyLen = -1f;
+
         SyncDspTimes();
 
         if (_head != null)
@@ -186,61 +163,10 @@ public class HoldNote : Note
             Destroy(_head.gameObject);
             _head = null;
         }
-
-        //클리핑 활성화
-        EnableClipping(true);
     }
-
-    //클리핑 관련 메서드 =====
-    private void EnableClipping(bool enabled)
-    {
-        float value = enabled ? 1f : 0f;
-
-        if (_bodyMaterial != null)
-            _bodyMaterial.SetFloat(_ClipEnabledID, value);
-
-        if (_bodyExtraMaterial != null)
-            _bodyExtraMaterial.SetFloat(_ClipEnabledID, value);
-
-        if (_tailMaterial != null)
-            _tailMaterial.SetFloat(_ClipEnabledID, value);
-    }
-
-    private void UpdateClipping()
-    {
-        if (_space == null) return;
-
-        // 판정선 월드 위치
-        Vector3 hitWorldPos = _space.TransformPoint(_hitLocal);
-
-        // 클리핑 반경 (조절 가능)
-        float clipRadius = 0.5f;
-
-        if (_bodyMaterial != null)
-        {
-            _bodyMaterial.SetVector(_ClipCenterID, hitWorldPos);
-            _bodyMaterial.SetFloat(_ClipRadiusID, clipRadius);
-        }
-
-        if (_bodyExtraMaterial != null)
-        {
-            _bodyExtraMaterial.SetVector(_ClipCenterID, hitWorldPos);
-            _bodyExtraMaterial.SetFloat(_ClipRadiusID, clipRadius);
-        }
-
-        if (_tailMaterial != null)
-        {
-            _tailMaterial.SetVector(_ClipCenterID, hitWorldPos);
-            _tailMaterial.SetFloat(_ClipRadiusID, clipRadius);
-        }
-    }
-    // ===================================
 
     public void SuccessAndDestroy()
     {
-        // 클리핑 비활성화
-        EnableClipping(false);
-
         if (_tail != null)
         {
             Destroy(_tail.gameObject);
@@ -254,11 +180,16 @@ public class HoldNote : Note
     {
         if (IsFailed) return;
 
+        // Save current body length before failing
+        if (IsActive && _totalHoldDuration > 0)
+        {
+            double elapsed = AudioSettings.dspTime - _holdStartDspTime;
+            float ratio = Mathf.Clamp01((float)(elapsed / _totalHoldDuration));
+            _savedBodyLen = _holdLen * (1f - ratio);
+        }
+
         IsFailed = true;
         IsActive = false;
-
-        // 클리핑 비활성화 (실패 시 전체 보이게)
-        EnableClipping(false);
 
         if (palette != null)
         {
@@ -332,6 +263,7 @@ public class HoldNote : Note
     {
         if (_space == null) return;
 
+        //제발 따라붙어라
         float headElapsed = (float)(AudioSettings.dspTime - _spawnDspTime);
         if (headElapsed < 0f) headElapsed = 0f;
 
@@ -346,16 +278,14 @@ public class HoldNote : Note
         if (_built)
             ApplyBodyTransform();
 
-        // Hold 활성화 시 클리핑 업뎃
-        if (IsActive && !IsFailed)
-            UpdateClipping();
-
         if (!_useDespawn)
             return;
 
+        // Check if tail reached despawn
         if (_tail != null && _space != null)
         {
-            Vector3 tailSpaceLocal = _space.InverseTransformPoint(_tail.position);
+            Vector3 tailWorldPos = _tail.position;
+            Vector3 tailSpaceLocal = _space.InverseTransformPoint(tailWorldPos);
             float tailS = Vector3.Dot(tailSpaceLocal, _axisLocal);
 
             bool tailReached = (_moveSignS > 0f) ? (tailS >= _despawnS) : (tailS <= _despawnS);
@@ -369,37 +299,80 @@ public class HoldNote : Note
         if (_space == null) return;
 
         Vector3 worldMove = _space.TransformDirection(_axisLocal) * _moveSignS;
-
         Vector3 worldLocalFwd = transform.TransformDirection(Vector3.forward);
         float align = Mathf.Sign(Vector3.Dot(worldLocalFwd, worldMove));
         if (align == 0f) align = 1f;
 
         float tailSign = -align;
-
         Vector3 tailDirLocal = Vector3.forward * tailSign;
-
         Quaternion rot = Quaternion.FromToRotation(Vector3.forward, tailDirLocal);
 
-        Vector3 headPos = Vector3.zero;
-        Vector3 tailPos = tailDirLocal * _holdLen;
+        // Head position
+        Vector3 headLocalPos = Vector3.zero;
 
+        // Tail position
+        Vector3 tailLocalPos = tailDirLocal * _holdLen;
+
+        // Head transform
         if (_head != null)
         {
-            _head.localPosition = headPos;
+            _head.localPosition = headLocalPos;
             _head.localRotation = rot;
         }
 
+        // Tail transform
         if (_tail != null)
         {
-            _tail.localPosition = tailPos;
+            _tail.localPosition = tailLocalPos;
             _tail.localRotation = rot;
         }
 
-        Vector3 headInner = headPos + (tailDirLocal * GetEdgeOffsetZ(_head, +1f));
-        Vector3 tailInner = tailPos + (tailDirLocal * GetEdgeOffsetZ(_tail, -1f));
+        float fullBodyLen = _holdLen;
+        float currentBodyLen = fullBodyLen;
 
-        float bodyLen = Mathf.Abs(Vector3.Dot(tailInner - headInner, tailDirLocal));
-        Vector3 bodyCenter = (headInner + tailInner) * 0.5f;
+        // Body center calculation
+        Vector3 bodyCenter;
+
+        if (IsActive && !IsFailed)
+        {
+            // Time-based: calculate how much body should shrink
+            double now = AudioSettings.dspTime;
+            double elapsed = now - HeadDspTime;
+            double totalDuration = TailDspTime - HeadDspTime;
+
+            if (totalDuration > 0)
+            {
+                float ratio = Mathf.Clamp01((float)(elapsed / totalDuration));
+                currentBodyLen = fullBodyLen * (1f - ratio);
+            }
+
+            Vector3 hitLocalWithOffset = _hitLocal;
+            hitLocalWithOffset.y += _yOffsetLocal;
+            Vector3 hitWorld = _space.TransformPoint(hitLocalWithOffset);
+            Vector3 hitInNoteLocal = transform.InverseTransformPoint(hitWorld);
+
+            Vector3 bodyFrontIfPivotAtTail = tailLocalPos - tailDirLocal * currentBodyLen;
+
+            float distToHitLine = Vector3.Dot(hitInNoteLocal - bodyFrontIfPivotAtTail, -tailDirLocal);
+
+            if (distToHitLine > 0f)
+            {
+                currentBodyLen += distToHitLine;
+            }
+
+            _savedBodyLen = currentBodyLen;
+
+            bodyCenter = tailLocalPos - tailDirLocal * (currentBodyLen / 2f);
+        }
+        else if (IsFailed && _savedBodyLen >= 0f)
+        {
+            currentBodyLen = _savedBodyLen;
+            bodyCenter = tailLocalPos - tailDirLocal * (currentBodyLen / 2f);
+        }
+        else
+        {
+            bodyCenter = tailLocalPos - tailDirLocal * (currentBodyLen / 2f);
+        }
 
         if (_body != null)
         {
@@ -408,7 +381,7 @@ public class HoldNote : Note
             float meshLenZ = Mathf.Max(0.0001f, (maxZ - minZ));
 
             Vector3 sc = _bodyBaseScale;
-            sc.z = Mathf.Max(0.0001f, bodyLen / meshLenZ);
+            sc.z = Mathf.Max(0.0001f, currentBodyLen / meshLenZ);
             _body.localScale = sc;
 
             _body.localPosition = bodyCenter;
@@ -422,7 +395,7 @@ public class HoldNote : Note
             float meshLenZ = Mathf.Max(0.0001f, (maxZ - minZ));
 
             Vector3 sc = _bodyExtraBaseScale;
-            sc.z = Mathf.Max(0.0001f, bodyLen / meshLenZ);
+            sc.z = Mathf.Max(0.0001f, currentBodyLen / meshLenZ);
             _bodyExtra.localScale = sc;
 
             _bodyExtra.localPosition = bodyCenter;

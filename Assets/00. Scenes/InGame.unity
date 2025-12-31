@@ -246,9 +246,9 @@ MonoBehaviour:
   _laneType: 1
   _key: 111
   _userOffsetMs: 0
-  _severanceMs: 35
-  _cleanMs: 80
-  _traceMs: 120
+  _severanceMs: 40
+  _cleanMs: 90
+  _traceMs: 130
   _fractureMs: 155
   _ruinMs: 200
   _holdJudgeBonusMs: 5
@@ -783,7 +783,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 1000
+  m_text: 1234
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a95ae018eac054c4e9eb223d89fc64d1, type: 2}
   m_sharedMaterial: {fileID: 7749669027487252710, guid: a95ae018eac054c4e9eb223d89fc64d1, type: 2}
@@ -1938,9 +1938,9 @@ MonoBehaviour:
   _laneType: 0
   _key: 97
   _userOffsetMs: 0
-  _severanceMs: 35
-  _cleanMs: 80
-  _traceMs: 120
+  _severanceMs: 40
+  _cleanMs: 90
+  _traceMs: 130
   _fractureMs: 155
   _ruinMs: 200
   _holdJudgeBonusMs: 5
@@ -2097,7 +2097,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Severance
+  m_text: Example
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b2439bedbab694744b04474f6793f034, type: 2}
   m_sharedMaterial: {fileID: 6820004068024776020, guid: b2439bedbab694744b04474f6793f034, type: 2}
@@ -2303,9 +2303,9 @@ MonoBehaviour:
   _laneType: 1
   _key: 112
   _userOffsetMs: 0
-  _severanceMs: 35
-  _cleanMs: 80
-  _traceMs: 120
+  _severanceMs: 40
+  _cleanMs: 90
+  _traceMs: 130
   _fractureMs: 155
   _ruinMs: 200
   _holdJudgeBonusMs: 5
@@ -2730,8 +2730,8 @@ MonoBehaviour:
     _tapPrefab: {fileID: 9015790616304044342, guid: 1fe615d7e15ae534ab718c41ff8abb9b, type: 3}
     _holdPrefab: {fileID: 899932709157541386, guid: 7537e552b47ad574586741a4f6006b09, type: 3}
     _yOffsetLocal: 0
-  _baseApproachBeats: 2
-  _noteSpeedMul: 2
+  _baseApproachBeats: 5
+  _noteSpeedMul: 6
   _autoSpawn: 1
   _spawnIntervalBeats: 0.5
   _spawnRandomSingleLane: 1
@@ -2902,9 +2902,9 @@ MonoBehaviour:
   _laneType: 0
   _key: 115
   _userOffsetMs: 0
-  _severanceMs: 35
-  _cleanMs: 80
-  _traceMs: 120
+  _severanceMs: 40
+  _cleanMs: 90
+  _traceMs: 130
   _fractureMs: 155
   _ruinMs: 200
   _holdJudgeBonusMs: 5
@@ -3191,9 +3191,9 @@ MonoBehaviour:
   _laneType: 1
   _key: 119
   _userOffsetMs: 0
-  _severanceMs: 35
-  _cleanMs: 80
-  _traceMs: 120
+  _severanceMs: 40
+  _cleanMs: 90
+  _traceMs: 130
   _fractureMs: 155
   _ruinMs: 200
   _holdJudgeBonusMs: 5
@@ -3607,9 +3607,9 @@ MonoBehaviour:
   _laneType: 0
   _key: 108
   _userOffsetMs: 0
-  _severanceMs: 35
-  _cleanMs: 80
-  _traceMs: 120
+  _severanceMs: 40
+  _cleanMs: 90
+  _traceMs: 130
   _fractureMs: 155
   _ruinMs: 200
   _holdJudgeBonusMs: 5
@@ -3912,9 +3912,9 @@ MonoBehaviour:
   _laneType: 1
   _key: 113
   _userOffsetMs: 0
-  _severanceMs: 35
-  _cleanMs: 80
-  _traceMs: 120
+  _severanceMs: 40
+  _cleanMs: 90
+  _traceMs: 130
   _fractureMs: 155
   _ruinMs: 200
   _holdJudgeBonusMs: 5
@@ -4161,9 +4161,9 @@ MonoBehaviour:
   _laneType: 0
   _key: 59
   _userOffsetMs: 0
-  _severanceMs: 35
-  _cleanMs: 80
-  _traceMs: 120
+  _severanceMs: 40
+  _cleanMs: 90
+  _traceMs: 130
   _fractureMs: 155
   _ruinMs: 200
   _holdJudgeBonusMs: 5
