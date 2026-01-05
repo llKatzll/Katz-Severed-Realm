@@ -11,6 +11,11 @@ public class Note : MonoBehaviour
     protected Transform _space;
     protected Transform _rotateSource;
 
+    // Store Transform references for dynamic rail support
+    protected Transform _spawnPointRef;
+    protected Transform _hitPointRef;
+    protected Transform _despawnPointRef;
+
     protected Vector3 _spawnLocal;
     protected Vector3 _hitLocal;
     protected Vector3 _despawnLocal;
@@ -57,6 +62,11 @@ public class Note : MonoBehaviour
         _space = space != null ? space : hitPoint;
         _rotateSource = hitPoint != null ? hitPoint : _space;
 
+        // Store Transform references for dynamic updates
+        _spawnPointRef = spawnPoint;
+        _hitPointRef = hitPoint;
+        _despawnPointRef = despawnPoint;
+
         _useDespawn = (despawnPoint != null);
 
         _travelTime = Mathf.Max(0.0001f, travelTime);
@@ -64,15 +74,10 @@ public class Note : MonoBehaviour
 
         _yOffsetLocal = yOffsetLocal;
 
-        _spawnLocal = _space.InverseTransformPoint(spawnPoint.position);
-        _hitLocal = _space.InverseTransformPoint(hitPoint.position);
+        // Initial calculation
+        UpdateLocalPositions();
 
-        if (_useDespawn)
-            _despawnLocal = _space.InverseTransformPoint(despawnPoint.position);
-        else
-            _despawnLocal = _hitLocal;
-
-        // axis
+        // axis (calculated once - direction doesn't change)
         Vector3 axis = _hitLocal - _spawnLocal;
         if (axis.sqrMagnitude < 0.000001f) axis = Vector3.forward;
         _axisLocal = axis.normalized;
@@ -117,6 +122,25 @@ public class Note : MonoBehaviour
             DimensionManager.I.OnDimensionChanged += OnDimensionChanged;
             UpdateWrongDimensionVisual();
         }
+    }
+
+    /// <summary>
+    /// Update local positions from current Transform positions (for dynamic rails)
+    /// </summary>
+    protected void UpdateLocalPositions()
+    {
+        if (_space == null) return;
+
+        if (_spawnPointRef != null)
+            _spawnLocal = _space.InverseTransformPoint(_spawnPointRef.position);
+
+        if (_hitPointRef != null)
+            _hitLocal = _space.InverseTransformPoint(_hitPointRef.position);
+
+        if (_useDespawn && _despawnPointRef != null)
+            _despawnLocal = _space.InverseTransformPoint(_despawnPointRef.position);
+        else
+            _despawnLocal = _hitLocal;
     }
 
     private void CacheRenderers()
@@ -217,6 +241,9 @@ public class Note : MonoBehaviour
     protected virtual void Update()
     {
         if (_space == null) return;
+
+        // Update local positions for dynamic rails
+        UpdateLocalPositions();
 
         float elapsed = (float)(AudioSettings.dspTime - _spawnDspTime);
         if (elapsed < 0f) elapsed = 0f;

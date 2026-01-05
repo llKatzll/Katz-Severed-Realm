@@ -28,9 +28,11 @@ public class HoldNote : Note
 
     private Vector3 _lateralLocal;
 
+    //홀드 타이밍 제어
     private double _totalHoldDuration;
     private double _holdStartDspTime;
 
+    //대처용
     private float _savedBodyLen = -1f;
 
     private void Awake()
@@ -177,6 +179,7 @@ public class HoldNote : Note
     {
         if (IsFailed) return;
 
+        // 틀려도 입력된 만큼 몸통 길이 유지
         if (IsActive && _totalHoldDuration > 0)
         {
             double elapsed = AudioSettings.dspTime - _holdStartDspTime;
@@ -220,44 +223,58 @@ public class HoldNote : Note
 
     private Vector3 EvaluateHeadLocalUnclamped(float elapsed)
     {
-        Vector3 axisN = GetAxisNLocal();
+        // 동적인 레일 움직임을 서포팅하려고 로컬 가져오기
+        Vector3 spawnLocal = _spawnLocal;
+        Vector3 hitLocal = _hitLocal;
+        Vector3 despawnLocal = _despawnLocal;
 
-        float spawnS = Vector3.Dot(_spawnLocal, axisN);
-        float hitS = Vector3.Dot(_hitLocal, axisN);
-        float despawnS = Vector3.Dot(_despawnLocal, axisN);
+        if (_spawnPointRef != null && _space != null)
+            spawnLocal = _space.InverseTransformPoint(_spawnPointRef.position);
+        if (_hitPointRef != null && _space != null)
+            hitLocal = _space.InverseTransformPoint(_hitPointRef.position);
+        if (_despawnPointRef != null && _space != null)
+            despawnLocal = _space.InverseTransformPoint(_despawnPointRef.position);
+
+        Vector3 result;
 
         if (!_useDespawn)
         {
             float t = Mathf.Clamp01(elapsed / _travelTime);
-            float s = Mathf.Lerp(spawnS, hitS, t);
-            return _lateralLocal + axisN * s;
+            result = Vector3.Lerp(spawnLocal, hitLocal, t);
         }
-
-        if (elapsed <= _travelTime)
+        else if (elapsed <= _travelTime)
         {
             float t = Mathf.Clamp01(elapsed / _travelTime);
-            float s = Mathf.Lerp(spawnS, hitS, t);
-            return _lateralLocal + axisN * s;
+            result = Vector3.Lerp(spawnLocal, hitLocal, t);
         }
-
-        if (elapsed <= (_travelTime + _postTime))
+        else if (elapsed <= (_travelTime + _postTime))
         {
             float e2 = elapsed - _travelTime;
             float t2 = Mathf.Clamp01(e2 / Mathf.Max(0.0001f, _postTime));
-            float s = Mathf.Lerp(hitS, despawnS, t2);
-            return _lateralLocal + axisN * s;
+            result = Vector3.Lerp(hitLocal, despawnLocal, t2);
+        }
+        else
+        {
+            float extra = elapsed - (_travelTime + _postTime);
+            Vector3 direction = (despawnLocal - hitLocal).normalized;
+            if (direction.sqrMagnitude < 0.0001f)
+                direction = (hitLocal - spawnLocal).normalized;
+
+            float speed = Vector3.Distance(spawnLocal, hitLocal) / Mathf.Max(0.0001f, _travelTime);
+            result = despawnLocal + direction * (speed * extra);
         }
 
-        float extra = elapsed - (_travelTime + _postTime);
+        // 히트로컬 y 가져오기
+        result.y = hitLocal.y;
 
-        float sign = (Vector3.Dot(_postDirLocal, axisN) >= 0f) ? 1f : -1f;
-        float sExtra = despawnS + (sign * _speedLocal * extra);
-        return _lateralLocal + axisN * sExtra;
+        return result;
     }
 
     protected override void Update()
     {
         if (_space == null) return;
+
+        //여따 UpdateLocalPositions() 넣지마쇼
 
         float headElapsed = (float)(AudioSettings.dspTime - _spawnDspTime);
         if (headElapsed < 0f) headElapsed = 0f;
@@ -276,6 +293,7 @@ public class HoldNote : Note
         if (!_useDespawn)
             return;
 
+        //디스폰로직
         if (_tail != null && _space != null)
         {
             Vector3 tailWorldPos = _tail.position;
@@ -292,8 +310,25 @@ public class HoldNote : Note
     {
         if (_space == null) return;
 
-        Vector3 worldMove = _space.TransformDirection(_axisLocal) * _moveSignS;
+        // 동적이니까.
+        Vector3 spawnLocal = _spawnLocal;
+        Vector3 hitLocal = _hitLocal;
+
+        if (_spawnPointRef != null)
+            spawnLocal = _space.InverseTransformPoint(_spawnPointRef.position);
+        if (_hitPointRef != null)
+            hitLocal = _space.InverseTransformPoint(_hitPointRef.position);
+
+
+        Vector3 currentAxis = (hitLocal - spawnLocal).normalized;
+        if (currentAxis.sqrMagnitude < 0.0001f) currentAxis = Vector3.forward;
+
+        float currentMoveSign = Mathf.Sign(Vector3.Dot(hitLocal, currentAxis) - Vector3.Dot(spawnLocal, currentAxis));
+        if (currentMoveSign == 0f) currentMoveSign = 1f;
+
+        Vector3 worldMove = _space.TransformDirection(currentAxis) * currentMoveSign;
         Vector3 worldLocalFwd = transform.TransformDirection(Vector3.forward);
+
         float align = Mathf.Sign(Vector3.Dot(worldLocalFwd, worldMove));
         if (align == 0f) align = 1f;
 
@@ -301,29 +336,36 @@ public class HoldNote : Note
         Vector3 tailDirLocal = Vector3.forward * tailSign;
         Quaternion rot = Quaternion.FromToRotation(Vector3.forward, tailDirLocal);
 
+        // 머리
         Vector3 headLocalPos = Vector3.zero;
 
+        // 꼬리
         Vector3 tailLocalPos = tailDirLocal * _holdLen;
 
+        // 머리 트랜스폼
         if (_head != null)
         {
             _head.localPosition = headLocalPos;
             _head.localRotation = rot;
         }
 
+        // 꼬리 트랜스폼
         if (_tail != null)
         {
             _tail.localPosition = tailLocalPos;
             _tail.localRotation = rot;
         }
 
+        // 몸통 계산식
         float fullBodyLen = _holdLen;
         float currentBodyLen = fullBodyLen;
 
+        // 몸통 중앙 계산식
         Vector3 bodyCenter;
 
         if (IsActive && !IsFailed)
         {
+            // 시간베이스
             double now = AudioSettings.dspTime;
             double elapsed = now - HeadDspTime;
             double totalDuration = TailDspTime - HeadDspTime;
@@ -334,7 +376,7 @@ public class HoldNote : Note
                 currentBodyLen = fullBodyLen * (1f - ratio);
             }
 
-            Vector3 hitLocalWithOffset = _hitLocal;
+            Vector3 hitLocalWithOffset = hitLocal;
             hitLocalWithOffset.y += _yOffsetLocal;
             Vector3 hitWorld = _space.TransformPoint(hitLocalWithOffset);
             Vector3 hitInNoteLocal = transform.InverseTransformPoint(hitWorld);
@@ -350,7 +392,7 @@ public class HoldNote : Note
 
             _savedBodyLen = currentBodyLen;
 
-            bodyCenter = tailLocalPos - tailDirLocal * (currentBodyLen / 2f);
+           bodyCenter = tailLocalPos - tailDirLocal * (currentBodyLen / 2f);
         }
         else if (IsFailed && _savedBodyLen >= 0f)
         {
