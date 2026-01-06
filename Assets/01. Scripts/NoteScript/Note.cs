@@ -11,7 +11,6 @@ public class Note : MonoBehaviour
     protected Transform _space;
     protected Transform _rotateSource;
 
-    // Store Transform references for dynamic rail support
     protected Transform _spawnPointRef;
     protected Transform _hitPointRef;
     protected Transform _despawnPointRef;
@@ -28,7 +27,6 @@ public class Note : MonoBehaviour
     protected double _spawnDspTime;
     public double ExpectedHitDspTime { get; protected set; }
 
-    // projection axis (spawn -> hit)
     protected Vector3 _axisLocal;
     protected float _spawnS;
     protected float _hitS;
@@ -38,13 +36,16 @@ public class Note : MonoBehaviour
     public NoteSpawner.NoteType NoteType => _noteType;
     public DimensionType Dimension => _dimension;
 
-    // Wrong dimension visual state
     private bool _isShowingWrongDimension;
     private bool _isShowingCorridor;
     private GameObject _noiseEffectInstance;
     [System.NonSerialized] protected Renderer[] _renderers;
     protected Color[] _originalColors;
     protected string[] _originalColorProperties;
+
+    private static readonly int IdColor = Shader.PropertyToID("_Color");
+    private static readonly int IdEmissionColor = Shader.PropertyToID("_EmissionColor");
+    private static readonly int IdColorBlend = Shader.PropertyToID("_ColorBlend");
 
     public void SetDimension(DimensionType dim)
     {
@@ -64,7 +65,6 @@ public class Note : MonoBehaviour
         _space = space != null ? space : hitPoint;
         _rotateSource = hitPoint != null ? hitPoint : _space;
 
-        // Store Transform references for dynamic updates
         _spawnPointRef = spawnPoint;
         _hitPointRef = hitPoint;
         _despawnPointRef = despawnPoint;
@@ -76,10 +76,8 @@ public class Note : MonoBehaviour
 
         _yOffsetLocal = yOffsetLocal;
 
-        // Initial calculation
         UpdateLocalPositions();
 
-        // axis (calculated once - direction doesn't change)
         Vector3 axis = _hitLocal - _spawnLocal;
         if (axis.sqrMagnitude < 0.000001f) axis = Vector3.forward;
         _axisLocal = axis.normalized;
@@ -91,7 +89,6 @@ public class Note : MonoBehaviour
         _moveSignS = Mathf.Sign(_hitS - _spawnS);
         if (_moveSignS == 0f) _moveSignS = 1f;
 
-        // post time based on world distance (stable)
         float distA = Vector3.Distance(_spawnLocal, _hitLocal);
         float speed = distA / _travelTime;
 
@@ -115,10 +112,8 @@ public class Note : MonoBehaviour
         if (_rotateSource != null)
             transform.rotation = _rotateSource.rotation;
 
-        // Cache renderers for dimension effects
         CacheRenderers();
 
-        // Subscribe to dimension and corridor changes
         if (DimensionManager.I != null)
         {
             DimensionManager.I.OnDimensionChanged += OnDimensionChanged;
@@ -128,9 +123,6 @@ public class Note : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Update local positions from current Transform positions (for dynamic rails)
-    /// </summary>
     protected void UpdateLocalPositions()
     {
         if (_space == null) return;
@@ -159,11 +151,9 @@ public class Note : MonoBehaviour
             {
                 var mat = _renderers[i].material;
 
-                // Check EmissionColor first, but only if it has meaningful value
-                if (mat.HasProperty("_EmissionColor"))
+                if (mat.HasProperty(IdEmissionColor))
                 {
-                    Color emissionCol = mat.GetColor("_EmissionColor");
-                    // If emission has meaningful color (not black), use it
+                    Color emissionCol = mat.GetColor(IdEmissionColor);
                     if (emissionCol.r > 0.01f || emissionCol.g > 0.01f || emissionCol.b > 0.01f)
                     {
                         _originalColors[i] = emissionCol;
@@ -172,10 +162,9 @@ public class Note : MonoBehaviour
                     }
                 }
 
-                // Otherwise use _Color or _BaseColor
-                if (mat.HasProperty("_Color"))
+                if (mat.HasProperty(IdColor))
                 {
-                    _originalColors[i] = mat.GetColor("_Color");
+                    _originalColors[i] = mat.GetColor(IdColor);
                     _originalColorProperties[i] = "_Color";
                 }
                 else if (mat.HasProperty("_BaseColor"))
@@ -214,10 +203,8 @@ public class Note : MonoBehaviour
         bool inCorridor = DimensionManager.I.IsCorridorActive;
         bool inWrongDimension = DimensionManager.I.IsNoteInWrongDimension(_dimension);
 
-        // Priority: Corridor > Wrong Dimension > Normal
         if (inCorridor)
         {
-            // Show corridor visual
             if (!_isShowingCorridor)
             {
                 DestroyNoiseEffect();
@@ -228,7 +215,6 @@ public class Note : MonoBehaviour
         }
         else if (inWrongDimension)
         {
-            // Show wrong dimension effect
             if (!_isShowingWrongDimension || _isShowingCorridor)
             {
                 ApplyWrongDimensionColor();
@@ -239,7 +225,6 @@ public class Note : MonoBehaviour
         }
         else
         {
-            // Restore normal appearance
             if (_isShowingWrongDimension || _isShowingCorridor)
             {
                 RestoreOriginalColor();
@@ -267,22 +252,16 @@ public class Note : MonoBehaviour
             {
                 var mat = _renderers[i].material;
 
-                // ShaderGraph Override method
-                if (mat.HasProperty("_UseColorOverride"))
+                if (mat.HasProperty(IdColorBlend))
                 {
-                    mat.SetFloat("_UseColorOverride", 1f);
-                    mat.SetColor("_OverrideColor", corridorColor);
+                    mat.SetFloat(IdColorBlend, 1f);
+                    if (mat.HasProperty(IdColor))
+                        mat.SetColor(IdColor, corridorColor);
                 }
-                // Fallback: direct property set
-                else if (_originalColorProperties != null && i < _originalColorProperties.Length)
+                else if (mat.HasProperty(IdEmissionColor))
                 {
-                    string prop = _originalColorProperties[i];
-                    if (!string.IsNullOrEmpty(prop) && mat.HasProperty(prop))
-                    {
-                        if (prop == "_EmissionColor")
-                            mat.EnableKeyword("_EMISSION");
-                        mat.SetColor(prop, corridorColor);
-                    }
+                    mat.EnableKeyword("_EMISSION");
+                    mat.SetColor(IdEmissionColor, corridorColor);
                 }
             }
         }
@@ -300,22 +279,16 @@ public class Note : MonoBehaviour
             {
                 var mat = _renderers[i].material;
 
-                // ShaderGraph Override method
-                if (mat.HasProperty("_UseColorOverride"))
+                if (mat.HasProperty(IdColorBlend))
                 {
-                    mat.SetFloat("_UseColorOverride", 1f);
-                    mat.SetColor("_OverrideColor", wrongColor);
+                    mat.SetFloat(IdColorBlend, 1f);
+                    if (mat.HasProperty(IdColor))
+                        mat.SetColor(IdColor, wrongColor);
                 }
-                // Fallback: direct property set
-                else if (_originalColorProperties != null && i < _originalColorProperties.Length)
+                else if (mat.HasProperty(IdEmissionColor))
                 {
-                    string prop = _originalColorProperties[i];
-                    if (!string.IsNullOrEmpty(prop) && mat.HasProperty(prop))
-                    {
-                        if (prop == "_EmissionColor")
-                            mat.EnableKeyword("_EMISSION");
-                        mat.SetColor(prop, wrongColor);
-                    }
+                    mat.EnableKeyword("_EMISSION");
+                    mat.SetColor(IdEmissionColor, wrongColor);
                 }
             }
         }
@@ -329,21 +302,17 @@ public class Note : MonoBehaviour
             {
                 var mat = _renderers[i].material;
 
-                // ShaderGraph Override method - disable override
-                if (mat.HasProperty("_UseColorOverride"))
+                if (mat.HasProperty(IdColorBlend))
                 {
-                    mat.SetFloat("_UseColorOverride", 0f);
+                    mat.SetFloat(IdColorBlend, 0f);
                 }
-                // Fallback: restore original color
                 else if (_originalColors != null && i < _originalColors.Length &&
                          _originalColorProperties != null && i < _originalColorProperties.Length)
                 {
-                    Color original = _originalColors[i];
                     string prop = _originalColorProperties[i];
-
                     if (!string.IsNullOrEmpty(prop) && mat.HasProperty(prop))
                     {
-                        mat.SetColor(prop, original);
+                        mat.SetColor(prop, _originalColors[i]);
                     }
                 }
             }
@@ -382,7 +351,6 @@ public class Note : MonoBehaviour
     {
         if (_space == null) return;
 
-        // Update local positions for dynamic rails
         UpdateLocalPositions();
 
         float elapsed = (float)(AudioSettings.dspTime - _spawnDspTime);
@@ -438,7 +406,6 @@ public class Note : MonoBehaviour
 
     protected virtual void OnDestroy()
     {
-        // Unsubscribe from dimension and corridor changes
         if (DimensionManager.I != null)
         {
             DimensionManager.I.OnDimensionChanged -= OnDimensionChanged;

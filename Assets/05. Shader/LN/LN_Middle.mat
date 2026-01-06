@@ -46,13 +46,16 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _ColorBlend: 0
     - _Final_int: 80.15
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _UserColorOverride: 0
     - v6: 3.15
     - v7: 94.1
     m_Colors:
     - _Color: {r: 47.937256, g: 11.043138, b: 4.266667, a: 1}
+    - _OverrideColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &8466792368901536345

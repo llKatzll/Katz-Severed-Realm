@@ -28,12 +28,14 @@ public class HoldNote : Note
 
     private Vector3 _lateralLocal;
 
-    // Hold timing
     private double _totalHoldDuration;
     private double _holdStartDspTime;
 
-    // For preserving body length when released mid-hold
     private float _savedBodyLen = -1f;
+
+    private static readonly int IdColor = Shader.PropertyToID("_Color");
+    private static readonly int IdEmissionColor = Shader.PropertyToID("_EmissionColor");
+    private static readonly int IdColorBlend = Shader.PropertyToID("_ColorBlend");
 
     private void Awake()
     {
@@ -45,7 +47,6 @@ public class HoldNote : Note
 
         _renderers = GetComponentsInChildren<Renderer>(true);
 
-        // Initialize color arrays (will be properly set in CacheRenderers via InitFollow)
         _originalColors = new Color[_renderers.Length];
         _originalColorProperties = new string[_renderers.Length];
 
@@ -68,16 +69,6 @@ public class HoldNote : Note
         minZ = b.min.z;
         maxZ = b.max.z;
         return true;
-    }
-
-    private static float GetEdgeOffsetZ(Transform t, float dir)
-    {
-        float minZ, maxZ;
-        if (!TryGetMeshZ(t, out minZ, out maxZ)) return 0.05f * dir;
-
-        float edge = (dir >= 0f) ? maxZ : minZ;
-        float sc = (t != null) ? t.localScale.z : 1f;
-        return edge * sc;
     }
 
     public new void SetExpectedHitDspTime(double hitDspTime)
@@ -119,7 +110,6 @@ public class HoldNote : Note
         _totalHoldDuration = holdSec;
 
         float worldDistA = 0f;
-        float worldSpeed = 0f;
 
         if (_space != null)
         {
@@ -128,7 +118,7 @@ public class HoldNote : Note
             worldDistA = Vector3.Distance(wSpawn, wHit);
         }
 
-        worldSpeed = worldDistA / Mathf.Max(0.0001f, _travelTime);
+        float worldSpeed = worldDistA / Mathf.Max(0.0001f, _travelTime);
 
         float holdWorldLen = worldSpeed * Mathf.Max(0f, holdSec);
 
@@ -183,7 +173,6 @@ public class HoldNote : Note
     {
         if (IsFailed) return;
 
-        // Save current body length before failing
         if (IsActive && _totalHoldDuration > 0)
         {
             double elapsed = AudioSettings.dspTime - _holdStartDspTime;
@@ -227,7 +216,6 @@ public class HoldNote : Note
 
     private Vector3 EvaluateHeadLocalUnclamped(float elapsed)
     {
-        // Get current rail positions (for dynamic rail support)
         Vector3 spawnLocal = _spawnLocal;
         Vector3 hitLocal = _hitLocal;
         Vector3 despawnLocal = _despawnLocal;
@@ -259,7 +247,6 @@ public class HoldNote : Note
         }
         else
         {
-            // Past despawn - continue in same direction
             float extra = elapsed - (_travelTime + _postTime);
             Vector3 direction = (despawnLocal - hitLocal).normalized;
             if (direction.sqrMagnitude < 0.0001f)
@@ -269,7 +256,6 @@ public class HoldNote : Note
             result = despawnLocal + direction * (speed * extra);
         }
 
-        // Keep Y aligned with rail (use hitLocal's Y as reference)
         result.y = hitLocal.y;
 
         return result;
@@ -278,8 +264,6 @@ public class HoldNote : Note
     protected override void Update()
     {
         if (_space == null) return;
-
-        // Note: Don't call UpdateLocalPositions() here - hold note uses fixed spawn position
 
         float headElapsed = (float)(AudioSettings.dspTime - _spawnDspTime);
         if (headElapsed < 0f) headElapsed = 0f;
@@ -298,7 +282,6 @@ public class HoldNote : Note
         if (!_useDespawn)
             return;
 
-        // Check if tail reached despawn
         if (_tail != null && _space != null)
         {
             Vector3 tailWorldPos = _tail.position;
@@ -315,7 +298,6 @@ public class HoldNote : Note
     {
         if (_space == null) return;
 
-        // Get current rail positions for dynamic axis calculation
         Vector3 spawnLocal = _spawnLocal;
         Vector3 hitLocal = _hitLocal;
 
@@ -324,7 +306,6 @@ public class HoldNote : Note
         if (_hitPointRef != null)
             hitLocal = _space.InverseTransformPoint(_hitPointRef.position);
 
-        // Calculate current axis direction
         Vector3 currentAxis = (hitLocal - spawnLocal).normalized;
         if (currentAxis.sqrMagnitude < 0.0001f) currentAxis = Vector3.forward;
 
@@ -340,36 +321,28 @@ public class HoldNote : Note
         Vector3 tailDirLocal = Vector3.forward * tailSign;
         Quaternion rot = Quaternion.FromToRotation(Vector3.forward, tailDirLocal);
 
-        // Head position (origin of this transform)
         Vector3 headLocalPos = Vector3.zero;
-
-        // Tail position (fixed distance from head, in tail direction)
         Vector3 tailLocalPos = tailDirLocal * _holdLen;
 
-        // Head transform
         if (_head != null)
         {
             _head.localPosition = headLocalPos;
             _head.localRotation = rot;
         }
 
-        // Tail transform (always at fixed position relative to note)
         if (_tail != null)
         {
             _tail.localPosition = tailLocalPos;
             _tail.localRotation = rot;
         }
 
-        // === Body calculation ===
         float fullBodyLen = _holdLen;
         float currentBodyLen = fullBodyLen;
 
-        // Body center calculation
         Vector3 bodyCenter;
 
         if (IsActive && !IsFailed)
         {
-            // Time-based: calculate how much body should shrink
             double now = AudioSettings.dspTime;
             double elapsed = now - HeadDspTime;
             double totalDuration = TailDspTime - HeadDspTime;
@@ -380,40 +353,31 @@ public class HoldNote : Note
                 currentBodyLen = fullBodyLen * (1f - ratio);
             }
 
-            // Calculate hit line position in note's local space (use current rail position)
-            // hitLocal already calculated above
             Vector3 hitLocalWithOffset = hitLocal;
             hitLocalWithOffset.y += _yOffsetLocal;
             Vector3 hitWorld = _space.TransformPoint(hitLocalWithOffset);
             Vector3 hitInNoteLocal = transform.InverseTransformPoint(hitWorld);
 
-            // Body front end position (if pivot at tail)
             Vector3 bodyFrontIfPivotAtTail = tailLocalPos - tailDirLocal * currentBodyLen;
 
-            // Distance from body front to hit line (along tailDirLocal, negative = need to extend)
             float distToHitLine = Vector3.Dot(hitInNoteLocal - bodyFrontIfPivotAtTail, -tailDirLocal);
 
-            // If body front doesn't reach hit line, extend it
             if (distToHitLine > 0f)
             {
                 currentBodyLen += distToHitLine;
             }
 
-            // Save current length in case player releases
             _savedBodyLen = currentBodyLen;
 
-            // Body center: pivot at tail, extends toward head
             bodyCenter = tailLocalPos - tailDirLocal * (currentBodyLen / 2f);
         }
         else if (IsFailed && _savedBodyLen >= 0f)
         {
-            // Failed mid-hold: use saved length
             currentBodyLen = _savedBodyLen;
             bodyCenter = tailLocalPos - tailDirLocal * (currentBodyLen / 2f);
         }
         else
         {
-            // Not active: normal position (tail to head)
             bodyCenter = tailLocalPos - tailDirLocal * (currentBodyLen / 2f);
         }
 
@@ -460,22 +424,16 @@ public class HoldNote : Note
             {
                 var mat = _renderers[i].material;
 
-                // ShaderGraph Override method
-                if (mat.HasProperty("_UseColorOverride"))
+                if (mat.HasProperty(IdColorBlend))
                 {
-                    mat.SetFloat("_UseColorOverride", 1f);
-                    mat.SetColor("_OverrideColor", corridorColor);
+                    mat.SetFloat(IdColorBlend, 1f);
+                    if (mat.HasProperty(IdColor))
+                        mat.SetColor(IdColor, corridorColor);
                 }
-                // Fallback: direct property set
-                else if (_originalColorProperties != null && i < _originalColorProperties.Length)
+                else if (mat.HasProperty(IdEmissionColor))
                 {
-                    string prop = _originalColorProperties[i];
-                    if (!string.IsNullOrEmpty(prop) && mat.HasProperty(prop))
-                    {
-                        if (prop == "_EmissionColor")
-                            mat.EnableKeyword("_EMISSION");
-                        mat.SetColor(prop, corridorColor);
-                    }
+                    mat.EnableKeyword("_EMISSION");
+                    mat.SetColor(IdEmissionColor, corridorColor);
                 }
             }
         }
