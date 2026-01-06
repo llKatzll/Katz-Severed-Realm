@@ -40,9 +40,11 @@ public class Note : MonoBehaviour
 
     // Wrong dimension visual state
     private bool _isShowingWrongDimension;
+    private bool _isShowingCorridor;
     private GameObject _noiseEffectInstance;
     [System.NonSerialized] protected Renderer[] _renderers;
-    private Color[] _originalColors;
+    protected Color[] _originalColors;
+    protected string[] _originalColorProperties;
 
     public void SetDimension(DimensionType dim)
     {
@@ -116,11 +118,13 @@ public class Note : MonoBehaviour
         // Cache renderers for dimension effects
         CacheRenderers();
 
-        // Subscribe to dimension changes
+        // Subscribe to dimension and corridor changes
         if (DimensionManager.I != null)
         {
             DimensionManager.I.OnDimensionChanged += OnDimensionChanged;
-            UpdateWrongDimensionVisual();
+            DimensionManager.I.OnCorridorStarted += OnCorridorStarted;
+            DimensionManager.I.OnCorridorEnded += OnCorridorEnded;
+            UpdateNoteVisual();
         }
     }
 
@@ -147,40 +151,140 @@ public class Note : MonoBehaviour
     {
         _renderers = GetComponentsInChildren<Renderer>(true);
         _originalColors = new Color[_renderers.Length];
+        _originalColorProperties = new string[_renderers.Length];
 
         for (int i = 0; i < _renderers.Length; i++)
         {
             if (_renderers[i] != null && _renderers[i].material != null)
             {
-                _originalColors[i] = _renderers[i].material.color;
+                var mat = _renderers[i].material;
+
+                // Check EmissionColor first, but only if it has meaningful value
+                if (mat.HasProperty("_EmissionColor"))
+                {
+                    Color emissionCol = mat.GetColor("_EmissionColor");
+                    // If emission has meaningful color (not black), use it
+                    if (emissionCol.r > 0.01f || emissionCol.g > 0.01f || emissionCol.b > 0.01f)
+                    {
+                        _originalColors[i] = emissionCol;
+                        _originalColorProperties[i] = "_EmissionColor";
+                        continue;
+                    }
+                }
+
+                // Otherwise use _Color or _BaseColor
+                if (mat.HasProperty("_Color"))
+                {
+                    _originalColors[i] = mat.GetColor("_Color");
+                    _originalColorProperties[i] = "_Color";
+                }
+                else if (mat.HasProperty("_BaseColor"))
+                {
+                    _originalColors[i] = mat.GetColor("_BaseColor");
+                    _originalColorProperties[i] = "_BaseColor";
+                }
+                else
+                {
+                    _originalColors[i] = mat.color;
+                    _originalColorProperties[i] = "_Color";
+                }
             }
         }
     }
 
     private void OnDimensionChanged(DimensionType newDimension)
     {
-        UpdateWrongDimensionVisual();
+        UpdateNoteVisual();
+    }
+
+    private void OnCorridorStarted()
+    {
+        UpdateNoteVisual();
+    }
+
+    private void OnCorridorEnded()
+    {
+        UpdateNoteVisual();
+    }
+
+    protected virtual void UpdateNoteVisual()
+    {
+        if (DimensionManager.I == null) return;
+
+        bool inCorridor = DimensionManager.I.IsCorridorActive;
+        bool inWrongDimension = DimensionManager.I.IsNoteInWrongDimension(_dimension);
+
+        // Priority: Corridor > Wrong Dimension > Normal
+        if (inCorridor)
+        {
+            // Show corridor visual
+            if (!_isShowingCorridor)
+            {
+                DestroyNoiseEffect();
+                ApplyCorridorColor();
+                _isShowingCorridor = true;
+                _isShowingWrongDimension = false;
+            }
+        }
+        else if (inWrongDimension)
+        {
+            // Show wrong dimension effect
+            if (!_isShowingWrongDimension || _isShowingCorridor)
+            {
+                ApplyWrongDimensionColor();
+                SpawnNoiseEffect();
+                _isShowingWrongDimension = true;
+                _isShowingCorridor = false;
+            }
+        }
+        else
+        {
+            // Restore normal appearance
+            if (_isShowingWrongDimension || _isShowingCorridor)
+            {
+                RestoreOriginalColor();
+                DestroyNoiseEffect();
+                _isShowingWrongDimension = false;
+                _isShowingCorridor = false;
+            }
+        }
     }
 
     protected virtual void UpdateWrongDimensionVisual()
     {
+        UpdateNoteVisual();
+    }
+
+    protected virtual void ApplyCorridorColor()
+    {
         if (DimensionManager.I == null) return;
 
-        bool shouldShowWrong = DimensionManager.I.IsNoteInWrongDimension(_dimension);
+        Color corridorColor = DimensionManager.I.GetCorridorNoteColor(_noteType, false);
 
-        if (shouldShowWrong && !_isShowingWrongDimension)
+        for (int i = 0; i < _renderers.Length; i++)
         {
-            // Show wrong dimension effect
-            ApplyWrongDimensionColor();
-            SpawnNoiseEffect();
-            _isShowingWrongDimension = true;
-        }
-        else if (!shouldShowWrong && _isShowingWrongDimension)
-        {
-            // Restore normal appearance
-            RestoreOriginalColor();
-            DestroyNoiseEffect();
-            _isShowingWrongDimension = false;
+            if (_renderers[i] != null && _renderers[i].material != null)
+            {
+                var mat = _renderers[i].material;
+
+                // ShaderGraph Override method
+                if (mat.HasProperty("_UseColorOverride"))
+                {
+                    mat.SetFloat("_UseColorOverride", 1f);
+                    mat.SetColor("_OverrideColor", corridorColor);
+                }
+                // Fallback: direct property set
+                else if (_originalColorProperties != null && i < _originalColorProperties.Length)
+                {
+                    string prop = _originalColorProperties[i];
+                    if (!string.IsNullOrEmpty(prop) && mat.HasProperty(prop))
+                    {
+                        if (prop == "_EmissionColor")
+                            mat.EnableKeyword("_EMISSION");
+                        mat.SetColor(prop, corridorColor);
+                    }
+                }
+            }
         }
     }
 
@@ -194,7 +298,25 @@ public class Note : MonoBehaviour
         {
             if (_renderers[i] != null && _renderers[i].material != null)
             {
-                _renderers[i].material.color = wrongColor;
+                var mat = _renderers[i].material;
+
+                // ShaderGraph Override method
+                if (mat.HasProperty("_UseColorOverride"))
+                {
+                    mat.SetFloat("_UseColorOverride", 1f);
+                    mat.SetColor("_OverrideColor", wrongColor);
+                }
+                // Fallback: direct property set
+                else if (_originalColorProperties != null && i < _originalColorProperties.Length)
+                {
+                    string prop = _originalColorProperties[i];
+                    if (!string.IsNullOrEmpty(prop) && mat.HasProperty(prop))
+                    {
+                        if (prop == "_EmissionColor")
+                            mat.EnableKeyword("_EMISSION");
+                        mat.SetColor(prop, wrongColor);
+                    }
+                }
             }
         }
     }
@@ -203,9 +325,27 @@ public class Note : MonoBehaviour
     {
         for (int i = 0; i < _renderers.Length; i++)
         {
-            if (_renderers[i] != null && _renderers[i].material != null && i < _originalColors.Length)
+            if (_renderers[i] != null && _renderers[i].material != null)
             {
-                _renderers[i].material.color = _originalColors[i];
+                var mat = _renderers[i].material;
+
+                // ShaderGraph Override method - disable override
+                if (mat.HasProperty("_UseColorOverride"))
+                {
+                    mat.SetFloat("_UseColorOverride", 0f);
+                }
+                // Fallback: restore original color
+                else if (_originalColors != null && i < _originalColors.Length &&
+                         _originalColorProperties != null && i < _originalColorProperties.Length)
+                {
+                    Color original = _originalColors[i];
+                    string prop = _originalColorProperties[i];
+
+                    if (!string.IsNullOrEmpty(prop) && mat.HasProperty(prop))
+                    {
+                        mat.SetColor(prop, original);
+                    }
+                }
             }
         }
     }
@@ -298,10 +438,12 @@ public class Note : MonoBehaviour
 
     protected virtual void OnDestroy()
     {
-        // Unsubscribe from dimension changes
+        // Unsubscribe from dimension and corridor changes
         if (DimensionManager.I != null)
         {
             DimensionManager.I.OnDimensionChanged -= OnDimensionChanged;
+            DimensionManager.I.OnCorridorStarted -= OnCorridorStarted;
+            DimensionManager.I.OnCorridorEnded -= OnCorridorEnded;
         }
 
         DestroyNoiseEffect();

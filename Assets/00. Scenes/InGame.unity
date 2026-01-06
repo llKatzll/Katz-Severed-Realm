@@ -1093,7 +1093,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.09, y: -4.5, z: -20.45}
+  m_LocalPosition: {x: 0, y: -4.5, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2742,7 +2742,7 @@ MonoBehaviour:
   _spawnForm: 2
   _preventHoldOverlapOnSameLane: 1
   _holdBeats: 0.5
-  _currentSpawnDimension: 0
+  _currentSpawnDimension: 1
   _randomizeDimension: 0
 --- !u!1 &1191700353
 GameObject:
@@ -3311,24 +3311,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c486a37cac5e4e046a31e1c509508224, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DimensionManager
-  _currentDimension: 0
+  _currentDimension: 1
   _switchMode: 0
   _switchKey: 32
   _indicatorLeadTimeMs: 700
+  _corridorDurationMs: 1400
+  _corridorColors: {fileID: 11400000, guid: ae6ad7634ffa6d6469802567dde9cc08, type: 2}
+  _corridorBgEffectPrefab: {fileID: 0}
+  _corridorTapHitFxPrefab: {fileID: 1953410223531933535, guid: 99249b3bd6770cc4e9a0cd8abf9b9d2f, type: 3}
+  _corridorHoldHeadFxPrefab: {fileID: 8430663150762934430, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
+  _corridorHoldTailFxPrefab: {fileID: 1953410223531933535, guid: 99249b3bd6770cc4e9a0cd8abf9b9d2f, type: 3}
+  _corridorHoldLoopFxPrefab: {fileID: 8017308452861690929, guid: 3233726abf1301748b4300c466199b2b, type: 3}
   _dismallerBgEffectPrefab: {fileID: 0}
   _separationBgEffectPrefab: {fileID: 3838068148595954904, guid: 43bb1136fa350b441902bd8cd4278b0e, type: 3}
+  _bgEffectCanvas: {fileID: 0}
+  _attachToCamera: 1
+  _mainCamera: {fileID: 330585545}
   _dismallerIndicatorPrefab: {fileID: 0}
   _separationIndicatorPrefab: {fileID: 5274774243444757464, guid: 5efdd58088b77da4f910179ba303a1e7, type: 3}
   _indicatorSpawnPoint: {fileID: 89938671}
-  _dismallerNoteNoisePrefab: {fileID: 0}
-  _separationNoteNoisePrefab: {fileID: 0}
-  _dismallerBodyNoisePrefab: {fileID: 0}
-  _separationBodyNoisePrefab: {fileID: 0}
-  _dismallerWrongColor: {r: 0, g: 0, b: 0, a: 1}
-  _separationWrongColor: {r: 1, g: 1, b: 1, a: 1}
+  _dismallerNoteNoisePrefab: {fileID: 4739820083955746375, guid: f1aed34321da0114e811caad5358f904, type: 3}
+  _separationNoteNoisePrefab: {fileID: 4739820083955746375, guid: f1aed34321da0114e811caad5358f904, type: 3}
+  _dismallerBodyNoisePrefab: {fileID: 4739820083955746375, guid: f1aed34321da0114e811caad5358f904, type: 3}
+  _separationBodyNoisePrefab: {fileID: 4739820083955746375, guid: f1aed34321da0114e811caad5358f904, type: 3}
+  _dismallerWrongColor: {r: 22.627417, g: 0, b: 0, a: 1}
+  _separationWrongColor: {r: 22.627417, g: 0, b: 0, a: 1}
   _enableDebugLog: 1
-  _debugTriggerSeparationKey: 116
-  _debugTriggerDismallerKey: 103
+  _debugTriggerSeparationKey: 101
+  _debugTriggerDismallerKey: 100
 --- !u!4 &1362899131
 Transform:
   m_ObjectHideFlags: 0

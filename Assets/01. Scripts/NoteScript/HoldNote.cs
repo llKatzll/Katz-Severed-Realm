@@ -28,11 +28,11 @@ public class HoldNote : Note
 
     private Vector3 _lateralLocal;
 
-    //홀드 타이밍 제어
+    // Hold timing
     private double _totalHoldDuration;
     private double _holdStartDspTime;
 
-    //대처용
+    // For preserving body length when released mid-hold
     private float _savedBodyLen = -1f;
 
     private void Awake()
@@ -44,6 +44,10 @@ public class HoldNote : Note
             _bodyExtraBaseScale = _bodyExtra.localScale;
 
         _renderers = GetComponentsInChildren<Renderer>(true);
+
+        // Initialize color arrays (will be properly set in CacheRenderers via InitFollow)
+        _originalColors = new Color[_renderers.Length];
+        _originalColorProperties = new string[_renderers.Length];
 
         IsActive = false;
         IsFailed = false;
@@ -179,7 +183,7 @@ public class HoldNote : Note
     {
         if (IsFailed) return;
 
-        // 틀려도 입력된 만큼 몸통 길이 유지
+        // Save current body length before failing
         if (IsActive && _totalHoldDuration > 0)
         {
             double elapsed = AudioSettings.dspTime - _holdStartDspTime;
@@ -223,7 +227,7 @@ public class HoldNote : Note
 
     private Vector3 EvaluateHeadLocalUnclamped(float elapsed)
     {
-        // 동적인 레일 움직임을 서포팅하려고 로컬 가져오기
+        // Get current rail positions (for dynamic rail support)
         Vector3 spawnLocal = _spawnLocal;
         Vector3 hitLocal = _hitLocal;
         Vector3 despawnLocal = _despawnLocal;
@@ -255,6 +259,7 @@ public class HoldNote : Note
         }
         else
         {
+            // Past despawn - continue in same direction
             float extra = elapsed - (_travelTime + _postTime);
             Vector3 direction = (despawnLocal - hitLocal).normalized;
             if (direction.sqrMagnitude < 0.0001f)
@@ -264,7 +269,7 @@ public class HoldNote : Note
             result = despawnLocal + direction * (speed * extra);
         }
 
-        // 히트로컬 y 가져오기
+        // Keep Y aligned with rail (use hitLocal's Y as reference)
         result.y = hitLocal.y;
 
         return result;
@@ -274,7 +279,7 @@ public class HoldNote : Note
     {
         if (_space == null) return;
 
-        //여따 UpdateLocalPositions() 넣지마쇼
+        // Note: Don't call UpdateLocalPositions() here - hold note uses fixed spawn position
 
         float headElapsed = (float)(AudioSettings.dspTime - _spawnDspTime);
         if (headElapsed < 0f) headElapsed = 0f;
@@ -293,7 +298,7 @@ public class HoldNote : Note
         if (!_useDespawn)
             return;
 
-        //디스폰로직
+        // Check if tail reached despawn
         if (_tail != null && _space != null)
         {
             Vector3 tailWorldPos = _tail.position;
@@ -310,7 +315,7 @@ public class HoldNote : Note
     {
         if (_space == null) return;
 
-        // 동적이니까.
+        // Get current rail positions for dynamic axis calculation
         Vector3 spawnLocal = _spawnLocal;
         Vector3 hitLocal = _hitLocal;
 
@@ -319,7 +324,7 @@ public class HoldNote : Note
         if (_hitPointRef != null)
             hitLocal = _space.InverseTransformPoint(_hitPointRef.position);
 
-
+        // Calculate current axis direction
         Vector3 currentAxis = (hitLocal - spawnLocal).normalized;
         if (currentAxis.sqrMagnitude < 0.0001f) currentAxis = Vector3.forward;
 
@@ -328,7 +333,6 @@ public class HoldNote : Note
 
         Vector3 worldMove = _space.TransformDirection(currentAxis) * currentMoveSign;
         Vector3 worldLocalFwd = transform.TransformDirection(Vector3.forward);
-
         float align = Mathf.Sign(Vector3.Dot(worldLocalFwd, worldMove));
         if (align == 0f) align = 1f;
 
@@ -336,36 +340,36 @@ public class HoldNote : Note
         Vector3 tailDirLocal = Vector3.forward * tailSign;
         Quaternion rot = Quaternion.FromToRotation(Vector3.forward, tailDirLocal);
 
-        // 머리
+        // Head position (origin of this transform)
         Vector3 headLocalPos = Vector3.zero;
 
-        // 꼬리
+        // Tail position (fixed distance from head, in tail direction)
         Vector3 tailLocalPos = tailDirLocal * _holdLen;
 
-        // 머리 트랜스폼
+        // Head transform
         if (_head != null)
         {
             _head.localPosition = headLocalPos;
             _head.localRotation = rot;
         }
 
-        // 꼬리 트랜스폼
+        // Tail transform (always at fixed position relative to note)
         if (_tail != null)
         {
             _tail.localPosition = tailLocalPos;
             _tail.localRotation = rot;
         }
 
-        // 몸통 계산식
+        // === Body calculation ===
         float fullBodyLen = _holdLen;
         float currentBodyLen = fullBodyLen;
 
-        // 몸통 중앙 계산식
+        // Body center calculation
         Vector3 bodyCenter;
 
         if (IsActive && !IsFailed)
         {
-            // 시간베이스
+            // Time-based: calculate how much body should shrink
             double now = AudioSettings.dspTime;
             double elapsed = now - HeadDspTime;
             double totalDuration = TailDspTime - HeadDspTime;
@@ -376,31 +380,40 @@ public class HoldNote : Note
                 currentBodyLen = fullBodyLen * (1f - ratio);
             }
 
+            // Calculate hit line position in note's local space (use current rail position)
+            // hitLocal already calculated above
             Vector3 hitLocalWithOffset = hitLocal;
             hitLocalWithOffset.y += _yOffsetLocal;
             Vector3 hitWorld = _space.TransformPoint(hitLocalWithOffset);
             Vector3 hitInNoteLocal = transform.InverseTransformPoint(hitWorld);
 
+            // Body front end position (if pivot at tail)
             Vector3 bodyFrontIfPivotAtTail = tailLocalPos - tailDirLocal * currentBodyLen;
 
+            // Distance from body front to hit line (along tailDirLocal, negative = need to extend)
             float distToHitLine = Vector3.Dot(hitInNoteLocal - bodyFrontIfPivotAtTail, -tailDirLocal);
 
+            // If body front doesn't reach hit line, extend it
             if (distToHitLine > 0f)
             {
                 currentBodyLen += distToHitLine;
             }
 
+            // Save current length in case player releases
             _savedBodyLen = currentBodyLen;
 
-           bodyCenter = tailLocalPos - tailDirLocal * (currentBodyLen / 2f);
+            // Body center: pivot at tail, extends toward head
+            bodyCenter = tailLocalPos - tailDirLocal * (currentBodyLen / 2f);
         }
         else if (IsFailed && _savedBodyLen >= 0f)
         {
+            // Failed mid-hold: use saved length
             currentBodyLen = _savedBodyLen;
             bodyCenter = tailLocalPos - tailDirLocal * (currentBodyLen / 2f);
         }
         else
         {
+            // Not active: normal position (tail to head)
             bodyCenter = tailLocalPos - tailDirLocal * (currentBodyLen / 2f);
         }
 
@@ -430,6 +443,41 @@ public class HoldNote : Note
 
             _bodyExtra.localPosition = bodyCenter;
             _bodyExtra.localRotation = rot;
+        }
+    }
+
+    protected override void ApplyCorridorColor()
+    {
+        if (DimensionManager.I == null) return;
+
+        Color corridorColor = DimensionManager.I.GetCorridorNoteColor(NoteType, true);
+
+        if (_renderers == null) return;
+
+        for (int i = 0; i < _renderers.Length; i++)
+        {
+            if (_renderers[i] != null && _renderers[i].material != null)
+            {
+                var mat = _renderers[i].material;
+
+                // ShaderGraph Override method
+                if (mat.HasProperty("_UseColorOverride"))
+                {
+                    mat.SetFloat("_UseColorOverride", 1f);
+                    mat.SetColor("_OverrideColor", corridorColor);
+                }
+                // Fallback: direct property set
+                else if (_originalColorProperties != null && i < _originalColorProperties.Length)
+                {
+                    string prop = _originalColorProperties[i];
+                    if (!string.IsNullOrEmpty(prop) && mat.HasProperty(prop))
+                    {
+                        if (prop == "_EmissionColor")
+                            mat.EnableKeyword("_EMISSION");
+                        mat.SetColor(prop, corridorColor);
+                    }
+                }
+            }
         }
     }
 }

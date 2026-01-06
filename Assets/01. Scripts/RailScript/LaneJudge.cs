@@ -19,7 +19,7 @@ public class LaneJudge : MonoBehaviour
     [SerializeField] private float _ruinMs = 200f;
 
     [Header("Hold Judge Bonus (ms)")]
-    [SerializeField] private float _holdJudgeBonusMs = 10f;
+    [SerializeField] private float _holdJudgeBonusMs = 10f; //·Õ³ò ¾î·ÆÀÝ¾Æ~
 
     [Header("Palette")]
     [SerializeField] private HitFxPaletteSO _palette;
@@ -49,6 +49,20 @@ public class LaneJudge : MonoBehaviour
     private GameObject _holdLoopFx;
     private readonly List<Note> _tapNotes = new List<Note>(64);
     private HoldNote _hold;
+
+    private static readonly int IdColor = Shader.PropertyToID("_Color");
+    private static readonly int IdBaseColor = Shader.PropertyToID("_BaseColor");
+    private static readonly int IdTintColor = Shader.PropertyToID("_TintColor");
+    private static readonly int IdEmissionColor = Shader.PropertyToID("_EmissionColor");
+    private static readonly int IdEmissionIntensity = Shader.PropertyToID("_EmissionIntensity");
+
+    private static readonly int IdColorNoUnderscore = Shader.PropertyToID("Color");
+    private static readonly int IdFinalInt = Shader.PropertyToID("Final_int");
+    private static readonly int IdFinalInt2 = Shader.PropertyToID("_Final_int");
+
+    private static MaterialPropertyBlock _mpb;
+    private static readonly List<ParticleSystemVertexStream> _streams = new List<ParticleSystemVertexStream>(16);
+
 
     public void SetLaneType(NoteSpawner.NoteType t) => _laneType = t;
 
@@ -112,6 +126,7 @@ public class LaneJudge : MonoBehaviour
 
         NoteSpawner.NoteType laneType = _hold.NoteType;
 
+        // Dimension check for hold start (not in progress yet)
         if (!CanJudgeNoteDimension(_hold.Dimension, false))
         {
             if (_enableDimensionDebug)
@@ -168,6 +183,7 @@ public class LaneJudge : MonoBehaviour
 
         // Note: Hold in progress - dimension agnostic (always judgeable)
         // CanJudgeNoteDimension(_hold.Dimension, true) would return true
+
         double nowDsp = AudioSettings.dspTime;
         double rawMs = (nowDsp - _hold.TailDspTime) * 1000.0 + _userOffsetMs;
 
@@ -276,7 +292,6 @@ public class LaneJudge : MonoBehaviour
             if (_enableDimensionDebug)
                 Debug.Log("[LaneJudge] Tap blocked - wrong dimension: " + target.Dimension);
 
-            // Wrong dimension = forced Miss
             if (ComboUI.I != null)
                 ComboUI.I.OnTapResult("Miss", true);
 
@@ -308,6 +323,9 @@ public class LaneJudge : MonoBehaviour
         Destroy(target.gameObject);
     }
 
+    /// <summary>
+    /// Check if note can be judged based on current dimension
+    /// </summary>
     private bool CanJudgeNoteDimension(DimensionType noteDimension, bool isLongNoteInProgress)
     {
         if (DimensionManager.I == null) return true; // No dimension system = always ok
@@ -342,6 +360,12 @@ public class LaneJudge : MonoBehaviour
     {
         Color c = Color.white;
 
+        // Corridor mode: use corridor HitFX color
+        if (DimensionManager.I != null && DimensionManager.I.IsCorridorActive)
+        {
+            return DimensionManager.I.GetCorridorHitFxColor(laneType);
+        }
+
         if (_palette == null)
             return c;
 
@@ -358,9 +382,14 @@ public class LaneJudge : MonoBehaviour
     {
         if (fx == null) return;
 
+        c = FixAlpha(c);
+
+        if (_mpb == null) _mpb = new MaterialPropertyBlock();
+
         var pss = fx.GetComponentsInChildren<ParticleSystem>(true);
-        foreach (var ps in pss)
+        for (int i = 0; i < pss.Length; i++)
         {
+            var ps = pss[i];
             if (ps == null) continue;
 
             var main = ps.main;
@@ -369,38 +398,87 @@ public class LaneJudge : MonoBehaviour
             var col = ps.colorOverLifetime;
             if (col.enabled)
             {
-                Gradient newGrad = new Gradient();
-                newGrad.SetKeys(
-                    new GradientColorKey[] { new GradientColorKey(c, 0f), new GradientColorKey(c, 1f) },
-                    new GradientAlphaKey[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(0f, 1f) }
+                Gradient g = new Gradient();
+                g.SetKeys(
+                    new[] { new GradientColorKey(c, 0f), new GradientColorKey(c, 1f) },
+                    new[] { new GradientAlphaKey(c.a, 0f), new GradientAlphaKey(0f, 1f) }
                 );
-                col.color = new ParticleSystem.MinMaxGradient(newGrad);
+                col.color = new ParticleSystem.MinMaxGradient(g);
             }
 
             var colSpeed = ps.colorBySpeed;
             if (colSpeed.enabled)
-            {
                 colSpeed.color = new ParticleSystem.MinMaxGradient(c);
-            }
 
             var trails = ps.trails;
             if (trails.enabled)
             {
-                Gradient trailGrad = new Gradient();
-                trailGrad.SetKeys(
-                    new GradientColorKey[] { new GradientColorKey(c, 0f), new GradientColorKey(c, 1f) },
-                    new GradientAlphaKey[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(0f, 1f) }
+                Gradient tg = new Gradient();
+                tg.SetKeys(
+                    new[] { new GradientColorKey(c, 0f), new GradientColorKey(c, 1f) },
+                    new[] { new GradientAlphaKey(c.a, 0f), new GradientAlphaKey(0f, 1f) }
                 );
-                trails.colorOverLifetime = new ParticleSystem.MinMaxGradient(trailGrad);
+                trails.colorOverLifetime = new ParticleSystem.MinMaxGradient(tg);
+            }
+
+            var r = ps.GetComponent<ParticleSystemRenderer>();
+            if (r == null) continue;
+
+            _streams.Clear();
+            r.GetActiveVertexStreams(_streams);
+
+            bool changed = false;
+            if (!_streams.Contains(ParticleSystemVertexStream.Color))
+            {
+                _streams.Add(ParticleSystemVertexStream.Color);
+                changed = true;
+            }
+            if (!_streams.Contains(ParticleSystemVertexStream.Custom1XYZW))
+            {
+                _streams.Add(ParticleSystemVertexStream.Custom1XYZW);
+                changed = true;
+            }
+            if (changed)
+                r.SetActiveVertexStreams(_streams);
+
+            r.GetPropertyBlock(_mpb);
+
+            _mpb.SetColor(IdColorNoUnderscore, c);
+            _mpb.SetColor(IdColor, c);
+            _mpb.SetColor(IdBaseColor, c);
+            _mpb.SetColor(IdTintColor, c);
+            _mpb.SetColor(IdEmissionColor, c);
+
+            _mpb.SetFloat(IdFinalInt, 1f);
+            _mpb.SetFloat(IdFinalInt2, 1f);
+
+            r.SetPropertyBlock(_mpb);
+
+            var mat = r.sharedMaterial;
+            if (mat != null && mat.HasProperty(IdEmissionColor))
+            {
+                mat.EnableKeyword("_EMISSION");
             }
         }
     }
+
 
     private void SpawnTapHitFx(JudgeType judge, NoteSpawner.NoteType laneType)
     {
         if (judge == JudgeType.Miss) return;
 
-        GameObject prefab = _tapHitFxPrefab != null ? _tapHitFxPrefab : (_palette != null ? _palette.hitFxPrefab : null);
+        GameObject prefab = null;
+
+        // Corridor mode: use corridor prefab if available
+        if (DimensionManager.I != null && DimensionManager.I.IsCorridorActive)
+        {
+            prefab = DimensionManager.I.GetCorridorTapHitFxPrefab();
+        }
+
+        // Fallback to normal prefab
+        if (prefab == null)
+            prefab = _tapHitFxPrefab != null ? _tapHitFxPrefab : (_palette != null ? _palette.hitFxPrefab : null);
+
         if (prefab == null) return;
 
         GameObject fx = Instantiate(prefab, transform.position, transform.rotation);
@@ -415,9 +493,22 @@ public class LaneJudge : MonoBehaviour
     private void SpawnHoldHeadFx(JudgeType judge, NoteSpawner.NoteType laneType)
     {
         if (judge == JudgeType.Miss) return;
-        if (_holdHeadFxPrefab == null) return;
 
-        GameObject fx = Instantiate(_holdHeadFxPrefab, transform.position, transform.rotation);
+        GameObject prefab = null;
+
+        // Corridor mode: use corridor prefab if available
+        if (DimensionManager.I != null && DimensionManager.I.IsCorridorActive)
+        {
+            prefab = DimensionManager.I.GetCorridorHoldFxPrefab("head");
+        }
+
+        // Fallback to normal prefab
+        if (prefab == null)
+            prefab = _holdHeadFxPrefab;
+
+        if (prefab == null) return;
+
+        GameObject fx = Instantiate(prefab, transform.position, transform.rotation);
 
         Color c = GetJudgeColor(laneType, judge);
         ApplyFxColor(fx, c);
@@ -428,9 +519,22 @@ public class LaneJudge : MonoBehaviour
     private void SpawnHoldTailFx(JudgeType judge, NoteSpawner.NoteType laneType)
     {
         if (judge == JudgeType.Miss) return;
-        if (_holdTailFxPrefab == null) return;
 
-        GameObject fx = Instantiate(_holdTailFxPrefab, transform.position, transform.rotation);
+        GameObject prefab = null;
+
+        // Corridor mode: use corridor prefab if available
+        if (DimensionManager.I != null && DimensionManager.I.IsCorridorActive)
+        {
+            prefab = DimensionManager.I.GetCorridorHoldFxPrefab("tail");
+        }
+
+        // Fallback to normal prefab
+        if (prefab == null)
+            prefab = _holdTailFxPrefab;
+
+        if (prefab == null) return;
+
+        GameObject fx = Instantiate(prefab, transform.position, transform.rotation);
 
         Color c = GetJudgeColor(laneType, judge);
         ApplyFxColor(fx, c);
@@ -443,8 +547,19 @@ public class LaneJudge : MonoBehaviour
         if (_holdLoopFx != null) return;
 
         GameObject prefab = null;
-        if (laneType == NoteSpawner.NoteType.Ground) prefab = _holdLoopFxGroundPrefab;
-        else if (laneType == NoteSpawner.NoteType.Upper) prefab = _holdLoopFxUpperPrefab;
+
+        // Corridor mode: use corridor prefab if available
+        if (DimensionManager.I != null && DimensionManager.I.IsCorridorActive)
+        {
+            prefab = DimensionManager.I.GetCorridorHoldFxPrefab("loop");
+        }
+
+        // Fallback to normal prefab
+        if (prefab == null)
+        {
+            if (laneType == NoteSpawner.NoteType.Ground) prefab = _holdLoopFxGroundPrefab;
+            else if (laneType == NoteSpawner.NoteType.Upper) prefab = _holdLoopFxUpperPrefab;
+        }
 
         if (prefab == null) return;
 
@@ -517,6 +632,11 @@ public class LaneJudge : MonoBehaviour
                     ComboUI.I.OnTapResult("Miss", true);
             }
         }
+    }
+    private static Color FixAlpha(Color c)
+    {
+        if (c.a <= 0.0001f) c.a = 1f;
+        return c;
     }
 
     private void CleanupDeadTap()
