@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc333365e25348d4aabbbbf68209df04, type: 3}
   m_Name: CorridorColorsSO
   m_EditorClassIdentifier: Assembly-CSharp::CorridorColorsSO
-  groundNoteColor: {r: 1.0980393, g: 1.5686275, b: 2, a: 1}
-  groundHitFxColor: {r: 0, g: 1.0980393, b: 4, a: 1}
-  upperNoteColor: {r: 0, g: 1.8003135, b: 2, a: 1}
-  upperHitFxColor: {r: 0, g: 1.0980393, b: 4, a: 1}
-  groundLongNoteColor: {r: 0.8981127, g: 2.2737331, b: 3.9999998, a: 1}
-  upperLongNoteColor: {r: 0, g: 0.8891198, b: 3.2041876, a: 1}
+  groundNoteColor: {r: 0.5296368, g: 2.1185472, b: 2.1185472, a: 1}
+  groundHitFxColor: {r: 0, g: 2.1208208, b: 2.1208208, a: 1}
+  upperNoteColor: {r: 0.8673074, g: 0.047089856, b: 3.565389, a: 1}
+  upperHitFxColor: {r: 1.5184407, g: 0.6196806, b: 4.157354, a: 1}
+  groundLongNoteColor: {r: 0.5296368, g: 2.1185472, b: 2.1185472, a: 1}
+  upperLongNoteColor: {r: 0.8673074, g: 0.047089856, b: 3.565389, a: 1}

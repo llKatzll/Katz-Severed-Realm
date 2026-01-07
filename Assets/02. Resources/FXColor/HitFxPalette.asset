@@ -15,14 +15,14 @@ MonoBehaviour:
   hitFxPrefab: {fileID: 8163141537363357767, guid: d8e9aae6f5a0e5340a82e4687a67a042, type: 3}
   fxDestroySec: 0.3
   ground_Sev: {r: 1, g: 1, b: 1, a: 1}
-  ground_Clea: {r: 1, g: 0.8078432, b: 0, a: 1}
-  ground_Trs: {r: 0, g: 1, b: 0.8078432, a: 1}
-  ground_Frac: {r: 0.6196079, g: 0, b: 1, a: 1}
-  ground_Ru: {r: 1, g: 0, b: 0, a: 1}
-  upper_Sev: {r: 1, g: 0.6800256, b: 0.3754716, a: 1}
-  upper_Clea: {r: 1, g: 0.8078432, b: 0, a: 1}
-  upper_Trs: {r: 0, g: 1, b: 0.8078432, a: 1}
-  upper_Frac: {r: 0.6196079, g: 0, b: 1, a: 1}
-  upper_Ru: {r: 1, g: 0, b: 0, a: 1}
-  ground_HoldFail: {r: 0.5207546, g: 0.5207546, b: 0.5207546, a: 0}
-  upper_HoldFail: {r: 1, g: 0.6784314, b: 0.3764706, a: 1}
+  ground_Clea: {r: 4, g: 1.7382199, b: 0, a: 1}
+  ground_Trs: {r: 0, g: 2, b: 0.9049506, a: 1}
+  ground_Frac: {r: 2, g: 0, b: 1.8680992, a: 1}
+  ground_Ru: {r: 1.1385952, g: 0, b: 0.059612025, a: 1}
+  upper_Sev: {r: 1, g: 0.6079823, b: 0.27058828, a: 1}
+  upper_Clea: {r: 4, g: 1.7382199, b: 0, a: 1}
+  upper_Trs: {r: 0, g: 2, b: 0.9049506, a: 1}
+  upper_Frac: {r: 2, g: 0, b: 1.8680992, a: 1}
+  upper_Ru: {r: 1.1385952, g: 0, b: 0.059612025, a: 1}
+  ground_HoldFail: {r: 0.10943389, g: 0.10943389, b: 0.10943389, a: 0}
+  upper_HoldFail: {r: 0.13962269, g: 0.067616016, b: 0, a: 1}

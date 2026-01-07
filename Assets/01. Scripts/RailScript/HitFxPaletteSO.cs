@@ -6,17 +6,19 @@ public class HitFxPaletteSO : ScriptableObject
     public GameObject hitFxPrefab;
     public float fxDestroySec = 0.3f;
 
-    public Color ground_Sev;
-    public Color ground_Clea;
-    public Color ground_Trs;
-    public Color ground_Frac;
-    public Color ground_Ru;
+    //I love HDR
 
-    public Color upper_Sev;
-    public Color upper_Clea;
-    public Color upper_Trs;
-    public Color upper_Frac;
-    public Color upper_Ru;
+    [ColorUsage(true, true)] public Color ground_Sev;
+    [ColorUsage(true, true)] public Color ground_Clea;
+    [ColorUsage(true, true)] public Color ground_Trs;
+    [ColorUsage(true, true)] public Color ground_Frac;
+    [ColorUsage(true, true)] public Color ground_Ru;
+
+    [ColorUsage(true, true)] public Color upper_Sev;
+    [ColorUsage(true, true)] public Color upper_Clea;
+    [ColorUsage(true, true)] public Color upper_Trs;
+    [ColorUsage(true, true)] public Color upper_Frac;
+    [ColorUsage(true, true)] public Color upper_Ru;
 
     [ColorUsage(true, true)] public Color ground_HoldFail;
     [ColorUsage(true, true)] public Color upper_HoldFail;
