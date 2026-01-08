@@ -20,17 +20,19 @@ public class DimensionManager : MonoBehaviour
     [SerializeField] private SwitchMode _switchMode = SwitchMode.Hold;
     [SerializeField] private KeyCode _switchKey = KeyCode.Space;
 
+    //Lifetime set later.
     [Header("Indicator Settings")]
-    [SerializeField] private float _indicatorLeadTimeMs = 700f;
-    public float IndicatorLeadTimeSec => _indicatorLeadTimeMs / 1000f;
+    [SerializeField] private float _indicatorLeadTimeMs;
+    public float IndicatorLeadTimeSec => _indicatorLeadTimeMs;
 
+    //Lifetime set later.
     [Header("Corridor Settings")]
-    [SerializeField] private float _corridorDurationMs = 700f;
-    public float CorridorDurationSec => _corridorDurationMs / 1000f;
+    [SerializeField] private float _corridorDurationMs;
+    public float CorridorDurationSec => _corridorDurationMs;
 
     [Header("Corridor Colors (HDR)")]
-    [SerializeField][ColorUsage(true, true)] private Color _corridorGroundColor = new Color(0f, 2f, 4f, 1f);
-    [SerializeField][ColorUsage(true, true)] private Color _corridorUpperColor = new Color(0.5f, 2.5f, 4f, 1f);
+    [SerializeField][ColorUsage(true, true)] private Color _corridorGroundColor;
+    [SerializeField][ColorUsage(true, true)] private Color _corridorUpperColor;
 
     [Header("Background Effects")]
     [SerializeField] private GameObject _dismallerBgEffectPrefab;

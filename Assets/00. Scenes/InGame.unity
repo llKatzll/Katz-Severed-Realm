@@ -1919,7 +1919,7 @@ MonoBehaviour:
   _groundCorridor: {r: 0, g: 2.2598722, b: 3.564869, a: 1}
   _upperDismaller: {r: 2.9852495, g: 0.39421543, b: 0, a: 1}
   _upperSeparation: {r: 0.2, g: 2.2598722, b: 3.564869, a: 1}
-  _upperCorridor: {r: 2.8284273, g: 2.0855856, b: 0.6350616, a: 1}
+  _upperCorridor: {r: 2.9852495, g: 0.39421543, b: 0, a: 1}
 --- !u!4 &738567381
 Transform:
   m_ObjectHideFlags: 0
