@@ -3615,7 +3615,7 @@ MonoBehaviour:
   _separationBodyNoisePrefab: {fileID: 4739820083955746375, guid: f1aed34321da0114e811caad5358f904, type: 3}
   _dismallerWrongColor: {r: 22.627417, g: 0, b: 0, a: 1}
   _separationWrongColor: {r: 22.627417, g: 0, b: 0, a: 1}
-  _railColorPalette: {fileID: 0}
+  _railColorPalette: {fileID: 11400000, guid: fcdca554ccc5ee142a66efa1ea55f45a, type: 2}
   _corridorRailColor: {r: 0, g: 2, b: 4, a: 1}
   _enableDebugLog: 1
   _debugTriggerSeparationKey: 101

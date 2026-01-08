@@ -172,7 +172,6 @@ public class RailColorController : MonoBehaviour
 
             if (mat.HasProperty(IdBaseColor)) _mpb.SetColor(IdBaseColor, color);
 
-
             rend.SetPropertyBlock(_mpb);
         }
     }
