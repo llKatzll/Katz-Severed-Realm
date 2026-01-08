@@ -23,12 +23,12 @@ public class DimensionManager : MonoBehaviour
     //Lifetime set later.
     [Header("Indicator Settings")]
     [SerializeField] private float _indicatorLeadTimeMs;
-    public float IndicatorLeadTimeSec => _indicatorLeadTimeMs;
+    public float IndicatorLeadTimeSec => _indicatorLeadTimeMs * 0.001f;
 
     //Lifetime set later.
     [Header("Corridor Settings")]
     [SerializeField] private float _corridorDurationMs;
-    public float CorridorDurationSec => _corridorDurationMs;
+    public float CorridorDurationSec => _corridorDurationMs * 0.001f;
 
     [Header("Corridor Colors (HDR)")]
     [SerializeField][ColorUsage(true, true)] private Color _corridorGroundColor;
