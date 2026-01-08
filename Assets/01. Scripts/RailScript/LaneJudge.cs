@@ -351,7 +351,15 @@ public class LaneJudge : MonoBehaviour
 
         if (DimensionManager.I != null && DimensionManager.I.IsCorridorActive)
         {
+            if (RuntimeColorPalette.I != null)
+                return RuntimeColorPalette.I.GetCorridorColor(laneType);
             return DimensionManager.I.GetCorridorHitFxColor(laneType);
+        }
+
+        if (judge == JudgeType.Severance)
+        {
+            if (RuntimeColorPalette.I != null)
+                return RuntimeColorPalette.I.GetSevHitFxColor(laneType);
         }
 
         if (_palette == null)
@@ -458,15 +466,7 @@ public class LaneJudge : MonoBehaviour
     {
         if (judge == JudgeType.Miss) return;
 
-        GameObject prefab = null;
-
-        if (DimensionManager.I != null && DimensionManager.I.IsCorridorActive)
-        {
-            prefab = DimensionManager.I.GetCorridorTapHitFxPrefab();
-        }
-
-        if (prefab == null)
-            prefab = _tapHitFxPrefab != null ? _tapHitFxPrefab : (_palette != null ? _palette.hitFxPrefab : null);
+        GameObject prefab = _tapHitFxPrefab != null ? _tapHitFxPrefab : (_palette != null ? _palette.hitFxPrefab : null);
 
         if (prefab == null) return;
 
@@ -483,19 +483,9 @@ public class LaneJudge : MonoBehaviour
     {
         if (judge == JudgeType.Miss) return;
 
-        GameObject prefab = null;
+        if (_holdHeadFxPrefab == null) return;
 
-        if (DimensionManager.I != null && DimensionManager.I.IsCorridorActive)
-        {
-            prefab = DimensionManager.I.GetCorridorHoldFxPrefab("head");
-        }
-
-        if (prefab == null)
-            prefab = _holdHeadFxPrefab;
-
-        if (prefab == null) return;
-
-        GameObject fx = Instantiate(prefab, transform.position, transform.rotation);
+        GameObject fx = Instantiate(_holdHeadFxPrefab, transform.position, transform.rotation);
 
         Color c = GetJudgeColor(laneType, judge);
         ApplyFxColor(fx, c);
@@ -507,19 +497,9 @@ public class LaneJudge : MonoBehaviour
     {
         if (judge == JudgeType.Miss) return;
 
-        GameObject prefab = null;
+        if (_holdTailFxPrefab == null) return;
 
-        if (DimensionManager.I != null && DimensionManager.I.IsCorridorActive)
-        {
-            prefab = DimensionManager.I.GetCorridorHoldFxPrefab("tail");
-        }
-
-        if (prefab == null)
-            prefab = _holdTailFxPrefab;
-
-        if (prefab == null) return;
-
-        GameObject fx = Instantiate(prefab, transform.position, transform.rotation);
+        GameObject fx = Instantiate(_holdTailFxPrefab, transform.position, transform.rotation);
 
         Color c = GetJudgeColor(laneType, judge);
         ApplyFxColor(fx, c);
@@ -532,17 +512,8 @@ public class LaneJudge : MonoBehaviour
         if (_holdLoopFx != null) return;
 
         GameObject prefab = null;
-
-        if (DimensionManager.I != null && DimensionManager.I.IsCorridorActive)
-        {
-            prefab = DimensionManager.I.GetCorridorHoldFxPrefab("loop");
-        }
-
-        if (prefab == null)
-        {
-            if (laneType == NoteSpawner.NoteType.Ground) prefab = _holdLoopFxGroundPrefab;
-            else if (laneType == NoteSpawner.NoteType.Upper) prefab = _holdLoopFxUpperPrefab;
-        }
+        if (laneType == NoteSpawner.NoteType.Ground) prefab = _holdLoopFxGroundPrefab;
+        else if (laneType == NoteSpawner.NoteType.Upper) prefab = _holdLoopFxUpperPrefab;
 
         if (prefab == null) return;
 

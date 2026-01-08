@@ -51,7 +51,6 @@ MonoBehaviour:
   _head: {fileID: 2813317490515807841}
   _body: {fileID: 8431468545255302235}
   _tail: {fileID: 6778724136075830273}
-  _bodyExtra: {fileID: 0}
 --- !u!1 &2921881011937180933
 GameObject:
   m_ObjectHideFlags: 0
@@ -63,6 +62,7 @@ GameObject:
   - component: {fileID: 6778724136075830273}
   - component: {fileID: 950278848574571621}
   - component: {fileID: 4534421913274098116}
+  - component: {fileID: 6298394957600722357}
   - component: {fileID: 2864854033214669025}
   - component: {fileID: 5879147132767040496}
   m_Layer: 0
@@ -120,7 +120,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: cfa725994662e9b4680a97c0611847c8, type: 2}
+  - {fileID: 2100000, guid: 71ba8ac14c554b54f8ec80cb963bd1d4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -143,6 +143,24 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &6298394957600722357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2921881011937180933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 894f644e7bfaf7b48bcb9e48d2289b45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RailColorController
+  _railType: 1
+  _targetRenderers:
+  - {fileID: 4534421913274098116}
+  _autoFindChildren: 0
+  _previewInEditor: 0
+  _previewDimension: 0
 --- !u!65 &2864854033214669025
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -202,6 +220,7 @@ GameObject:
   - component: {fileID: 2813317490515807841}
   - component: {fileID: 4639557477693397825}
   - component: {fileID: 4349487402919862227}
+  - component: {fileID: 7322560647017815490}
   - component: {fileID: 5660960328068229615}
   - component: {fileID: 233234798706644681}
   m_Layer: 0
@@ -259,7 +278,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: cfa725994662e9b4680a97c0611847c8, type: 2}
+  - {fileID: 2100000, guid: 71ba8ac14c554b54f8ec80cb963bd1d4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -282,6 +301,24 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &7322560647017815490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4268465630310712376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 894f644e7bfaf7b48bcb9e48d2289b45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RailColorController
+  _railType: 1
+  _targetRenderers:
+  - {fileID: 4349487402919862227}
+  _autoFindChildren: 0
+  _previewInEditor: 0
+  _previewDimension: 0
 --- !u!65 &5660960328068229615
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -341,6 +378,7 @@ GameObject:
   - component: {fileID: 8431468545255302235}
   - component: {fileID: 9117585288854945289}
   - component: {fileID: 4529037200325543018}
+  - component: {fileID: 7521422821714838631}
   - component: {fileID: 4901302497262986456}
   - component: {fileID: 2493168552472354233}
   m_Layer: 0
@@ -398,7 +436,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: cfa725994662e9b4680a97c0611847c8, type: 2}
+  - {fileID: 2100000, guid: 71ba8ac14c554b54f8ec80cb963bd1d4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -421,6 +459,24 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &7521422821714838631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8397980980798866926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 894f644e7bfaf7b48bcb9e48d2289b45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RailColorController
+  _railType: 1
+  _targetRenderers:
+  - {fileID: 4529037200325543018}
+  _autoFindChildren: 0
+  _previewInEditor: 0
+  _previewDimension: 0
 --- !u!65 &4901302497262986456
 BoxCollider:
   m_ObjectHideFlags: 0

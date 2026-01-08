@@ -43,10 +43,6 @@ public class Note : MonoBehaviour
     protected Color[] _originalColors;
     protected string[] _originalColorProperties;
 
-    private static readonly int IdColor = Shader.PropertyToID("_Color");
-    private static readonly int IdEmissionColor = Shader.PropertyToID("_EmissionColor");
-    private static readonly int IdColorBlend = Shader.PropertyToID("_ColorBlend");
-
     public void SetDimension(DimensionType dim)
     {
         _dimension = dim;
@@ -119,8 +115,14 @@ public class Note : MonoBehaviour
             DimensionManager.I.OnDimensionChanged += OnDimensionChanged;
             DimensionManager.I.OnCorridorStarted += OnCorridorStarted;
             DimensionManager.I.OnCorridorEnded += OnCorridorEnded;
-            UpdateNoteVisual();
         }
+
+        if (RuntimeColorPalette.I != null)
+        {
+            RuntimeColorPalette.I.OnColorsChanged += OnColorsChanged;
+        }
+
+        UpdateNoteVisual();
     }
 
     protected void UpdateLocalPositions()
@@ -151,9 +153,9 @@ public class Note : MonoBehaviour
             {
                 var mat = _renderers[i].material;
 
-                if (mat.HasProperty(IdEmissionColor))
+                if (mat.HasProperty("_EmissionColor"))
                 {
-                    Color emissionCol = mat.GetColor(IdEmissionColor);
+                    Color emissionCol = mat.GetColor("_EmissionColor");
                     if (emissionCol.r > 0.01f || emissionCol.g > 0.01f || emissionCol.b > 0.01f)
                     {
                         _originalColors[i] = emissionCol;
@@ -162,9 +164,9 @@ public class Note : MonoBehaviour
                     }
                 }
 
-                if (mat.HasProperty(IdColor))
+                if (mat.HasProperty("_Color"))
                 {
-                    _originalColors[i] = mat.GetColor(IdColor);
+                    _originalColors[i] = mat.GetColor("_Color");
                     _originalColorProperties[i] = "_Color";
                 }
                 else if (mat.HasProperty("_BaseColor"))
@@ -193,6 +195,13 @@ public class Note : MonoBehaviour
 
     private void OnCorridorEnded()
     {
+        UpdateNoteVisual();
+    }
+
+    private void OnColorsChanged()
+    {
+        _isShowingCorridor = false;
+        _isShowingWrongDimension = false;
         UpdateNoteVisual();
     }
 
@@ -242,9 +251,20 @@ public class Note : MonoBehaviour
 
     protected virtual void ApplyCorridorColor()
     {
-        if (DimensionManager.I == null) return;
+        Color corridorColor;
 
-        Color corridorColor = DimensionManager.I.GetCorridorNoteColor(_noteType, false);
+        if (RuntimeColorPalette.I != null)
+        {
+            corridorColor = RuntimeColorPalette.I.GetCorridorColor(_noteType);
+        }
+        else if (DimensionManager.I != null)
+        {
+            corridorColor = DimensionManager.I.GetCorridorNoteColor(_noteType);
+        }
+        else
+        {
+            corridorColor = new Color(0f, 4f, 2f, 1f);
+        }
 
         for (int i = 0; i < _renderers.Length; i++)
         {
@@ -252,16 +272,10 @@ public class Note : MonoBehaviour
             {
                 var mat = _renderers[i].material;
 
-                if (mat.HasProperty(IdColorBlend))
-                {
-                    mat.SetFloat(IdColorBlend, 1f);
-                    if (mat.HasProperty(IdColor))
-                        mat.SetColor(IdColor, corridorColor);
-                }
-                else if (mat.HasProperty(IdEmissionColor))
+                if (mat.HasProperty("_EmissionColor"))
                 {
                     mat.EnableKeyword("_EMISSION");
-                    mat.SetColor(IdEmissionColor, corridorColor);
+                    mat.SetColor("_EmissionColor", corridorColor);
                 }
             }
         }
@@ -279,16 +293,10 @@ public class Note : MonoBehaviour
             {
                 var mat = _renderers[i].material;
 
-                if (mat.HasProperty(IdColorBlend))
-                {
-                    mat.SetFloat(IdColorBlend, 1f);
-                    if (mat.HasProperty(IdColor))
-                        mat.SetColor(IdColor, wrongColor);
-                }
-                else if (mat.HasProperty(IdEmissionColor))
+                if (mat.HasProperty("_EmissionColor"))
                 {
                     mat.EnableKeyword("_EMISSION");
-                    mat.SetColor(IdEmissionColor, wrongColor);
+                    mat.SetColor("_EmissionColor", wrongColor);
                 }
             }
         }
@@ -298,22 +306,16 @@ public class Note : MonoBehaviour
     {
         for (int i = 0; i < _renderers.Length; i++)
         {
-            if (_renderers[i] != null && _renderers[i].material != null)
+            if (_renderers[i] != null && _renderers[i].material != null &&
+                _originalColors != null && i < _originalColors.Length &&
+                _originalColorProperties != null && i < _originalColorProperties.Length)
             {
                 var mat = _renderers[i].material;
+                string prop = _originalColorProperties[i];
 
-                if (mat.HasProperty(IdColorBlend))
+                if (!string.IsNullOrEmpty(prop) && mat.HasProperty(prop))
                 {
-                    mat.SetFloat(IdColorBlend, 0f);
-                }
-                else if (_originalColors != null && i < _originalColors.Length &&
-                         _originalColorProperties != null && i < _originalColorProperties.Length)
-                {
-                    string prop = _originalColorProperties[i];
-                    if (!string.IsNullOrEmpty(prop) && mat.HasProperty(prop))
-                    {
-                        mat.SetColor(prop, _originalColors[i]);
-                    }
+                    mat.SetColor(prop, _originalColors[i]);
                 }
             }
         }
@@ -411,6 +413,11 @@ public class Note : MonoBehaviour
             DimensionManager.I.OnDimensionChanged -= OnDimensionChanged;
             DimensionManager.I.OnCorridorStarted -= OnCorridorStarted;
             DimensionManager.I.OnCorridorEnded -= OnCorridorEnded;
+        }
+
+        if (RuntimeColorPalette.I != null)
+        {
+            RuntimeColorPalette.I.OnColorsChanged -= OnColorsChanged;
         }
 
         DestroyNoiseEffect();

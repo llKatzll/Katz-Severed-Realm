@@ -132,6 +132,7 @@ GameObject:
   - component: {fileID: 17181887}
   - component: {fileID: 17181886}
   - component: {fileID: 17181889}
+  - component: {fileID: 17181890}
   m_Layer: 0
   m_Name: HitRail_3
   m_TagString: Untagged
@@ -200,7 +201,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: cfa725994662e9b4680a97c0611847c8, type: 2}
+  - {fileID: 2100000, guid: 71ba8ac14c554b54f8ec80cb963bd1d4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -265,6 +266,24 @@ MonoBehaviour:
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: 47e7700bbfea603418096236c0e2bb40, type: 3}
   _emptyDestroySec: 0.2
   _enableDimensionDebug: 0
+--- !u!114 &17181890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 17181883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 894f644e7bfaf7b48bcb9e48d2289b45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RailColorController
+  _railType: 1
+  _targetRenderers:
+  - {fileID: 17181886}
+  _autoFindChildren: 0
+  _previewInEditor: 0
+  _previewDimension: 0
 --- !u!1 &55276492
 GameObject:
   m_ObjectHideFlags: 0
@@ -470,7 +489,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: fa71dc27494d7f84d8e6b69b0de0191b, type: 3}
+  m_Resource: {fileID: 8300000, guid: 63cf87cd6fbd0bc43bfd0821f0a39759, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.453
   m_Pitch: 1
@@ -905,6 +924,7 @@ GameObject:
   - component: {fileID: 279145359}
   - component: {fileID: 279145361}
   - component: {fileID: 279145360}
+  - component: {fileID: 279145362}
   m_Layer: 0
   m_Name: WarnRail_2
   m_TagString: Untagged
@@ -983,6 +1003,24 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 279145358}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &279145362
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 279145358}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 894f644e7bfaf7b48bcb9e48d2289b45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RailColorController
+  _railType: 1
+  _targetRenderers:
+  - {fileID: 279145360}
+  _autoFindChildren: 0
+  _previewInEditor: 0
+  _previewDimension: 0
 --- !u!1 &302895730
 GameObject:
   m_ObjectHideFlags: 0
@@ -1847,6 +1885,56 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -20.835, y: 0, z: 0}
+--- !u!1 &738567379
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 738567381}
+  - component: {fileID: 738567380}
+  m_Layer: 0
+  m_Name: HITRAIL_COLOR
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &738567380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 738567379}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a00291a23bbb49439e769e378c143a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RuntimeColorPalette
+  _groundDismaller: {r: 2.1185474, g: 2.1185474, b: 2.1185474, a: 1}
+  _groundSeparation: {r: 2.1185474, g: 2.1185474, b: 2.1185474, a: 1}
+  _groundCorridor: {r: 0, g: 2.2598722, b: 3.564869, a: 1}
+  _upperDismaller: {r: 2.9852495, g: 0.39421543, b: 0, a: 1}
+  _upperSeparation: {r: 0.2, g: 2.2598722, b: 3.564869, a: 1}
+  _upperCorridor: {r: 2.8284273, g: 2.0855856, b: 0.6350616, a: 1}
+--- !u!4 &738567381
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 738567379}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5.18732, y: 0, z: -10.43871}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &747966631
 GameObject:
   m_ObjectHideFlags: 0
@@ -1925,6 +2013,7 @@ GameObject:
   - component: {fileID: 803267087}
   - component: {fileID: 803267086}
   - component: {fileID: 803267089}
+  - component: {fileID: 803267090}
   - component: {fileID: 803267085}
   m_Layer: 0
   m_Name: HitRail_1
@@ -1994,8 +2083,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 40c198817b5a8874ebdd5a0dbdb01666, type: 2}
-  - {fileID: 2100000, guid: 3ea7b89a8684346498c929c1f4fc3a31, type: 2}
+  - {fileID: 2100000, guid: 98974268d3ac69343a0bf3d81cdd57f3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2060,6 +2148,24 @@ MonoBehaviour:
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: a28b98217eb767846839462972610979, type: 3}
   _emptyDestroySec: 0.2
   _enableDimensionDebug: 0
+--- !u!114 &803267090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 803267083}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 894f644e7bfaf7b48bcb9e48d2289b45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RailColorController
+  _railType: 0
+  _targetRenderers:
+  - {fileID: 803267086}
+  _autoFindChildren: 0
+  _previewInEditor: 0
+  _previewDimension: 0
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -2293,6 +2399,7 @@ GameObject:
   - component: {fileID: 1031235099}
   - component: {fileID: 1031235098}
   - component: {fileID: 1031235101}
+  - component: {fileID: 1031235102}
   m_Layer: 0
   m_Name: HitRail_4
   m_TagString: Untagged
@@ -2361,7 +2468,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: cfa725994662e9b4680a97c0611847c8, type: 2}
+  - {fileID: 2100000, guid: 71ba8ac14c554b54f8ec80cb963bd1d4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2426,6 +2533,24 @@ MonoBehaviour:
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: 47e7700bbfea603418096236c0e2bb40, type: 3}
   _emptyDestroySec: 0.2
   _enableDimensionDebug: 0
+--- !u!114 &1031235102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1031235095}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 894f644e7bfaf7b48bcb9e48d2289b45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RailColorController
+  _railType: 1
+  _targetRenderers:
+  - {fileID: 1031235098}
+  _autoFindChildren: 0
+  _previewInEditor: 0
+  _previewDimension: 0
 --- !u!1 &1038989766
 GameObject:
   m_ObjectHideFlags: 0
@@ -2455,7 +2580,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efd3710500ef49e489cb50de18a0dab2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RhythmConductor
-  _bpm: 110
+  _bpm: 166
   _audio: {fileID: 92614242}
 --- !u!4 &1038989768
 Transform:
@@ -2514,6 +2639,7 @@ GameObject:
   - component: {fileID: 1122658235}
   - component: {fileID: 1122658237}
   - component: {fileID: 1122658236}
+  - component: {fileID: 1122658238}
   m_Layer: 0
   m_Name: WarnRail_1
   m_TagString: Untagged
@@ -2592,6 +2718,24 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1122658234}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1122658238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1122658234}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 894f644e7bfaf7b48bcb9e48d2289b45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RailColorController
+  _railType: 1
+  _targetRenderers:
+  - {fileID: 1122658236}
+  _autoFindChildren: 0
+  _previewInEditor: 0
+  _previewDimension: 0
 --- !u!1 &1130633021
 GameObject:
   m_ObjectHideFlags: 0
@@ -2836,7 +2980,7 @@ MonoBehaviour:
     _holdPrefab: {fileID: 899932709157541386, guid: 7537e552b47ad574586741a4f6006b09, type: 3}
     _yOffsetLocal: 0
   _baseApproachBeats: 5
-  _noteSpeedMul: 6
+  _noteSpeedMul: 3.5
   _autoSpawn: 1
   _spawnIntervalBeats: 0.5
   _spawnRandomSingleLane: 1
@@ -2893,6 +3037,7 @@ GameObject:
   - component: {fileID: 1234262239}
   - component: {fileID: 1234262238}
   - component: {fileID: 1234262241}
+  - component: {fileID: 1234262242}
   - component: {fileID: 1234262237}
   m_Layer: 0
   m_Name: HitRail_2
@@ -2962,8 +3107,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 40c198817b5a8874ebdd5a0dbdb01666, type: 2}
-  - {fileID: 2100000, guid: 3ea7b89a8684346498c929c1f4fc3a31, type: 2}
+  - {fileID: 2100000, guid: 98974268d3ac69343a0bf3d81cdd57f3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3028,6 +3172,24 @@ MonoBehaviour:
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: a28b98217eb767846839462972610979, type: 3}
   _emptyDestroySec: 0.2
   _enableDimensionDebug: 0
+--- !u!114 &1234262242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1234262235}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 894f644e7bfaf7b48bcb9e48d2289b45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RailColorController
+  _railType: 0
+  _targetRenderers:
+  - {fileID: 1234262238}
+  _autoFindChildren: 0
+  _previewInEditor: 0
+  _previewDimension: 0
 --- !u!1 &1242119139
 GameObject:
   m_ObjectHideFlags: 0
@@ -3185,6 +3347,7 @@ GameObject:
   - component: {fileID: 1300446903}
   - component: {fileID: 1300446902}
   - component: {fileID: 1300446905}
+  - component: {fileID: 1300446906}
   m_Layer: 0
   m_Name: HitRail_2
   m_TagString: Untagged
@@ -3253,7 +3416,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: cfa725994662e9b4680a97c0611847c8, type: 2}
+  - {fileID: 2100000, guid: 71ba8ac14c554b54f8ec80cb963bd1d4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3318,6 +3481,24 @@ MonoBehaviour:
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: 47e7700bbfea603418096236c0e2bb40, type: 3}
   _emptyDestroySec: 0.2
   _enableDimensionDebug: 0
+--- !u!114 &1300446906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1300446899}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 894f644e7bfaf7b48bcb9e48d2289b45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RailColorController
+  _railType: 1
+  _targetRenderers:
+  - {fileID: 1300446902}
+  _autoFindChildren: 0
+  _previewInEditor: 0
+  _previewDimension: 0
 --- !u!1 &1310526127
 GameObject:
   m_ObjectHideFlags: 0
@@ -3418,15 +3599,11 @@ MonoBehaviour:
   _switchKey: 32
   _indicatorLeadTimeMs: 700
   _corridorDurationMs: 700
-  _corridorColors: {fileID: 11400000, guid: ae6ad7634ffa6d6469802567dde9cc08, type: 2}
-  _corridorBgEffectPrefab: {fileID: 0}
-  _corridorTapHitFxPrefab: {fileID: 8163141537363357767, guid: d8e9aae6f5a0e5340a82e4687a67a042, type: 3}
-  _corridorHoldHeadFxPrefab: {fileID: 8430663150762934430, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
-  _corridorHoldTailFxPrefab: {fileID: 1953410223531933535, guid: 99249b3bd6770cc4e9a0cd8abf9b9d2f, type: 3}
-  _corridorHoldLoopFxPrefab: {fileID: 8017308452861690929, guid: 3233726abf1301748b4300c466199b2b, type: 3}
+  _corridorGroundColor: {r: 0, g: 2, b: 4, a: 1}
+  _corridorUpperColor: {r: 0.5, g: 2.5, b: 4, a: 1}
   _dismallerBgEffectPrefab: {fileID: 0}
   _separationBgEffectPrefab: {fileID: 3838068148595954904, guid: 43bb1136fa350b441902bd8cd4278b0e, type: 3}
-  _bgEffectCanvas: {fileID: 371732671}
+  _corridorBgEffectPrefab: {fileID: 0}
   _attachToCamera: 1
   _mainCamera: {fileID: 330585545}
   _dismallerIndicatorPrefab: {fileID: 0}
@@ -3438,6 +3615,8 @@ MonoBehaviour:
   _separationBodyNoisePrefab: {fileID: 4739820083955746375, guid: f1aed34321da0114e811caad5358f904, type: 3}
   _dismallerWrongColor: {r: 22.627417, g: 0, b: 0, a: 1}
   _separationWrongColor: {r: 22.627417, g: 0, b: 0, a: 1}
+  _railColorPalette: {fileID: 0}
+  _corridorRailColor: {r: 0, g: 2, b: 4, a: 1}
   _enableDebugLog: 1
   _debugTriggerSeparationKey: 101
   _debugTriggerDismallerKey: 100
@@ -3533,6 +3712,7 @@ GameObject:
   - component: {fileID: 1478382432}
   - component: {fileID: 1478382434}
   - component: {fileID: 1478382433}
+  - component: {fileID: 1478382435}
   m_Layer: 0
   m_Name: WarnRail_3
   m_TagString: Untagged
@@ -3611,6 +3791,24 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1478382431}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1478382435
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1478382431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 894f644e7bfaf7b48bcb9e48d2289b45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RailColorController
+  _railType: 1
+  _targetRenderers:
+  - {fileID: 1478382433}
+  _autoFindChildren: 0
+  _previewInEditor: 0
+  _previewDimension: 0
 --- !u!1 &1479421244
 GameObject:
   m_ObjectHideFlags: 0
@@ -3623,6 +3821,7 @@ GameObject:
   - component: {fileID: 1479421248}
   - component: {fileID: 1479421247}
   - component: {fileID: 1479421250}
+  - component: {fileID: 1479421251}
   - component: {fileID: 1479421246}
   m_Layer: 0
   m_Name: HitRail_3
@@ -3692,8 +3891,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 40c198817b5a8874ebdd5a0dbdb01666, type: 2}
-  - {fileID: 2100000, guid: 3ea7b89a8684346498c929c1f4fc3a31, type: 2}
+  - {fileID: 2100000, guid: 98974268d3ac69343a0bf3d81cdd57f3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3758,6 +3956,24 @@ MonoBehaviour:
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: a28b98217eb767846839462972610979, type: 3}
   _emptyDestroySec: 0.2
   _enableDimensionDebug: 0
+--- !u!114 &1479421251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1479421244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 894f644e7bfaf7b48bcb9e48d2289b45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RailColorController
+  _railType: 0
+  _targetRenderers:
+  - {fileID: 1479421247}
+  _autoFindChildren: 0
+  _previewInEditor: 0
+  _previewDimension: 0
 --- !u!1 &1488290272
 GameObject:
   m_ObjectHideFlags: 0
@@ -3931,6 +4147,7 @@ GameObject:
   - component: {fileID: 1653326920}
   - component: {fileID: 1653326919}
   - component: {fileID: 1653326922}
+  - component: {fileID: 1653326923}
   m_Layer: 0
   m_Name: HitRail_1
   m_TagString: Untagged
@@ -3999,7 +4216,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: cfa725994662e9b4680a97c0611847c8, type: 2}
+  - {fileID: 2100000, guid: 71ba8ac14c554b54f8ec80cb963bd1d4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4064,6 +4281,24 @@ MonoBehaviour:
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: 47e7700bbfea603418096236c0e2bb40, type: 3}
   _emptyDestroySec: 0.2
   _enableDimensionDebug: 0
+--- !u!114 &1653326923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1653326916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 894f644e7bfaf7b48bcb9e48d2289b45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RailColorController
+  _railType: 1
+  _targetRenderers:
+  - {fileID: 1653326919}
+  _autoFindChildren: 0
+  _previewInEditor: 0
+  _previewDimension: 0
 --- !u!1 &1653508745
 GameObject:
   m_ObjectHideFlags: 0
@@ -4179,6 +4414,7 @@ GameObject:
   - component: {fileID: 1677809517}
   - component: {fileID: 1677809516}
   - component: {fileID: 1677809519}
+  - component: {fileID: 1677809520}
   - component: {fileID: 1677809515}
   m_Layer: 0
   m_Name: HitRail_4
@@ -4248,8 +4484,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 40c198817b5a8874ebdd5a0dbdb01666, type: 2}
-  - {fileID: 2100000, guid: 3ea7b89a8684346498c929c1f4fc3a31, type: 2}
+  - {fileID: 2100000, guid: 98974268d3ac69343a0bf3d81cdd57f3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4314,6 +4549,24 @@ MonoBehaviour:
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: a28b98217eb767846839462972610979, type: 3}
   _emptyDestroySec: 0.2
   _enableDimensionDebug: 0
+--- !u!114 &1677809520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1677809513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 894f644e7bfaf7b48bcb9e48d2289b45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RailColorController
+  _railType: 0
+  _targetRenderers:
+  - {fileID: 1677809516}
+  _autoFindChildren: 0
+  _previewInEditor: 0
+  _previewDimension: 0
 --- !u!1 &1719964235
 GameObject:
   m_ObjectHideFlags: 0
@@ -4356,6 +4609,7 @@ GameObject:
   - component: {fileID: 1752626188}
   - component: {fileID: 1752626190}
   - component: {fileID: 1752626189}
+  - component: {fileID: 1752626191}
   m_Layer: 0
   m_Name: WarnRail_4
   m_TagString: Untagged
@@ -4434,6 +4688,24 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1752626187}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1752626191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1752626187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 894f644e7bfaf7b48bcb9e48d2289b45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RailColorController
+  _railType: 1
+  _targetRenderers:
+  - {fileID: 1752626189}
+  _autoFindChildren: 0
+  _previewInEditor: 0
+  _previewDimension: 0
 --- !u!1 &1897652375
 GameObject:
   m_ObjectHideFlags: 0
@@ -4608,6 +4880,7 @@ SceneRoots:
   - {fileID: 1255481619}
   - {fileID: 1161246399}
   - {fileID: 1362899131}
+  - {fileID: 738567381}
   - {fileID: 2026075041}
   - {fileID: 516172090}
   - {fileID: 1653508746}

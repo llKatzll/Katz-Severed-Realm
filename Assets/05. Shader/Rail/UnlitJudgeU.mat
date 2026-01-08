@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-4180206215629896788
+--- !u!114 &-7523085544992806568
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -20,8 +20,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: WarnLine
-  m_Shader: {fileID: -6465566751694194690, guid: ea9214b0c24704d408e85db70e264d18, type: 3}
+  m_Name: UnlitJudgeU
+  m_Shader: {fileID: -6465566751694194690, guid: 9826a6544fb05924a8f64844d3529bcb, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -37,14 +37,6 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _SampleTexture2D_bdd130b465af47cbb178297ab112b3b1_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: c421e922d10229743981a00ed7d3e5fc, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_f3f5e59ba98b427b8ec8096e93435ae9_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: c421e922d10229743981a00ed7d3e5fc, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -59,12 +51,9 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Final_int: 120.89
     - _QueueControl: 0
     - _QueueOffset: 0
-    - v6: 2.99
-    - v7: 100
     m_Colors:
-    - _Color: {r: 21.361254, g: 21.361254, b: 21.361254, a: 1}
+    - _Color: {r: 5.3403134, g: 5.3403134, b: 5.3403134, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

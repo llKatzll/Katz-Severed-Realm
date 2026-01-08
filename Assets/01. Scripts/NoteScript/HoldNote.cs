@@ -5,7 +5,6 @@ public class HoldNote : Note
     [SerializeField] private Transform _head;
     [SerializeField] private Transform _body;
     [SerializeField] private Transform _tail;
-    [SerializeField] private Transform _bodyExtra;
 
     public double HeadDspTime { get; private set; }
     public double TailDspTime { get; private set; }
@@ -19,7 +18,6 @@ public class HoldNote : Note
     private float _holdLen;
 
     private Vector3 _bodyBaseScale;
-    private Vector3 _bodyExtraBaseScale;
 
     private bool _built;
 
@@ -33,17 +31,10 @@ public class HoldNote : Note
 
     private float _savedBodyLen = -1f;
 
-    private static readonly int IdColor = Shader.PropertyToID("_Color");
-    private static readonly int IdEmissionColor = Shader.PropertyToID("_EmissionColor");
-    private static readonly int IdColorBlend = Shader.PropertyToID("_ColorBlend");
-
     private void Awake()
     {
         if (_body != null)
             _bodyBaseScale = _body.localScale;
-
-        if (_bodyExtra != null)
-            _bodyExtraBaseScale = _bodyExtra.localScale;
 
         _renderers = GetComponentsInChildren<Renderer>(true);
 
@@ -394,27 +385,24 @@ public class HoldNote : Note
             _body.localPosition = bodyCenter;
             _body.localRotation = rot;
         }
-
-        if (_bodyExtra != null)
-        {
-            float minZ, maxZ;
-            TryGetMeshZ(_bodyExtra, out minZ, out maxZ);
-            float meshLenZ = Mathf.Max(0.0001f, (maxZ - minZ));
-
-            Vector3 sc = _bodyExtraBaseScale;
-            sc.z = Mathf.Max(0.0001f, currentBodyLen / meshLenZ);
-            _bodyExtra.localScale = sc;
-
-            _bodyExtra.localPosition = bodyCenter;
-            _bodyExtra.localRotation = rot;
-        }
     }
 
     protected override void ApplyCorridorColor()
     {
-        if (DimensionManager.I == null) return;
+        Color corridorColor;
 
-        Color corridorColor = DimensionManager.I.GetCorridorNoteColor(NoteType, true);
+        if (RuntimeColorPalette.I != null)
+        {
+            corridorColor = RuntimeColorPalette.I.GetCorridorColor(NoteType);
+        }
+        else if (DimensionManager.I != null)
+        {
+            corridorColor = DimensionManager.I.GetCorridorNoteColor(NoteType);
+        }
+        else
+        {
+            corridorColor = new Color(0f, 4f, 2f, 1f);
+        }
 
         if (_renderers == null) return;
 
@@ -424,16 +412,10 @@ public class HoldNote : Note
             {
                 var mat = _renderers[i].material;
 
-                if (mat.HasProperty(IdColorBlend))
-                {
-                    mat.SetFloat(IdColorBlend, 1f);
-                    if (mat.HasProperty(IdColor))
-                        mat.SetColor(IdColor, corridorColor);
-                }
-                else if (mat.HasProperty(IdEmissionColor))
+                if (mat.HasProperty("_EmissionColor"))
                 {
                     mat.EnableKeyword("_EMISSION");
-                    mat.SetColor(IdEmissionColor, corridorColor);
+                    mat.SetColor("_EmissionColor", corridorColor);
                 }
             }
         }

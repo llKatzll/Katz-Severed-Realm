@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5761688860368805270}
   - component: {fileID: 6801925536695851987}
   - component: {fileID: 9015790616304044342}
+  - component: {fileID: 4083774895499748063}
   - component: {fileID: -8341385637649158687}
   m_Layer: 0
   m_Name: UpperNote
@@ -69,7 +70,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: cfa725994662e9b4680a97c0611847c8, type: 2}
+  - {fileID: 2100000, guid: 71ba8ac14c554b54f8ec80cb963bd1d4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -125,6 +126,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1a7459686e75a7438a0dcfba86a8afd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Note
+  _dimension: 0
+--- !u!114 &4083774895499748063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6871002532316265894}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 894f644e7bfaf7b48bcb9e48d2289b45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RailColorController
+  _railType: 1
+  _targetRenderers:
+  - {fileID: 5761688860368805270}
+  _autoFindChildren: 0
+  _previewInEditor: 0
+  _previewDimension: 0
 --- !u!54 &-8341385637649158687
 Rigidbody:
   m_ObjectHideFlags: 0
