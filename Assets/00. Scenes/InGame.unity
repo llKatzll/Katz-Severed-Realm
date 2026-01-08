@@ -1916,10 +1916,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RuntimeColorPalette
   _groundDismaller: {r: 2.1185474, g: 2.1185474, b: 2.1185474, a: 1}
   _groundSeparation: {r: 2.1185474, g: 2.1185474, b: 2.1185474, a: 1}
-  _groundCorridor: {r: 0.93638974, g: 2.437613, b: 3.286666, a: 1}
-  _upperDismaller: {r: 3.8050652, g: 1.3769656, b: 0.56716967, a: 1}
-  _upperSeparation: {r: 0.40186173, g: 2.1143723, b: 3.1789064, a: 1}
-  _upperCorridor: {r: 2.541723, g: 1.5383687, b: 0.6282372, a: 1}
+  _groundCorridor: {r: 0.60358614, g: 1.5712576, b: 2.1185474, a: 1}
+  _upperDismaller: {r: 2.1185474, g: 0.7666536, b: 0.31578323, a: 1}
+  _upperSeparation: {r: 0.26781633, g: 1.4091002, b: 2.1185474, a: 1}
+  _upperCorridor: {r: 2.1185472, g: 1.2822431, b: 0.52364093, a: 1}
 --- !u!4 &738567381
 Transform:
   m_ObjectHideFlags: 0
