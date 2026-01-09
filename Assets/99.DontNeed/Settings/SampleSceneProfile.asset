@@ -177,46 +177,46 @@ MonoBehaviour:
   active: 0
   intensity:
     m_OverrideState: 1
-    m_Value: 2.29
+    m_Value: 3.25
   tintColor:
     m_OverrideState: 1
-    m_Value: {r: 1, g: 1, b: 1, a: 1}
+    m_Value: {r: 0.3254717, g: 0.65561825, b: 1, a: 1}
   bloomMip:
     m_OverrideState: 0
     m_Value: 1
   firstFlareIntensity:
     m_OverrideState: 1
-    m_Value: 0.1
+    m_Value: 0.87
   secondaryFlareIntensity:
     m_OverrideState: 1
-    m_Value: 0.64
+    m_Value: 0.06
   warpedFlareIntensity:
     m_OverrideState: 1
-    m_Value: 13.52
+    m_Value: 1.48
   warpedFlareScale:
     m_OverrideState: 0
     m_Value: {x: 1, y: 1}
   samples:
     m_OverrideState: 1
-    m_Value: 3
+    m_Value: 1
   sampleDimmer:
     m_OverrideState: 0
     m_Value: 0.5
   vignetteEffect:
     m_OverrideState: 1
-    m_Value: 0.875
+    m_Value: 0
   startingPosition:
     m_OverrideState: 1
     m_Value: 1
   scale:
     m_OverrideState: 1
-    m_Value: 1.08
+    m_Value: 1
   streaksIntensity:
     m_OverrideState: 1
     m_Value: 0
   streaksLength:
     m_OverrideState: 1
-    m_Value: 0.435
+    m_Value: 0.529
   streaksOrientation:
     m_OverrideState: 1
     m_Value: 0
@@ -228,7 +228,7 @@ MonoBehaviour:
     m_Value: 4
   chromaticAbberationIntensity:
     m_OverrideState: 1
-    m_Value: 0.467
+    m_Value: 0
 --- !u!114 &-3431915245354808046
 MonoBehaviour:
   m_ObjectHideFlags: 3

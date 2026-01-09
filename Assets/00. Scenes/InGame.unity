@@ -3601,12 +3601,12 @@ MonoBehaviour:
   _corridorDurationMs: 700
   _corridorGroundColor: {r: 0, g: 2, b: 4, a: 1}
   _corridorUpperColor: {r: 0.5, g: 2.5, b: 4, a: 1}
-  _dismallerBgEffectPrefab: {fileID: 0}
+  _dismallerBgEffectPrefab: {fileID: 3838068148595954904, guid: 43bb1136fa350b441902bd8cd4278b0e, type: 3}
   _separationBgEffectPrefab: {fileID: 3838068148595954904, guid: 43bb1136fa350b441902bd8cd4278b0e, type: 3}
-  _corridorBgEffectPrefab: {fileID: 0}
+  _corridorBgEffectPrefab: {fileID: 3838068148595954904, guid: 43bb1136fa350b441902bd8cd4278b0e, type: 3}
   _attachToCamera: 1
   _mainCamera: {fileID: 330585545}
-  _dismallerIndicatorPrefab: {fileID: 0}
+  _dismallerIndicatorPrefab: {fileID: 5274774243444757464, guid: 5efdd58088b77da4f910179ba303a1e7, type: 3}
   _separationIndicatorPrefab: {fileID: 5274774243444757464, guid: 5efdd58088b77da4f910179ba303a1e7, type: 3}
   _indicatorSpawnPoint: {fileID: 89938671}
   _dismallerNoteNoisePrefab: {fileID: 4739820083955746375, guid: f1aed34321da0114e811caad5358f904, type: 3}

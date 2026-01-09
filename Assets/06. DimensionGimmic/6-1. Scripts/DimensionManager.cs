@@ -19,6 +19,7 @@ public class DimensionManager : MonoBehaviour
     [Header("Switch Settings")]
     [SerializeField] private SwitchMode _switchMode = SwitchMode.Hold;
     [SerializeField] private KeyCode _switchKey = KeyCode.Space;
+    //[SerializeField] private KeyCode _switchKey1 = KeyCode.Space; 중복이면 설정하지 못하게끔
 
     //Lifetime set later.
     [Header("Indicator Settings")]
