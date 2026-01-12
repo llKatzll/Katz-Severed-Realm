@@ -179,7 +179,7 @@ public class LaneJudge : MonoBehaviour
         double nowDsp = AudioSettings.dspTime;
         double rawMs = (nowDsp - _hold.TailDspTime) * 1000.0 + _userOffsetMs;
 
-        if (rawMs < -HoldRuinMs)
+        if (rawMs < -(HoldRuinMs + _holdJudgeBonusMs))
         {
             _hold.Fail(_palette, laneType);
             StopHoldLoopFx();
@@ -189,7 +189,7 @@ public class LaneJudge : MonoBehaviour
             return;
         }
 
-        JudgeType judge = JudgeFromRawMsHold(rawMs);
+        JudgeType judge = JudgeFromRawMsHoldTail(rawMs);
 
         if (judge == JudgeType.Miss)
         {
@@ -247,7 +247,7 @@ public class LaneJudge : MonoBehaviour
         double now = AudioSettings.dspTime;
         double rawTailMs = (now - _hold.TailDspTime) * 1000.0 + _userOffsetMs;
 
-        if (rawTailMs > HoldRuinMs)
+        if (rawTailMs > HoldRuinMs + _holdJudgeBonusMs)
         {
             NoteSpawner.NoteType laneType = _hold.NoteType;
 
@@ -342,6 +342,19 @@ public class LaneJudge : MonoBehaviour
         if (absMs <= HoldTraceMs) return JudgeType.Trace;
         if (absMs <= HoldFractureMs) return JudgeType.Fracture;
         if (absMs <= HoldRuinMs) return JudgeType.Ruin;
+        return JudgeType.Miss;
+    }
+
+    private JudgeType JudgeFromRawMsHoldTail(double rawMs)
+    {
+        double absMs = Math.Abs(rawMs);
+        double bonus = _holdJudgeBonusMs;
+
+        if (absMs <= HoldSevMs + bonus) return JudgeType.Severance;
+        if (absMs <= HoldCleanMs + bonus) return JudgeType.Clean;
+        if (absMs <= HoldTraceMs + bonus) return JudgeType.Trace;
+        if (absMs <= HoldFractureMs + bonus) return JudgeType.Fracture;
+        if (absMs <= HoldRuinMs + bonus) return JudgeType.Ruin;
         return JudgeType.Miss;
     }
 

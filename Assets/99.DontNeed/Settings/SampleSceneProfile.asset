@@ -161,7 +161,7 @@ MonoBehaviour:
     m_Value: {r: 0, g: 0, b: 0, a: 1}
   balance:
     m_OverrideState: 1
-    m_Value: 34
+    m_Value: 29
 --- !u!114 &-4717792182479940246
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -643,10 +643,10 @@ MonoBehaviour:
   active: 0
   temperature:
     m_OverrideState: 1
-    m_Value: -58
+    m_Value: 11
   tint:
     m_OverrideState: 1
-    m_Value: 100
+    m_Value: 78
 --- !u!114 &6385197812375696967
 MonoBehaviour:
   m_ObjectHideFlags: 3

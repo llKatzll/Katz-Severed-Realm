@@ -2982,7 +2982,7 @@ MonoBehaviour:
   _baseApproachBeats: 5
   _noteSpeedMul: 3.5
   _autoSpawn: 1
-  _spawnIntervalBeats: 0.15
+  _spawnIntervalBeats: 0.01
   _spawnRandomSingleLane: 1
   _avoidSameLaneTwice: 1
   _spawnForm: 0
