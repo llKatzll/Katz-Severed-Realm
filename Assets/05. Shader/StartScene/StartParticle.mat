@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Particle
-  m_Shader: {fileID: -6465566751694194690, guid: 0bdb26acb2fe45b4b8b7931083064d5b, type: 3}
+  m_Name: StartParticle
+  m_Shader: {fileID: -6465566751694194690, guid: 7c4302b03996e6b40872d68683966a86, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -24,16 +24,8 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _SampleTexture2D_bdd130b465af47cbb178297ab112b3b1_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: 1b6cc7be335ae8f49b5195e0d3046c6c, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_de2ab72af9ef48d9913e0ddf5eb09568_Texture_1_Texture2D:
         m_Texture: {fileID: 2800000, guid: 6500b38735a5cc84885d62b58e1bab83, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_f3f5e59ba98b427b8ec8096e93435ae9_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: ca731a5bdbdc2664299afc86dcfdaaf9, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -54,13 +46,13 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _speed: 0
-    - v6: 10
-    - v7: 51.1
+    - v6: 16.5
+    - v7: 39.6
     m_Colors:
-    - _Color: {r: 128, g: 128, b: 128, a: 1}
+    - _Color: {r: 4, g: 4, b: 4, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
---- !u!114 &3244410826258313276
+--- !u!114 &8041188897912147881
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}

@@ -54,6 +54,9 @@ public class IntroScene : MonoBehaviour
     private bool _skipRequested;
     private Phase _phase = Phase.None;
 
+    [Header("NextScene")]
+    [SerializeField] private StartScene _sts;
+
     public bool IsDone { get; private set; }
 
     private void Awake()
@@ -156,9 +159,11 @@ public class IntroScene : MonoBehaviour
 
         if (_alertImage != null) _alertImage.gameObject.SetActive(false);
 
+        if (_sts != null) _sts.StartParticlesPlay();
+        
         if (_canvasRoot != null) _canvasRoot.SetActive(false);
-
-        _phase = Phase.Done;
+        
+            _phase = Phase.Done;
         IsDone = true;
     }
 
