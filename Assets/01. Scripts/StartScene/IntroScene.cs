@@ -49,13 +49,11 @@ public class IntroScene : MonoBehaviour
 
     [Header("Options")]
     [SerializeField] private bool _playOnStart = true;
+    [SerializeField] private GameObject _nextSceneObject;
 
     private Coroutine _co;
     private bool _skipRequested;
     private Phase _phase = Phase.None;
-
-    [Header("NextScene")]
-    [SerializeField] private StartScene _sts;
 
     public bool IsDone { get; private set; }
 
@@ -66,8 +64,6 @@ public class IntroScene : MonoBehaviour
 
     private void OnEnable()
     {
-        ApplyInitialState();
-
         if (_playOnStart && Application.isPlaying)
             Play();
     }
@@ -100,6 +96,9 @@ public class IntroScene : MonoBehaviour
             _signParticles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             _signParticles.gameObject.SetActive(true);
         }
+
+        if (_nextSceneObject != null)
+            _nextSceneObject.SetActive(false);
     }
 
     private IEnumerator CoRun()
@@ -159,11 +158,12 @@ public class IntroScene : MonoBehaviour
 
         if (_alertImage != null) _alertImage.gameObject.SetActive(false);
 
-        if (_sts != null) _sts.StartParticlesPlay();
-        
         if (_canvasRoot != null) _canvasRoot.SetActive(false);
-        
-            _phase = Phase.Done;
+
+        if (_nextSceneObject != null)
+            _nextSceneObject.SetActive(true);
+
+        _phase = Phase.Done;
         IsDone = true;
     }
 
