@@ -18,8 +18,8 @@ public class LaneJudge : MonoBehaviour
     [SerializeField] private float _fractureMs = 155f;
     [SerializeField] private float _ruinMs = 200f;
 
-    [Header("Hold Judge Bonus (ms)")]
-    [SerializeField] private float _holdJudgeBonusMs = 10f;
+    [Header("Hold Tail Judge Bonus (ms)")]
+    [SerializeField] private float _holdTailBonusMs = 10f;
 
     [Header("Palette")]
     [SerializeField] private HitFxPaletteSO _palette;
@@ -93,13 +93,46 @@ public class LaneJudge : MonoBehaviour
 
     private void OnKeyDown()
     {
-        if (_hold != null && !_hold.IsFailed && !_hold.IsActive)
+        Note earliestTap = PickEarliestTap();
+
+        bool hasValidHold = _hold != null && !_hold.IsFailed && !_hold.IsActive;
+        bool hasValidTap = earliestTap != null;
+
+        if (!hasValidHold && !hasValidTap)
         {
-            TryStartHoldByHead();
+            SpawnEmptyHit();
             return;
         }
 
-        JudgeTap();
+        if (hasValidHold && hasValidTap)
+        {
+            double holdHeadTime = _hold.HeadDspTime;
+            double tapTime = earliestTap.ExpectedHitDspTime;
+
+            if (holdHeadTime <= tapTime)
+            {
+                if (TryStartHoldByHead())
+                    return;
+                JudgeTap();
+            }
+            else
+            {
+                if (JudgeTapInternal(earliestTap))
+                    return;
+                TryStartHoldByHead();
+            }
+        }
+        else if (hasValidHold)
+        {
+            if (!TryStartHoldByHead())
+            {
+                SpawnEmptyHit();
+            }
+        }
+        else
+        {
+            JudgeTap();
+        }
     }
 
     private void OnKeyUp()
@@ -110,17 +143,18 @@ public class LaneJudge : MonoBehaviour
         }
     }
 
-    private double HoldSevMs => _severanceMs + _holdJudgeBonusMs;
-    private double HoldCleanMs => _cleanMs + _holdJudgeBonusMs;
-    private double HoldTraceMs => _traceMs + _holdJudgeBonusMs;
-    private double HoldFractureMs => _fractureMs + _holdJudgeBonusMs;
-    private double HoldRuinMs => _ruinMs + _holdJudgeBonusMs;
-
-    private void TryStartHoldByHead()
+    private bool TryStartHoldByHead()
     {
-        if (_hold == null) return;
+        if (_hold == null) return false;
 
         NoteSpawner.NoteType laneType = _hold.NoteType;
+
+        double rawMs = (AudioSettings.dspTime - _hold.HeadDspTime) * 1000.0 + _userOffsetMs;
+
+        if (rawMs < -_ruinMs)
+        {
+            return false;
+        }
 
         if (!CanJudgeNoteDimension(_hold.Dimension, false))
         {
@@ -128,18 +162,10 @@ public class LaneJudge : MonoBehaviour
                 Debug.Log("[LaneJudge] Hold start blocked - wrong dimension: " + _hold.Dimension);
 
             SpawnEmptyHit();
-            return;
+            return true;
         }
 
-        double rawMs = (AudioSettings.dspTime - _hold.HeadDspTime) * 1000.0 + _userOffsetMs;
-
-        if (rawMs < -HoldRuinMs)
-        {
-            SpawnEmptyHit();
-            return;
-        }
-
-        JudgeType judge = JudgeFromRawMsHold(rawMs);
+        JudgeType judge = JudgeFromRawMs(rawMs);
 
         if (judge == JudgeType.Miss)
         {
@@ -149,7 +175,7 @@ public class LaneJudge : MonoBehaviour
             if (ComboUI.I != null) ComboUI.I.OnHoldFail("Miss");
 
             _hold = null;
-            return;
+            return true;
         }
 
         SpawnHoldHeadFx(judge, laneType);
@@ -157,7 +183,7 @@ public class LaneJudge : MonoBehaviour
         if (ComboUI.I != null)
         {
             float bpm = 120f;
-            RhythmConductor rhy = FindObjectOfType<RhythmConductor>();
+            RhythmConductor rhy = FindObjectOfType<RhythmConductor>(); //ITS WORKING BRO STOP WARNING ABOUT THIS
             if (rhy != null) bpm = (float)rhy.Bpm;
 
             bool breaks = (judge == JudgeType.Ruin || judge == JudgeType.Miss);
@@ -168,6 +194,8 @@ public class LaneJudge : MonoBehaviour
 
         Color c = GetJudgeColor(laneType, judge);
         StartHoldLoopFx(c, laneType);
+
+        return true;
     }
 
     private void TryFinishHoldByTail()
@@ -179,17 +207,20 @@ public class LaneJudge : MonoBehaviour
         double nowDsp = AudioSettings.dspTime;
         double rawMs = (nowDsp - _hold.TailDspTime) * 1000.0 + _userOffsetMs;
 
-        if (rawMs < -(HoldRuinMs + _holdJudgeBonusMs))
+        double tailWindow = _ruinMs + _holdTailBonusMs;
+
+        if (rawMs < -tailWindow)
         {
             _hold.Fail(_palette, laneType);
             StopHoldLoopFx();
 
             if (ComboUI.I != null) ComboUI.I.OnHoldFail("Miss");
 
+            _hold = null;
             return;
         }
 
-        JudgeType judge = JudgeFromRawMsHoldTail(rawMs);
+        JudgeType judge = JudgeFromRawMsTail(rawMs);
 
         if (judge == JudgeType.Miss)
         {
@@ -198,6 +229,7 @@ public class LaneJudge : MonoBehaviour
 
             if (ComboUI.I != null) ComboUI.I.OnHoldFail("Miss");
 
+            _hold = null;
             return;
         }
 
@@ -223,7 +255,7 @@ public class LaneJudge : MonoBehaviour
         double now = AudioSettings.dspTime;
         double rawHeadMs = (now - _hold.HeadDspTime) * 1000.0 + _userOffsetMs;
 
-        if (rawHeadMs > HoldRuinMs)
+        if (rawHeadMs > _ruinMs)
         {
             NoteSpawner.NoteType laneType = _hold.NoteType;
 
@@ -247,7 +279,9 @@ public class LaneJudge : MonoBehaviour
         double now = AudioSettings.dspTime;
         double rawTailMs = (now - _hold.TailDspTime) * 1000.0 + _userOffsetMs;
 
-        if (rawTailMs > HoldRuinMs + _holdJudgeBonusMs)
+        double tailWindow = _ruinMs + _holdTailBonusMs;
+
+        if (rawTailMs > tailWindow)
         {
             NoteSpawner.NoteType laneType = _hold.NoteType;
 
@@ -273,10 +307,23 @@ public class LaneJudge : MonoBehaviour
     private void JudgeTap()
     {
         Note target = PickEarliestTap();
+        JudgeTapInternal(target);
+    }
+
+    private bool JudgeTapInternal(Note target)
+    {
         if (target == null)
         {
             SpawnEmptyHit();
-            return;
+            return false;
+        }
+
+        double rawMs = (AudioSettings.dspTime - target.ExpectedHitDspTime) * 1000.0 + _userOffsetMs;
+
+        if (rawMs < -_ruinMs)
+        {
+            SpawnEmptyHit();
+            return false;
         }
 
         if (!CanJudgeNoteDimension(target.Dimension, false))
@@ -288,15 +335,7 @@ public class LaneJudge : MonoBehaviour
                 ComboUI.I.OnTapResult("Miss", true);
 
             SpawnEmptyHit();
-            return;
-        }
-
-        double rawMs = (AudioSettings.dspTime - target.ExpectedHitDspTime) * 1000.0 + _userOffsetMs;
-
-        if (rawMs < -_ruinMs)
-        {
-            SpawnEmptyHit();
-            return;
+            return true;
         }
 
         JudgeType judge = JudgeFromRawMs(rawMs);
@@ -313,6 +352,7 @@ public class LaneJudge : MonoBehaviour
             SpawnTapHitFx(judge, target.NoteType);
 
         Destroy(target.gameObject);
+        return true;
     }
 
     private bool CanJudgeNoteDimension(DimensionType noteDimension, bool isLongNoteInProgress)
@@ -333,28 +373,16 @@ public class LaneJudge : MonoBehaviour
         return JudgeType.Miss;
     }
 
-    private JudgeType JudgeFromRawMsHold(double rawMs)
+    private JudgeType JudgeFromRawMsTail(double rawMs)
     {
         double absMs = Math.Abs(rawMs);
+        double bonus = _holdTailBonusMs;
 
-        if (absMs <= HoldSevMs) return JudgeType.Severance;
-        if (absMs <= HoldCleanMs) return JudgeType.Clean;
-        if (absMs <= HoldTraceMs) return JudgeType.Trace;
-        if (absMs <= HoldFractureMs) return JudgeType.Fracture;
-        if (absMs <= HoldRuinMs) return JudgeType.Ruin;
-        return JudgeType.Miss;
-    }
-
-    private JudgeType JudgeFromRawMsHoldTail(double rawMs)
-    {
-        double absMs = Math.Abs(rawMs);
-        double bonus = _holdJudgeBonusMs;
-
-        if (absMs <= HoldSevMs + bonus) return JudgeType.Severance;
-        if (absMs <= HoldCleanMs + bonus) return JudgeType.Clean;
-        if (absMs <= HoldTraceMs + bonus) return JudgeType.Trace;
-        if (absMs <= HoldFractureMs + bonus) return JudgeType.Fracture;
-        if (absMs <= HoldRuinMs + bonus) return JudgeType.Ruin;
+        if (absMs <= _severanceMs + bonus) return JudgeType.Severance;
+        if (absMs <= _cleanMs + bonus) return JudgeType.Clean;
+        if (absMs <= _traceMs + bonus) return JudgeType.Trace;
+        if (absMs <= _fractureMs + bonus) return JudgeType.Fracture;
+        if (absMs <= _ruinMs + bonus) return JudgeType.Ruin;
         return JudgeType.Miss;
     }
 
