@@ -219,7 +219,7 @@ public class LaneJudge : MonoBehaviour
             _hold = null;
             return;
         }
-
+        
         JudgeType judge = JudgeFromRawMsTail(rawMs);
 
         if (judge == JudgeType.Miss)
