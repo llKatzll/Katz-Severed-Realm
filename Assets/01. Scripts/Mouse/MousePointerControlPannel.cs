@@ -130,7 +130,7 @@ public class MousePointerControlPannel : MonoBehaviour
         _particleTf.rotation = Quaternion.identity;
     }
 
-    private void SetParticleActive(bool on)
+    private void SetParticleActive(bool on)  
     {
         if (_particleInstance == null) return;
 
@@ -151,4 +151,7 @@ public class MousePointerControlPannel : MonoBehaviour
                 _particleInstance.gameObject.SetActive(false);
         }
     }
+
+
+
 }

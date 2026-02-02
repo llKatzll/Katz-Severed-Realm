@@ -11,6 +11,7 @@ public class RhythmConductor : MonoBehaviour
     public double Bpm => _bpm;
     public double SecPerBeat => (_bpm > 0.0) ? (60.0 / _bpm) : 0.5;
     public double CurrentBeat => SongTime / SecPerBeat;
+
     public bool Started => _started;
 
     public double SongTime
