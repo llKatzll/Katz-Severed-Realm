@@ -151,7 +151,4 @@ public class MousePointerControlPannel : MonoBehaviour
                 _particleInstance.gameObject.SetActive(false);
         }
     }
-
-
-
 }
