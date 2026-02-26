@@ -3953,8 +3953,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Scrolling
   _pivot: {fileID: 553172596}
+  _songBars:
+  - {fileID: 55302353}
+  - {fileID: 1593860110}
+  - {fileID: 1380315416}
+  - {fileID: 70734553}
+  - {fileID: 608910609}
+  - {fileID: 789859218}
+  - {fileID: 622753615}
+  - {fileID: 476546935}
+  - {fileID: 1533679573}
   _rotationPerSlot: 40
   _rotationSpeed: 8
+  _selectedOffsetX: 53
+  _positionSpeed: 10
+  _selectionAngleThreshold: 2
   _invertWheel: 0
 --- !u!4 &1925629839
 Transform:
