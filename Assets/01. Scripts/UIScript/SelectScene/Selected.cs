@@ -1,16 +1,19 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Selected : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Start()
     {
-        
+        var _btn = GetComponent<Button>();
+        if (_btn != null)
+        {
+            _btn.onClick.AddListener(OnPressed);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public void OnPressed()
     {
-        
+        Debug.Log("Button Selected)");
     }
 }
