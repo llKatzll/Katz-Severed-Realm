@@ -1,5 +1,5 @@
 using UnityEngine;
-
+//a
 public enum DifficultyType
 {
     Easy,
@@ -14,8 +14,8 @@ public enum DifficultyType
 public class DifficultyData
 {
     public DifficultyType type;
-    public int level;
-    public float constant;
+    public int level; //°î·¾
+    public float constant; //»ó¼ö
     public bool exists = true;
 
     [Header("Song_Records")]

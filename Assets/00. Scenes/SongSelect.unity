@@ -265,6 +265,7 @@ GameObject:
   m_Component:
   - component: {fileID: 55302353}
   - component: {fileID: 55302355}
+  - component: {fileID: 55302356}
   - component: {fileID: 55302354}
   m_Layer: 5
   m_Name: SongNameBar
@@ -328,6 +329,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 55302352}
   m_CullTransparentMesh: 1
+--- !u!114 &55302356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 55302352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c627bfed48a63114bbd9622d7e0e25bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SongBar
+  _songData: {fileID: 11400000, guid: 51d569c4e2f38d747a457648dba8c90b, type: 2}
+  _songNameText: {fileID: 1068217444}
+  _songImage: {fileID: 0}
+  _selectionThreshold: 20
 --- !u!1 &70734552
 GameObject:
   m_ObjectHideFlags: 0
@@ -338,6 +355,7 @@ GameObject:
   m_Component:
   - component: {fileID: 70734553}
   - component: {fileID: 70734555}
+  - component: {fileID: 70734556}
   - component: {fileID: 70734554}
   m_Layer: 5
   m_Name: SongNameBar (3)
@@ -400,6 +418,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 70734552}
   m_CullTransparentMesh: 1
+--- !u!114 &70734556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 70734552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c627bfed48a63114bbd9622d7e0e25bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SongBar
+  _songData: {fileID: 0}
+  _songNameText: {fileID: 0}
+  _songImage: {fileID: 0}
+  _selectionThreshold: 20
 --- !u!1 &93333457
 GameObject:
   m_ObjectHideFlags: 0
@@ -1034,6 +1068,7 @@ GameObject:
   m_Component:
   - component: {fileID: 476546935}
   - component: {fileID: 476546937}
+  - component: {fileID: 476546938}
   - component: {fileID: 476546936}
   m_Layer: 5
   m_Name: SongNameBar (7)
@@ -1096,6 +1131,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 476546934}
   m_CullTransparentMesh: 1
+--- !u!114 &476546938
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 476546934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c627bfed48a63114bbd9622d7e0e25bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SongBar
+  _songData: {fileID: 0}
+  _songNameText: {fileID: 0}
+  _songImage: {fileID: 0}
+  _selectionThreshold: 20
 --- !u!1 &485567107
 GameObject:
   m_ObjectHideFlags: 0
@@ -1560,6 +1611,7 @@ GameObject:
   m_Component:
   - component: {fileID: 608910609}
   - component: {fileID: 608910611}
+  - component: {fileID: 608910612}
   - component: {fileID: 608910610}
   m_Layer: 5
   m_Name: SongNameBar (4)
@@ -1622,6 +1674,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 608910608}
   m_CullTransparentMesh: 1
+--- !u!114 &608910612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 608910608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c627bfed48a63114bbd9622d7e0e25bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SongBar
+  _songData: {fileID: 0}
+  _songNameText: {fileID: 0}
+  _songImage: {fileID: 0}
+  _selectionThreshold: 20
 --- !u!1 &622753614
 GameObject:
   m_ObjectHideFlags: 0
@@ -1632,6 +1700,7 @@ GameObject:
   m_Component:
   - component: {fileID: 622753615}
   - component: {fileID: 622753617}
+  - component: {fileID: 622753618}
   - component: {fileID: 622753616}
   m_Layer: 5
   m_Name: SongNameBar (6)
@@ -1694,6 +1763,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 622753614}
   m_CullTransparentMesh: 1
+--- !u!114 &622753618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 622753614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c627bfed48a63114bbd9622d7e0e25bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SongBar
+  _songData: {fileID: 0}
+  _songNameText: {fileID: 0}
+  _songImage: {fileID: 0}
+  _selectionThreshold: 20
 --- !u!1 &678940646
 GameObject:
   m_ObjectHideFlags: 0
@@ -2171,6 +2256,7 @@ GameObject:
   m_Component:
   - component: {fileID: 789859218}
   - component: {fileID: 789859220}
+  - component: {fileID: 789859221}
   - component: {fileID: 789859219}
   m_Layer: 5
   m_Name: SongNameBar (5)
@@ -2233,6 +2319,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 789859217}
   m_CullTransparentMesh: 1
+--- !u!114 &789859221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 789859217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c627bfed48a63114bbd9622d7e0e25bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SongBar
+  _songData: {fileID: 0}
+  _songNameText: {fileID: 0}
+  _songImage: {fileID: 0}
+  _selectionThreshold: 20
 --- !u!1 &839324753
 GameObject:
   m_ObjectHideFlags: 0
@@ -3688,6 +3790,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1380315416}
   - component: {fileID: 1380315418}
+  - component: {fileID: 1380315419}
   - component: {fileID: 1380315417}
   m_Layer: 5
   m_Name: SongNameBar (2)
@@ -3750,6 +3853,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1380315415}
   m_CullTransparentMesh: 1
+--- !u!114 &1380315419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1380315415}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c627bfed48a63114bbd9622d7e0e25bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SongBar
+  _songData: {fileID: 0}
+  _songNameText: {fileID: 0}
+  _songImage: {fileID: 0}
+  _selectionThreshold: 20
 --- !u!1 &1412679306
 GameObject:
   m_ObjectHideFlags: 0
@@ -3832,6 +3951,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1533679573}
   - component: {fileID: 1533679575}
+  - component: {fileID: 1533679576}
   - component: {fileID: 1533679574}
   m_Layer: 5
   m_Name: SongNameBar (8)
@@ -3894,6 +4014,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1533679572}
   m_CullTransparentMesh: 1
+--- !u!114 &1533679576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1533679572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c627bfed48a63114bbd9622d7e0e25bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SongBar
+  _songData: {fileID: 0}
+  _songNameText: {fileID: 0}
+  _songImage: {fileID: 0}
+  _selectionThreshold: 20
 --- !u!1 &1593860109
 GameObject:
   m_ObjectHideFlags: 0
@@ -3904,6 +4040,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1593860110}
   - component: {fileID: 1593860112}
+  - component: {fileID: 1593860113}
   - component: {fileID: 1593860111}
   m_Layer: 5
   m_Name: SongNameBar (1)
@@ -3966,6 +4103,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1593860109}
   m_CullTransparentMesh: 1
+--- !u!114 &1593860113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1593860109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c627bfed48a63114bbd9622d7e0e25bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SongBar
+  _songData: {fileID: 0}
+  _songNameText: {fileID: 0}
+  _songImage: {fileID: 0}
+  _selectionThreshold: 20
 --- !u!1 &1602868258
 GameObject:
   m_ObjectHideFlags: 0
@@ -3975,6 +4128,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1602868259}
+  - component: {fileID: 1602868260}
   m_Layer: 0
   m_Name: SongSelectManager
   m_TagString: Untagged
@@ -3991,12 +4145,39 @@ Transform:
   m_GameObject: {fileID: 1602868258}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 540, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1602868260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1602868258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d28453d88efd257449ba74edd4883f5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SongSelectManager
+  _scrolling: {fileID: 0}
+  _infoDisplay: {fileID: 0}
+  _difficultySelector: {fileID: 0}
+  _previewPlayer: {fileID: 0}
+  _songBars:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  _currentSong: {fileID: 0}
+  _currentDifficulty: 0
 --- !u!1 &1603155365
 GameObject:
   m_ObjectHideFlags: 0
@@ -5867,6 +6048,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 514388009}
   - {fileID: 1248442313}
+  - {fileID: 1602868259}
   - {fileID: 8829188}
   - {fileID: 1890984205}
   - {fileID: 776153774}
@@ -5878,4 +6060,3 @@ SceneRoots:
   - {fileID: 120860303}
   - {fileID: 1683521101}
   - {fileID: 485567110}
-  - {fileID: 1602868259}
