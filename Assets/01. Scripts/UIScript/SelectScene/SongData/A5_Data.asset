@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31831c5adab81c24abfa571160b6ea5b, type: 3}
   m_Name: A5_Data
   m_EditorClassIdentifier: Assembly-CSharp::SongData
-  songName: A1
-  artist: A1
+  songName: A5
+  artist: A5
   bpm: 100
   hasTempoShift: 1
   duration: 60
-  charter: A1
-  mapper: A1
+  charter: A5
+  mapper: A5
   songImage: {fileID: 21300000, guid: 0f84d358e36794244b0e85f4acbae6ff, type: 3}
   previewClip: {fileID: 8300000, guid: 9b5be29235099664cb922bdf728283a2, type: 3}
   fullClip: {fileID: 8300000, guid: 9b5be29235099664cb922bdf728283a2, type: 3}

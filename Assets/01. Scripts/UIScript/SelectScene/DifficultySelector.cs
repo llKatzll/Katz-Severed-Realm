@@ -73,15 +73,15 @@ public class DifficultySelector : MonoBehaviour
 
         foreach (var btn in _buttons)
         {
-            bool exists = song != null && song.HasDifficulty(btn.type);
+            bool hasDiff = song != null && song.HasDifficulty(btn.type);
 
             if (btn.button != null)
-                btn.button.interactable = exists;
+                btn.button.interactable = hasDiff;
 
             if (btn.canvasGroup != null)
-                btn.canvasGroup.alpha = exists ? _enabledAlpha : _disabledAlpha;
+                btn.canvasGroup.alpha = hasDiff ? _enabledAlpha : _disabledAlpha;
 
-            if (exists && !foundFirst)
+            if (hasDiff && !foundFirst)
             {
                 firstAvailable = btn.type;
                 foundFirst = true;

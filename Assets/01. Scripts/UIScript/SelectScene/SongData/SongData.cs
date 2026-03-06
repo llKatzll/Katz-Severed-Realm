@@ -1,5 +1,5 @@
 using UnityEngine;
-//a
+
 public enum DifficultyType
 {
     Easy,
@@ -14,19 +14,18 @@ public enum DifficultyType
 public class DifficultyData
 {
     public DifficultyType type;
-    public int level; //°î·¾
+    public int level; //·¹º§
     public float constant; //»ó¼ö
-    public bool exists = true;
 
-    [Header("Song_Records")]
+    [Header("Records")]
     public int highScore;
     public float accuracy;
 }
 
-[CreateAssetMenu(menuName = "K_S_R/Song Data", fileName = "NewSong")]
+[CreateAssetMenu(menuName = "Katz/Song Data", fileName = "NewSong")]
 public class SongData : ScriptableObject
 {
-    [Header("Basic_Info")]
+    [Header("Basic Info")]
     public string songName;
     public string artist;
     public float bpm;
@@ -43,7 +42,7 @@ public class SongData : ScriptableObject
     public AudioClip fullClip;
 
     [Header("Difficulties")]
-    public DifficultyData[] difficulties = new DifficultyData[6];
+    public DifficultyData[] difficulties;
 
     public DifficultyData GetDifficulty(DifficultyType type)
     {
@@ -57,7 +56,6 @@ public class SongData : ScriptableObject
 
     public bool HasDifficulty(DifficultyType type)
     {
-        var diff = GetDifficulty(type);
-        return diff != null && diff.exists;
+        return GetDifficulty(type) != null;
     }
 }

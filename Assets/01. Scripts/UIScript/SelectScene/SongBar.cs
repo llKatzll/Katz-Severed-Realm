@@ -10,7 +10,6 @@ public class SongBar : MonoBehaviour
 
     [Header("UI Elements")]
     [SerializeField] private TMP_Text _songNameText;
-    [SerializeField] private RawImage _songImage;
 
     [Header("Selection Detection")]
     [SerializeField] private float _selectionThreshold = 20f;
@@ -89,9 +88,6 @@ public class SongBar : MonoBehaviour
 
         if (_songNameText != null)
             _songNameText.text = _songData.songName;
-
-        if (_songImage != null && _songData.songImage != null)
-            _songImage.texture = _songData.songImage.texture;
     }
 
     private float NormalizeAngle(float angle)

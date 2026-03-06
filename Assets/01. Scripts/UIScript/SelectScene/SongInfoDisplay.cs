@@ -12,7 +12,7 @@ public class SongInfoDisplay : MonoBehaviour
     [SerializeField] private TMP_Text _durationText;
     [SerializeField] private TMP_Text _charterText;
     [SerializeField] private TMP_Text _mapperText;
-    [SerializeField] private RawImage _songImage;
+    [SerializeField] private Image _songImage;
 
     [Header("Difficulty Info")]
     [SerializeField] private TMP_Text _difficultyLevelText;
@@ -78,7 +78,7 @@ public class SongInfoDisplay : MonoBehaviour
             _mapperText.text = "Mapper : " + song.mapper;
 
         if (_songImage != null && song.songImage != null)
-            _songImage.texture = song.songImage.texture;
+            _songImage.sprite = song.songImage;
     }
 
     private void UpdateDifficultyInfo(SongData song, DifficultyType difficulty)
