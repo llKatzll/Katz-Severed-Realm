@@ -9,7 +9,6 @@ public class DifficultySelector : MonoBehaviour
         public DifficultyType type;
         public Button button;
         public Image buttonImage;
-        public CanvasGroup canvasGroup;
     }
 
     [Header("Buttons")]
@@ -18,10 +17,6 @@ public class DifficultySelector : MonoBehaviour
     [Header("Canvas Group (All Buttons)")]
     [SerializeField] private CanvasGroup _allButtonsGroup;
     [SerializeField] private float _fadeSpeed = 5f;
-
-    [Header("Visual")]
-    [SerializeField] private float _disabledAlpha = 0.3f;
-    [SerializeField] private float _enabledAlpha = 1f;
 
     private SongData _currentSong;
     private DifficultyType _selectedDifficulty;
@@ -77,9 +72,6 @@ public class DifficultySelector : MonoBehaviour
 
             if (btn.button != null)
                 btn.button.interactable = hasDiff;
-
-            if (btn.canvasGroup != null)
-                btn.canvasGroup.alpha = hasDiff ? _enabledAlpha : _disabledAlpha;
 
             if (hasDiff && !foundFirst)
             {
