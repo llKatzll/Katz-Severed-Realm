@@ -18,8 +18,12 @@ public class DifficultySelector : MonoBehaviour
     [SerializeField] private CanvasGroup _allButtonsGroup;
     [SerializeField] private float _fadeSpeed = 5f;
 
+    [Header("Alpha Hit Test")]
+    [SerializeField] private float _alphaThreshold = 0.1f;
+
     private SongData _currentSong;
     private DifficultyType _selectedDifficulty;
+    private int _selectedIndex = 0;
     private float _targetAlpha = 0f;
 
     public event System.Action<DifficultyType> OnDifficultySelected;
@@ -32,6 +36,11 @@ public class DifficultySelector : MonoBehaviour
             {
                 DifficultyType capturedType = btn.type;
                 btn.button.onClick.AddListener(() => SelectDifficulty(capturedType));
+            }
+
+            if (btn.buttonImage != null)
+            {
+                btn.buttonImage.alphaHitTestMinimumThreshold = _alphaThreshold;
             }
         }
 
@@ -49,14 +58,72 @@ public class DifficultySelector : MonoBehaviour
                 Time.deltaTime * _fadeSpeed
             );
         }
+
+        HandleKeyboardInput();
     }
 
-    public void ShowButtons(bool show)
+    private void HandleKeyboardInput()
+    {
+        if (_currentSong == null) return;
+        if (_targetAlpha < 0.5f) return;
+
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            SelectPrevious();
+        }
+        else if (Input.GetKeyDown(KeyCode.D))
+        {
+            SelectNext();
+        }
+    }
+
+    private void SelectPrevious()
+    {
+        int startIndex = _selectedIndex;
+        int count = _buttons.Length;
+
+        for (int i = 1; i <= count; i++)
+        {
+            int newIndex = (startIndex - i + count) % count;
+            if (_buttons[newIndex].button != null && _buttons[newIndex].button.interactable)
+            {
+                _selectedIndex = newIndex;
+                SelectDifficulty(_buttons[newIndex].type);
+                return;
+            }
+        }
+    }
+
+    private void SelectNext()
+    {
+        int startIndex = _selectedIndex;
+        int count = _buttons.Length;
+
+        for (int i = 1; i <= count; i++)
+        {
+            int newIndex = (startIndex + i) % count;
+            if (_buttons[newIndex].button != null && _buttons[newIndex].button.interactable)
+            {
+                _selectedIndex = newIndex;
+                SelectDifficulty(_buttons[newIndex].type);
+                return;
+            }
+        }
+    }
+
+    public void ShowButtons(bool show, bool instant = false)
     {
         _targetAlpha = show ? 1f : 0f;
 
         if (_allButtonsGroup != null)
+        {
             _allButtonsGroup.blocksRaycasts = show;
+
+            if (instant)
+            {
+                _allButtonsGroup.alpha = _targetAlpha;
+            }
+        }
     }
 
     public void SetupForSong(SongData song)
@@ -66,8 +133,9 @@ public class DifficultySelector : MonoBehaviour
         DifficultyType firstAvailable = DifficultyType.Easy;
         bool foundFirst = false;
 
-        foreach (var btn in _buttons)
+        for (int i = 0; i < _buttons.Length; i++)
         {
+            var btn = _buttons[i];
             bool hasDiff = song != null && song.HasDifficulty(btn.type);
 
             if (btn.button != null)
@@ -76,6 +144,7 @@ public class DifficultySelector : MonoBehaviour
             if (hasDiff && !foundFirst)
             {
                 firstAvailable = btn.type;
+                _selectedIndex = i;
                 foundFirst = true;
             }
         }
@@ -91,11 +160,18 @@ public class DifficultySelector : MonoBehaviour
 
         _selectedDifficulty = type;
 
+        for (int i = 0; i < _buttons.Length; i++)
+        {
+            if (_buttons[i].type == type)
+            {
+                _selectedIndex = i;
+                break;
+            }
+        }
+
         UpdateButtonVisuals();
 
         OnDifficultySelected?.Invoke(type);
-
-        Debug.Log("[DifficultySelector] Selected: " + type);
     }
 
     private void UpdateButtonVisuals()

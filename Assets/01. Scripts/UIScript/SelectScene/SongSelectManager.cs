@@ -19,6 +19,7 @@ public class SongSelectManager : MonoBehaviour
     [SerializeField] private DifficultyType _currentDifficulty;
 
     private SongBar _currentSelectedBar;
+    private bool _isFirstSelection = true;
 
     private void Awake()
     {
@@ -58,10 +59,12 @@ public class SongSelectManager : MonoBehaviour
 
         if (_difficultySelector != null)
         {
-            _difficultySelector.ShowButtons(true);
+            _difficultySelector.ShowButtons(true, _isFirstSelection);
             _difficultySelector.SetupForSong(_currentSong);
             _currentDifficulty = _difficultySelector.GetSelectedDifficulty();
         }
+
+        _isFirstSelection = false;
 
         if (_infoDisplay != null)
         {
