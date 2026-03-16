@@ -69,7 +69,7 @@ public class SongInfoDisplay : MonoBehaviour
         }
 
         if (_durationText != null)
-            _durationText.text = song.duration;
+            _durationText.text = song.GetFormattedDuration();
 
         if (_charterText != null)
             _charterText.text = "Charter : " + song.charter;

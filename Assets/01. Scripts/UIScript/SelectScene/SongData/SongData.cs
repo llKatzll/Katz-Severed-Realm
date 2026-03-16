@@ -14,8 +14,8 @@ public enum DifficultyType
 public class DifficultyData
 {
     public DifficultyType type;
-    public int level; //레벨
-    public float constant; //상수
+    public int level;
+    public float constant;
 
     [Header("Records")]
     public int highScore;
@@ -30,7 +30,7 @@ public class SongData : ScriptableObject
     public string artist;
     public float bpm;
     public bool hasTempoShift;
-    public string duration;
+    public float durationSeconds;
 
     [Header("Credits")]
     public string charter;
@@ -57,5 +57,12 @@ public class SongData : ScriptableObject
     public bool HasDifficulty(DifficultyType type)
     {
         return GetDifficulty(type) != null;
+    }
+
+    public string GetFormattedDuration()
+    {
+        int minutes = (int)(durationSeconds / 60);
+        int seconds = (int)(durationSeconds % 60);
+        return string.Format("{0}:{1:D2}", minutes, seconds);
     }
 }
