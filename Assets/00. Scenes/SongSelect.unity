@@ -5328,10 +5328,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SongPreviewPlayer
   _audioSource: {fileID: 1624874617}
-  _fadeInTime: 0.5
-  _fadeOutTime: 0.3
-  _maxVolume: 0.8
-  _delayBeforePlay: 0.3
+  _fadeInTime: 0.2
+  _fadeOutTime: 0.2
+  _maxVolume: 0.9
+  _delayBeforePlay: 0.15
 --- !u!1 &1631442318
 GameObject:
   m_ObjectHideFlags: 0
@@ -6491,20 +6491,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Scrolling
   _pivot: {fileID: 553172596}
   _songBars:
-  - {fileID: 55302353}
-  - {fileID: 1593860110}
-  - {fileID: 1380315416}
-  - {fileID: 70734553}
-  - {fileID: 608910609}
-  - {fileID: 789859218}
-  - {fileID: 622753615}
-  - {fileID: 476546935}
-  - {fileID: 1533679573}
+  - {fileID: 55302356}
+  - {fileID: 1593860113}
+  - {fileID: 1380315419}
+  - {fileID: 70734556}
+  - {fileID: 608910612}
+  - {fileID: 789859221}
+  - {fileID: 622753618}
+  - {fileID: 476546938}
+  - {fileID: 1533679576}
   _rotationPerSlot: 40
   _rotationSpeed: 13
   _selectedOffsetX: 53
   _positionSpeed: 10
-  _selectionAngleThreshold: 2
+  _selectionAngleThreshold: 1
   _invertWheel: 0
   _initialHoldInterval: 0.5
   _minHoldInterval: 0.05
