@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SongData
   songName: A5
   artist: A5
-  bpm: 100
-  hasTempoShift: 1
+  bpm: 400
+  hasTempoShift: 0
   durationSeconds: 400
   charter: A5
   mapper: A5
