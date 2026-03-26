@@ -5,7 +5,7 @@ public class LaneDistanceDebugger : MonoBehaviour
     public Transform _spawnPoint;
     public Transform _hitPoint;
     public float _noteSpeed = 5f;   // 인스펙터에서 넣는 속도
-    public string _laneName = "Lane";
+    public string _laneName = "Lane"    ;
 
     public float _approachTime = 4f;
 
