@@ -8,6 +8,10 @@ public class Scrolling : MonoBehaviour
     [Header("Song Bars")]
     [SerializeField] private SongBar[] _songBars;
 
+    [Header("All Songs")]
+    [SerializeField] private string _songResourcePath = "Songs";
+    private SongData[] _allSongs;
+
     [Header("Rotation Settings")]
     [SerializeField] private float _rotationPerSlot = 40f;
     [SerializeField] private float _rotationSpeed = 8f;
@@ -35,6 +39,11 @@ public class Scrolling : MonoBehaviour
     private float _holdTimer = 0f;
     private float _currentHoldInterval;
     private int _holdDirection = 0;
+
+    private int _topSongIndex = 0;
+    private int _scrollStep = 0;
+
+    public int TotalSongCount => _allSongs != null ? _allSongs.Length : 0;
 
     private void Start()
     {
@@ -64,7 +73,35 @@ public class Scrolling : MonoBehaviour
 
         _currentHoldInterval = _initialHoldInterval;
 
+        LoadAllSongs();
+        AssignSongsToBar();
         StartCoroutine(InitialSelectionCheck());
+    }
+
+    private void LoadAllSongs()
+    {
+        _allSongs = Resources.LoadAll<SongData>(_songResourcePath);
+        System.Array.Sort(_allSongs, (a, b) =>
+            string.Compare(a.name, b.name, System.StringComparison.Ordinal));
+    }
+
+    private void AssignSongsToBar()
+    {
+        if (_allSongs == null || _allSongs.Length == 0) return;
+        if (_songBars == null) return;
+
+        for (int i = 0; i < _songBars.Length; i++)
+        {
+            int songIdx = WrapSongIndex(_topSongIndex + i);
+            _songBars[i].SetSongData(_allSongs[songIdx]);
+        }
+    }
+
+    private int WrapSongIndex(int index)
+    {
+        if (_allSongs == null || _allSongs.Length == 0) return 0;
+        int len = _allSongs.Length;
+        return ((index % len) + len) % len;
     }
 
     private System.Collections.IEnumerator InitialSelectionCheck()
@@ -78,6 +115,7 @@ public class Scrolling : MonoBehaviour
         HandleInput();
         ApplyRotation();
         UpdateBarPositions();
+        CheckRecycle();
     }
 
     private void HandleInput()
@@ -133,6 +171,7 @@ public class Scrolling : MonoBehaviour
         {
             float direction = _invertWheel ? -scroll : scroll;
             _targetRotationZ += direction * _rotationPerSlot;
+            _scrollStep += direction > 0 ? 1 : -1;
         }
     }
 
@@ -144,6 +183,35 @@ public class Scrolling : MonoBehaviour
         Vector3 euler = _pivot.localEulerAngles;
         euler.z = _currentRotationZ;
         _pivot.localEulerAngles = euler;
+    }
+
+    private void CheckRecycle()
+    {
+        if (_allSongs == null || _allSongs.Length == 0) return;
+        if (_songBars == null || _songBars.Length == 0) return;
+
+        float pivotZ = _pivot.localEulerAngles.z;
+        float recycleAngle = _rotationPerSlot * _songBars.Length * 0.5f;
+
+        for (int i = 0; i < _songBars.Length; i++)
+        {
+            if (_songBars[i] == null) continue;
+
+            var rt = _songBars[i].GetComponent<RectTransform>();
+            float barLocalZ = rt.localEulerAngles.z;
+            float totalAngle = NormalizeAngle(pivotZ + barLocalZ);
+
+            if (totalAngle > recycleAngle)
+            {
+                int newSongIdx = WrapSongIndex(_topSongIndex + _songBars.Length + _scrollStep);
+                _songBars[i].SetSongData(_allSongs[newSongIdx]);
+            }
+            else if (totalAngle < -recycleAngle)
+            {
+                int newSongIdx = WrapSongIndex(_topSongIndex - 1 + _scrollStep);
+                _songBars[i].SetSongData(_allSongs[newSongIdx]);
+            }
+        }
     }
 
     private void UpdateBarPositions()

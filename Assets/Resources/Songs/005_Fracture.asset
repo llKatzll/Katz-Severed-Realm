@@ -10,51 +10,41 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 31831c5adab81c24abfa571160b6ea5b, type: 3}
-  m_Name: A3_Data
+  m_Name: 005_Fracture
   m_EditorClassIdentifier: Assembly-CSharp::SongData
-  songName: A3
-  artist: A3
-  bpm: 100
+  songName: Fracture
+  artist: KATZ
+  bpm: 200
   hasTempoShift: 1
-  durationSeconds: 100
-  charter: A3
-  mapper: A3
-  songImage: {fileID: 21300000, guid: 0f84d358e36794244b0e85f4acbae6ff, type: 3}
-  previewClip: {fileID: 8300000, guid: 9b5be29235099664cb922bdf728283a2, type: 3}
-  fullClip: {fileID: 8300000, guid: 9b5be29235099664cb922bdf728283a2, type: 3}
+  durationSeconds: 120
+  charter: Katz
+  mapper: Katz
+  songImage: {fileID: 0}
+  previewClip: {fileID: 0}
+  fullClip: {fileID: 0}
   difficulties:
   - type: 0
-    level: 0
-    constant: 0
-    highScore: 0
-    accuracy: 0
-  - type: 0
-    level: 1
-    constant: 1
+    level: 4
+    constant: 4.2
     highScore: 0
     accuracy: 0
   - type: 1
-    level: 3
-    constant: 3.4
+    level: 7
+    constant: 7.6
     highScore: 0
     accuracy: 0
   - type: 2
-    level: 6
-    constant: 6.2
+    level: 11
+    constant: 11.3
     highScore: 0
     accuracy: 0
   - type: 3
-    level: 10
-    constant: 10
+    level: 13
+    constant: 13.7
     highScore: 0
     accuracy: 0
   - type: 4
-    level: 14
-    constant: 14.2
-    highScore: 0
-    accuracy: 0
-  - type: 5
     level: 15
-    constant: 15
+    constant: 15.0
     highScore: 0
     accuracy: 0

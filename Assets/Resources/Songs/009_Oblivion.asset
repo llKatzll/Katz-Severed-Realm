@@ -10,51 +10,46 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 31831c5adab81c24abfa571160b6ea5b, type: 3}
-  m_Name: A5_Data
+  m_Name: 009_Oblivion
   m_EditorClassIdentifier: Assembly-CSharp::SongData
-  songName: A5
-  artist: A5
-  bpm: 400
-  hasTempoShift: 0
-  durationSeconds: 400
-  charter: A5
-  mapper: A5
-  songImage: {fileID: 21300000, guid: 0f84d358e36794244b0e85f4acbae6ff, type: 3}
-  previewClip: {fileID: 8300000, guid: 9b5be29235099664cb922bdf728283a2, type: 3}
-  fullClip: {fileID: 8300000, guid: 9b5be29235099664cb922bdf728283a2, type: 3}
+  songName: Oblivion
+  artist: KATZ
+  bpm: 210
+  hasTempoShift: 1
+  durationSeconds: 130
+  charter: Katz
+  mapper: Katz
+  songImage: {fileID: 0}
+  previewClip: {fileID: 0}
+  fullClip: {fileID: 0}
   difficulties:
   - type: 0
-    level: 0
-    constant: 0
-    highScore: 0
-    accuracy: 0
-  - type: 0
-    level: 1
-    constant: 1
+    level: 5
+    constant: 5.4
     highScore: 0
     accuracy: 0
   - type: 1
-    level: 3
-    constant: 3.4
+    level: 8
+    constant: 8.2
     highScore: 0
     accuracy: 0
   - type: 2
-    level: 6
-    constant: 6.2
+    level: 11
+    constant: 11.7
     highScore: 0
     accuracy: 0
   - type: 3
-    level: 10
-    constant: 10
+    level: 14
+    constant: 14.6
     highScore: 0
     accuracy: 0
   - type: 4
-    level: 14
-    constant: 14.2
+    level: 15
+    constant: 15.0
     highScore: 0
     accuracy: 0
   - type: 5
     level: 15
-    constant: 15
+    constant: 15.9
     highScore: 0
     accuracy: 0
