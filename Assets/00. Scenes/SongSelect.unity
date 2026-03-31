@@ -342,7 +342,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SongBar
   _songData: {fileID: 0}
-  _songNameText: {fileID: 0}
+  _songNameText: {fileID: 1068217444}
   _selectionThreshold: 20
 --- !u!1 &70734552
 GameObject:
@@ -431,7 +431,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SongBar
   _songData: {fileID: 0}
-  _songNameText: {fileID: 0}
+  _songNameText: {fileID: 362270929}
   _selectionThreshold: 20
 --- !u!1 &93333457
 GameObject:
@@ -1511,7 +1511,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SongBar
   _songData: {fileID: 0}
-  _songNameText: {fileID: 0}
+  _songNameText: {fileID: 611554563}
   _selectionThreshold: 20
 --- !u!1 &485567107
 GameObject:
@@ -2054,7 +2054,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SongBar
   _songData: {fileID: 0}
-  _songNameText: {fileID: 0}
+  _songNameText: {fileID: 771003375}
   _selectionThreshold: 20
 --- !u!1 &611554561
 GameObject:
@@ -2279,7 +2279,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SongBar
   _songData: {fileID: 0}
-  _songNameText: {fileID: 0}
+  _songNameText: {fileID: 1940173399}
   _selectionThreshold: 20
 --- !u!1 &678940646
 GameObject:
@@ -3124,7 +3124,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SongBar
   _songData: {fileID: 0}
-  _songNameText: {fileID: 0}
+  _songNameText: {fileID: 690434634}
   _selectionThreshold: 20
 --- !u!1 &839324753
 GameObject:
@@ -5185,7 +5185,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SongBar
   _songData: {fileID: 0}
-  _songNameText: {fileID: 0}
+  _songNameText: {fileID: 1140321844}
   _selectionThreshold: 20
 --- !u!1 &1386446922
 GameObject:
@@ -5547,7 +5547,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SongBar
   _songData: {fileID: 0}
-  _songNameText: {fileID: 0}
+  _songNameText: {fileID: 1674376036}
   _selectionThreshold: 20
 --- !u!1 &1568955735
 GameObject:
@@ -5757,7 +5757,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SongBar
   _songData: {fileID: 0}
-  _songNameText: {fileID: 0}
+  _songNameText: {fileID: 1406284152}
   _selectionThreshold: 20
 --- !u!1 &1602868258
 GameObject:
@@ -7395,18 +7395,7 @@ MonoBehaviour:
   - {fileID: 622753618}
   - {fileID: 476546938}
   - {fileID: 1533679576}
-  _allSongs:
-  - {fileID: 11400000, guid: 51d569c4e2f38d747a457648dba8c90b, type: 2}
-  - {fileID: 11400000, guid: 0b8d9b223232ee241a6442c5d8660b9a, type: 2}
-  - {fileID: 11400000, guid: c5492292a46211b4f9a8895b31f6fc2b, type: 2}
-  - {fileID: 11400000, guid: ff789a54cfb85f947a6744301cf2f7f8, type: 2}
-  - {fileID: 11400000, guid: c6a54ceb5800f1d47bd6672d88c5db44, type: 2}
-  - {fileID: 11400000, guid: 05a3a096f098447498b4df523fa6c57b, type: 2}
-  - {fileID: 11400000, guid: 57456b862b8106a468cb602dadb6f2f4, type: 2}
-  - {fileID: 11400000, guid: 4c48c3bc959675c4a818061cecf79b1f, type: 2}
-  - {fileID: 11400000, guid: 2dc76ec4a3589094abb49bbc3672582a, type: 2}
-  - {fileID: 11400000, guid: cb31b2348574f02498d17f593f58fed2, type: 2}
-  - {fileID: 11400000, guid: 547894cf5323a834a8d19c5ab213fa1e, type: 2}
+  _songResourcePath: Songs
   _rotationPerSlot: 40
   _rotationSpeed: 13
   _selectedOffsetX: 53

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31831c5adab81c24abfa571160b6ea5b, type: 3}
   m_Name: 002_Eclipse
   m_EditorClassIdentifier: Assembly-CSharp::SongData
-  songName: Eclipse
+  songName: 2
   artist: Void_Walker
   bpm: 156
   hasTempoShift: 0

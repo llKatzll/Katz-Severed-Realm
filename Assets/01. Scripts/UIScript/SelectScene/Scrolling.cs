@@ -40,8 +40,12 @@ public class Scrolling : MonoBehaviour
     private float _currentHoldInterval;
     private int _holdDirection = 0;
 
-    private int _topSongIndex = 0;
-    private int _scrollStep = 0;
+    // --- Recycling ---
+    // _songIndexMap[i] = i SongBar
+    private int[] _songIndexMap;
+    // Pivot ( = * _rotationPerSlot)
+    private int _logicalStep = 0;
+    private int _prevLogicalStep = 0;
 
     public int TotalSongCount => _allSongs != null ? _allSongs.Length : 0;
 
@@ -74,7 +78,7 @@ public class Scrolling : MonoBehaviour
         _currentHoldInterval = _initialHoldInterval;
 
         LoadAllSongs();
-        AssignSongsToBar();
+        InitSongIndexMap();
         StartCoroutine(InitialSelectionCheck());
     }
 
@@ -85,15 +89,28 @@ public class Scrolling : MonoBehaviour
             string.Compare(a.name, b.name, System.StringComparison.Ordinal));
     }
 
-    private void AssignSongsToBar()
+    private void InitSongIndexMap()
     {
-        if (_allSongs == null || _allSongs.Length == 0) return;
         if (_songBars == null) return;
+
+        _songIndexMap = new int[_songBars.Length];
+
+        float pivotInitialZ = _pivot != null ? NormalizeAngle(_pivot.localEulerAngles.z) : 0f;
 
         for (int i = 0; i < _songBars.Length; i++)
         {
-            int songIdx = WrapSongIndex(_topSongIndex + i);
-            _songBars[i].SetSongData(_allSongs[songIdx]);
+            if (_songBars[i] == null) continue;
+
+            var rt = _songBars[i].GetComponent<RectTransform>();
+            float angle = NormalizeAngle(pivotInitialZ + rt.localEulerAngles.z);
+            int slot = Mathf.RoundToInt(angle / _rotationPerSlot);
+
+            _songIndexMap[i] = slot;
+
+            if (_allSongs != null && _allSongs.Length > 0)
+            {
+                _songBars[i].SetSongData(_allSongs[WrapSongIndex(slot)]);
+            }
         }
     }
 
@@ -114,8 +131,8 @@ public class Scrolling : MonoBehaviour
     {
         HandleInput();
         ApplyRotation();
-        UpdateBarPositions();
         CheckRecycle();
+        UpdateBarPositions();
     }
 
     private void HandleInput()
@@ -171,7 +188,7 @@ public class Scrolling : MonoBehaviour
         {
             float direction = _invertWheel ? -scroll : scroll;
             _targetRotationZ += direction * _rotationPerSlot;
-            _scrollStep += direction > 0 ? 1 : -1;
+            _logicalStep += direction > 0 ? 1 : -1;
         }
     }
 
@@ -188,30 +205,101 @@ public class Scrolling : MonoBehaviour
     private void CheckRecycle()
     {
         if (_allSongs == null || _allSongs.Length == 0) return;
-        if (_songBars == null || _songBars.Length == 0) return;
+        if (_songBars == null || _songIndexMap == null) return;
+        if (_logicalStep == _prevLogicalStep) return;
+
+        int delta = _logicalStep - _prevLogicalStep;
+        int barCount = _songBars.Length;
+
+        if (delta > 0)
+        {
+            for (int d = 0; d < delta; d++)
+            {
+                int backBarIndex = FindBackmostBar();
+                if (backBarIndex < 0) continue;
+
+                int minSongIdx = int.MaxValue;
+                for (int i = 0; i < barCount; i++)
+                {
+                    if (_songIndexMap[i] < minSongIdx)
+                        minSongIdx = _songIndexMap[i];
+                }
+
+                int newSongIdx = minSongIdx - 1;
+                _songIndexMap[backBarIndex] = newSongIdx;
+                _songBars[backBarIndex].SetSongData(_allSongs[WrapSongIndex(newSongIdx)]);
+            }
+        }
+        else if (delta < 0)
+        {
+            int absDelta = -delta;
+            for (int d = 0; d < absDelta; d++)
+            {
+                int frontBarIndex = FindFrontmostBar();
+                if (frontBarIndex < 0) continue;
+
+                int maxSongIdx = int.MinValue;
+                for (int i = 0; i < barCount; i++)
+                {
+                    if (_songIndexMap[i] > maxSongIdx)
+                        maxSongIdx = _songIndexMap[i];
+                }
+
+                int newSongIdx = maxSongIdx + 1;
+                _songIndexMap[frontBarIndex] = newSongIdx;
+                _songBars[frontBarIndex].SetSongData(_allSongs[WrapSongIndex(newSongIdx)]);
+            }
+        }
+
+        _prevLogicalStep = _logicalStep;
+    }
+
+    private int FindBackmostBar()
+    {
+        if (_pivot == null || _songBars == null) return -1;
 
         float pivotZ = _pivot.localEulerAngles.z;
-        float recycleAngle = _rotationPerSlot * _songBars.Length * 0.5f;
+        int backIndex = -1;
+        float backAngle = float.MinValue;
 
         for (int i = 0; i < _songBars.Length; i++)
         {
             if (_songBars[i] == null) continue;
-
             var rt = _songBars[i].GetComponent<RectTransform>();
-            float barLocalZ = rt.localEulerAngles.z;
-            float totalAngle = NormalizeAngle(pivotZ + barLocalZ);
+            float totalAngle = NormalizeAngle(pivotZ + rt.localEulerAngles.z);
 
-            if (totalAngle > recycleAngle)
+            if (totalAngle > backAngle)
             {
-                int newSongIdx = WrapSongIndex(_topSongIndex + _songBars.Length + _scrollStep);
-                _songBars[i].SetSongData(_allSongs[newSongIdx]);
-            }
-            else if (totalAngle < -recycleAngle)
-            {
-                int newSongIdx = WrapSongIndex(_topSongIndex - 1 + _scrollStep);
-                _songBars[i].SetSongData(_allSongs[newSongIdx]);
+                backAngle = totalAngle;
+                backIndex = i;
             }
         }
+
+        return backIndex;
+    }
+
+    private int FindFrontmostBar()
+    {
+        if (_pivot == null || _songBars == null) return -1;
+
+        float pivotZ = _pivot.localEulerAngles.z;
+        int frontIndex = -1;
+        float frontAngle = float.MaxValue;
+
+        for (int i = 0; i < _songBars.Length; i++)
+        {
+            if (_songBars[i] == null) continue;
+            var rt = _songBars[i].GetComponent<RectTransform>();
+            float totalAngle = NormalizeAngle(pivotZ + rt.localEulerAngles.z);
+
+            if (totalAngle < frontAngle)
+            {
+                frontAngle = totalAngle;
+                frontIndex = i;
+            }
+        }
+
+        return frontIndex;
     }
 
     private void UpdateBarPositions()

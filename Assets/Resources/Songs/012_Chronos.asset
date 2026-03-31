@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 31831c5adab81c24abfa571160b6ea5b, type: 3}
-  m_Name: 009_Oblivion
+  m_Name: 012_Chronos
   m_EditorClassIdentifier: Assembly-CSharp::SongData
-  songName: 9
-  artist: KATZ
+  songName: 12
+  artist: Arev
   bpm: 210
   hasTempoShift: 1
-  durationSeconds: 130
+  durationSeconds: 300
   charter: Katz
   mapper: Katz
   songImage: {fileID: 0}
@@ -24,23 +24,23 @@ MonoBehaviour:
   fullClip: {fileID: 0}
   difficulties:
   - type: 0
-    level: 5
-    constant: 5.4
+    level: 3
+    constant: 3.4
     highScore: 0
     accuracy: 0
   - type: 1
-    level: 8
-    constant: 8.2
+    level: 6
+    constant: 6.1
     highScore: 0
     accuracy: 0
   - type: 2
-    level: 11
-    constant: 11.7
+    level: 10
+    constant: 10.5
     highScore: 0
     accuracy: 0
   - type: 3
-    level: 14
-    constant: 14.6
+    level: 13
+    constant: 13.9
     highScore: 0
     accuracy: 0
   - type: 4
@@ -50,6 +50,6 @@ MonoBehaviour:
     accuracy: 0
   - type: 5
     level: 15
-    constant: 15.9
-    highScore: 0
-    accuracy: 0
+    constant: 15
+    highScore: 9800000
+    accuracy: 99.75
