@@ -9,8 +9,11 @@ public class SongPreviewPlayer : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private float _fadeInTime = 0.5f;
     [SerializeField] private float _fadeOutTime = 0.3f;
+    [SerializeField] private float _loopFadeOutTime = 1.5f;
     [SerializeField] private float _maxVolume = 0.8f;
     [SerializeField] private float _delayBeforePlay = 0.3f;
+
+    public float FadeInTime => _fadeInTime;
 
     private Coroutine _currentCoroutine;
     private SongData _currentSong;
@@ -36,41 +39,51 @@ public class SongPreviewPlayer : MonoBehaviour
         if (_currentCoroutine != null)
             StopCoroutine(_currentCoroutine);
 
-        _currentCoroutine = StartCoroutine(FadeOutRoutine());
+        _currentCoroutine = StartCoroutine(FadeOutRoutine(_fadeOutTime));
     }
 
     private IEnumerator PlayPreviewRoutine(AudioClip clip)
     {
         if (_audioSource.isPlaying)
         {
-            yield return FadeOutRoutine();
+            yield return FadeOutRoutine(_fadeOutTime);
         }
 
         yield return new WaitForSeconds(_delayBeforePlay);
 
-        _audioSource.clip = clip;
-        _audioSource.volume = 0f;
-        _audioSource.Play();
-
-        float t = 0f;
-        while (t < _fadeInTime)
+        while (true)
         {
-            t += Time.deltaTime;
-            _audioSource.volume = Mathf.Lerp(0f, _maxVolume, t / _fadeInTime);
-            yield return null;
+            _audioSource.clip = clip;
+            _audioSource.time = 0f;
+            _audioSource.volume = 0f;
+            _audioSource.Play();
+
+            float t = 0f;
+            while (t < _fadeInTime)
+            {
+                t += Time.deltaTime;
+                _audioSource.volume = Mathf.Lerp(0f, _maxVolume, t / _fadeInTime);
+                yield return null;
+            }
+            _audioSource.volume = _maxVolume;
+
+            float holdTime = clip.length - _fadeInTime - _loopFadeOutTime;
+            if (holdTime > 0f)
+                yield return new WaitForSeconds(holdTime);
+
+            yield return FadeOutRoutine(_loopFadeOutTime);
         }
-        _audioSource.volume = _maxVolume;
     }
 
-    private IEnumerator FadeOutRoutine()
+    private IEnumerator FadeOutRoutine(float duration)
     {
         float startVol = _audioSource.volume;
         float t = 0f;
 
-        while (t < _fadeOutTime)
+        while (t < duration)
         {
             t += Time.deltaTime;
-            _audioSource.volume = Mathf.Lerp(startVol, 0f, t / _fadeOutTime);
+            _audioSource.volume = Mathf.Lerp(startVol, 0f, t / duration);
             yield return null;
         }
 

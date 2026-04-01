@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 public class SongBar : MonoBehaviour
@@ -14,14 +13,11 @@ public class SongBar : MonoBehaviour
     [Header("Selection Detection")]
     [SerializeField] private float _selectionThreshold = 20f;
 
-    private RectTransform _rectTransform;
     private Transform _pivot;
     private bool _isSelected;
 
     private void Awake()
     {
-        _rectTransform = GetComponent<RectTransform>();
-
         if (_songData != null)
         {
             UpdateDisplay();

@@ -38,14 +38,9 @@ public class Scrolling : MonoBehaviour
 
     private float _holdTimer = 0f;
     private float _currentHoldInterval;
-    private int _holdDirection = 0;
 
-    // --- Recycling ---
-    // _songIndexMap[i] = i SongBar
-    private int[] _songIndexMap;
-    // Pivot ( = * _rotationPerSlot)
-    private int _logicalStep = 0;
-    private int _prevLogicalStep = 0;
+    private int _centerSongIndex = 0;
+    private int[] _currentSongPerBar;
 
     public int TotalSongCount => _allSongs != null ? _allSongs.Length : 0;
 
@@ -59,12 +54,16 @@ public class Scrolling : MonoBehaviour
 
         if (_songBars != null)
         {
-            _basePosX = new float[_songBars.Length];
-            _basePosY = new float[_songBars.Length];
-            _currentOffsetX = new float[_songBars.Length];
+            int count = _songBars.Length;
+            _basePosX = new float[count];
+            _basePosY = new float[count];
+            _currentOffsetX = new float[count];
+            _currentSongPerBar = new int[count];
 
-            for (int i = 0; i < _songBars.Length; i++)
+            for (int i = 0; i < count; i++)
             {
+                _currentSongPerBar[i] = -1;
+
                 if (_songBars[i] != null)
                 {
                     var rt = _songBars[i].GetComponent<RectTransform>();
@@ -78,7 +77,7 @@ public class Scrolling : MonoBehaviour
         _currentHoldInterval = _initialHoldInterval;
 
         LoadAllSongs();
-        InitSongIndexMap();
+        UpdateSongAssignments();
         StartCoroutine(InitialSelectionCheck());
     }
 
@@ -87,31 +86,6 @@ public class Scrolling : MonoBehaviour
         _allSongs = Resources.LoadAll<SongData>(_songResourcePath);
         System.Array.Sort(_allSongs, (a, b) =>
             string.Compare(a.name, b.name, System.StringComparison.Ordinal));
-    }
-
-    private void InitSongIndexMap()
-    {
-        if (_songBars == null) return;
-
-        _songIndexMap = new int[_songBars.Length];
-
-        float pivotInitialZ = _pivot != null ? NormalizeAngle(_pivot.localEulerAngles.z) : 0f;
-
-        for (int i = 0; i < _songBars.Length; i++)
-        {
-            if (_songBars[i] == null) continue;
-
-            var rt = _songBars[i].GetComponent<RectTransform>();
-            float angle = NormalizeAngle(pivotInitialZ + rt.localEulerAngles.z);
-            int slot = Mathf.RoundToInt(angle / _rotationPerSlot);
-
-            _songIndexMap[i] = slot;
-
-            if (_allSongs != null && _allSongs.Length > 0)
-            {
-                _songBars[i].SetSongData(_allSongs[WrapSongIndex(slot)]);
-            }
-        }
     }
 
     private int WrapSongIndex(int index)
@@ -131,7 +105,7 @@ public class Scrolling : MonoBehaviour
     {
         HandleInput();
         ApplyRotation();
-        CheckRecycle();
+        UpdateSongAssignments();
         UpdateBarPositions();
     }
 
@@ -142,20 +116,17 @@ public class Scrolling : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.W))
         {
             scroll = 1f;
-            _holdDirection = 1;
             _holdTimer = 0f;
             _currentHoldInterval = _initialHoldInterval;
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
             scroll = -1f;
-            _holdDirection = -1;
             _holdTimer = 0f;
             _currentHoldInterval = _initialHoldInterval;
         }
         else if (Input.GetKey(KeyCode.W))
         {
-            _holdDirection = 1;
             _holdTimer += Time.deltaTime;
 
             if (_holdTimer >= _currentHoldInterval)
@@ -167,7 +138,6 @@ public class Scrolling : MonoBehaviour
         }
         else if (Input.GetKey(KeyCode.S))
         {
-            _holdDirection = -1;
             _holdTimer += Time.deltaTime;
 
             if (_holdTimer >= _currentHoldInterval)
@@ -179,7 +149,6 @@ public class Scrolling : MonoBehaviour
         }
         else
         {
-            _holdDirection = 0;
             _holdTimer = 0f;
             _currentHoldInterval = _initialHoldInterval;
         }
@@ -188,7 +157,7 @@ public class Scrolling : MonoBehaviour
         {
             float direction = _invertWheel ? -scroll : scroll;
             _targetRotationZ += direction * _rotationPerSlot;
-            _logicalStep += direction > 0 ? 1 : -1;
+            _centerSongIndex += direction > 0 ? -1 : 1;
         }
     }
 
@@ -202,104 +171,26 @@ public class Scrolling : MonoBehaviour
         _pivot.localEulerAngles = euler;
     }
 
-    private void CheckRecycle()
+    private void UpdateSongAssignments()
     {
         if (_allSongs == null || _allSongs.Length == 0) return;
-        if (_songBars == null || _songIndexMap == null) return;
-        if (_logicalStep == _prevLogicalStep) return;
-
-        int delta = _logicalStep - _prevLogicalStep;
-        int barCount = _songBars.Length;
-
-        if (delta > 0)
-        {
-            for (int d = 0; d < delta; d++)
-            {
-                int backBarIndex = FindBackmostBar();
-                if (backBarIndex < 0) continue;
-
-                int minSongIdx = int.MaxValue;
-                for (int i = 0; i < barCount; i++)
-                {
-                    if (_songIndexMap[i] < minSongIdx)
-                        minSongIdx = _songIndexMap[i];
-                }
-
-                int newSongIdx = minSongIdx - 1;
-                _songIndexMap[backBarIndex] = newSongIdx;
-                _songBars[backBarIndex].SetSongData(_allSongs[WrapSongIndex(newSongIdx)]);
-            }
-        }
-        else if (delta < 0)
-        {
-            int absDelta = -delta;
-            for (int d = 0; d < absDelta; d++)
-            {
-                int frontBarIndex = FindFrontmostBar();
-                if (frontBarIndex < 0) continue;
-
-                int maxSongIdx = int.MinValue;
-                for (int i = 0; i < barCount; i++)
-                {
-                    if (_songIndexMap[i] > maxSongIdx)
-                        maxSongIdx = _songIndexMap[i];
-                }
-
-                int newSongIdx = maxSongIdx + 1;
-                _songIndexMap[frontBarIndex] = newSongIdx;
-                _songBars[frontBarIndex].SetSongData(_allSongs[WrapSongIndex(newSongIdx)]);
-            }
-        }
-
-        _prevLogicalStep = _logicalStep;
-    }
-
-    private int FindBackmostBar()
-    {
-        if (_pivot == null || _songBars == null) return -1;
-
-        float pivotZ = _pivot.localEulerAngles.z;
-        int backIndex = -1;
-        float backAngle = float.MinValue;
+        if (_songBars == null || _currentSongPerBar == null) return;
 
         for (int i = 0; i < _songBars.Length; i++)
         {
             if (_songBars[i] == null) continue;
-            var rt = _songBars[i].GetComponent<RectTransform>();
-            float totalAngle = NormalizeAngle(pivotZ + rt.localEulerAngles.z);
 
-            if (totalAngle > backAngle)
+            var rt = _songBars[i].GetComponent<RectTransform>();
+            float totalAngle = NormalizeAngle(_targetRotationZ + rt.localEulerAngles.z);
+            int slotOffset = Mathf.RoundToInt(totalAngle / _rotationPerSlot);
+            int songIdx = WrapSongIndex(_centerSongIndex + slotOffset);
+
+            if (_currentSongPerBar[i] != songIdx)
             {
-                backAngle = totalAngle;
-                backIndex = i;
+                _currentSongPerBar[i] = songIdx;
+                _songBars[i].SetSongData(_allSongs[songIdx]);
             }
         }
-
-        return backIndex;
-    }
-
-    private int FindFrontmostBar()
-    {
-        if (_pivot == null || _songBars == null) return -1;
-
-        float pivotZ = _pivot.localEulerAngles.z;
-        int frontIndex = -1;
-        float frontAngle = float.MaxValue;
-
-        for (int i = 0; i < _songBars.Length; i++)
-        {
-            if (_songBars[i] == null) continue;
-            var rt = _songBars[i].GetComponent<RectTransform>();
-            float totalAngle = NormalizeAngle(pivotZ + rt.localEulerAngles.z);
-
-            if (totalAngle < frontAngle)
-            {
-                frontAngle = totalAngle;
-                frontIndex = i;
-            }
-        }
-
-        return frontIndex;
     }
 
     private void UpdateBarPositions()

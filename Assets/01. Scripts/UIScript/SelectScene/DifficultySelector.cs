@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class DifficultySelector : MonoBehaviour
 {
@@ -16,7 +17,6 @@ public class DifficultySelector : MonoBehaviour
 
     [Header("Canvas Group (All Buttons)")]
     [SerializeField] private CanvasGroup _allButtonsGroup;
-    [SerializeField] private float _fadeSpeed = 5f;
 
     [Header("Alpha Hit Test")]
     [SerializeField] private float _alphaThreshold = 0.1f;
@@ -24,7 +24,7 @@ public class DifficultySelector : MonoBehaviour
     private SongData _currentSong;
     private DifficultyType _selectedDifficulty;
     private int _selectedIndex = 0;
-    private float _targetAlpha = 0f;
+    private Coroutine _fadeCoroutine;
 
     public event System.Action<DifficultyType> OnDifficultySelected;
 
@@ -45,27 +45,23 @@ public class DifficultySelector : MonoBehaviour
         }
 
         if (_allButtonsGroup != null)
+        {
             _allButtonsGroup.alpha = 0f;
+            _allButtonsGroup.blocksRaycasts = false;
+        }
+
+        gameObject.SetActive(false);
     }
 
     private void Update()
     {
-        if (_allButtonsGroup != null)
-        {
-            _allButtonsGroup.alpha = Mathf.Lerp(
-                _allButtonsGroup.alpha,
-                _targetAlpha,
-                Time.deltaTime * _fadeSpeed
-            );
-        }
-
         HandleKeyboardInput();
     }
 
     private void HandleKeyboardInput()
     {
         if (_currentSong == null) return;
-        if (_targetAlpha < 0.5f) return;
+        if (_allButtonsGroup != null && _allButtonsGroup.alpha < 0.5f) return;
 
         if (Input.GetKeyDown(KeyCode.A))
         {
@@ -111,19 +107,47 @@ public class DifficultySelector : MonoBehaviour
         }
     }
 
-    public void ShowButtons(bool show, bool instant = false)
+    public void HideInstant()
     {
-        _targetAlpha = show ? 1f : 0f;
+        if (_fadeCoroutine != null)
+            StopCoroutine(_fadeCoroutine);
 
         if (_allButtonsGroup != null)
         {
-            _allButtonsGroup.blocksRaycasts = show;
-
-            if (instant)
-            {
-                _allButtonsGroup.alpha = _targetAlpha;
-            }
+            _allButtonsGroup.alpha = 0f;
+            _allButtonsGroup.blocksRaycasts = false;
         }
+
+        gameObject.SetActive(false);
+    }
+
+    public void ShowWithFade(float duration)
+    {
+        if (_fadeCoroutine != null)
+            StopCoroutine(_fadeCoroutine);
+
+        gameObject.SetActive(true);
+
+        if (_allButtonsGroup != null)
+            _allButtonsGroup.blocksRaycasts = false;
+
+        _fadeCoroutine = StartCoroutine(FadeInRoutine(duration));
+    }
+
+    private IEnumerator FadeInRoutine(float duration)
+    {
+        if (_allButtonsGroup == null) yield break;
+
+        float t = 0f;
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            _allButtonsGroup.alpha = Mathf.Clamp01(t / duration);
+            yield return null;
+        }
+
+        _allButtonsGroup.alpha = 1f;
+        _allButtonsGroup.blocksRaycasts = true;
     }
 
     public void SetupForSong(SongData song)

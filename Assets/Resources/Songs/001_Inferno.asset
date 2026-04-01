@@ -19,9 +19,9 @@ MonoBehaviour:
   durationSeconds: 135
   charter: Katz
   mapper: Katz
-  songImage: {fileID: 0}
-  previewClip: {fileID: 0}
-  fullClip: {fileID: 0}
+  songImage: {fileID: 1379820715, guid: 59c285646cdfb544b94efdb50645404a, type: 3}
+  previewClip: {fileID: 8300000, guid: 69c93895a76cbf241a665ae143494154, type: 3}
+  fullClip: {fileID: 8300000, guid: 9cb495fd4ab40834fac24afdd46fe1a0, type: 3}
   difficulties:
   - type: 0
     level: 2
