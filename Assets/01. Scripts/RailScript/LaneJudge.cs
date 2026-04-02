@@ -7,7 +7,11 @@ public class LaneJudge : MonoBehaviour
     [Header("Lane (fallback only)")]
     [SerializeField] private NoteSpawner.NoteType _laneType = NoteSpawner.NoteType.Ground;
 
-    [Header("Input")]
+    [Header("Key Bind Config")]
+    [SerializeField] private KeyBindConfig _keyBindConfig;
+    [SerializeField] private int _laneIndex;
+
+    [Header("Input (fallback if KeyBindConfig is null)")]
     [SerializeField] private KeyCode _key = KeyCode.A;
 
     [Header("Timing (ms)")]
@@ -60,7 +64,25 @@ public class LaneJudge : MonoBehaviour
     private static readonly List<ParticleSystemVertexStream> _streams = new List<ParticleSystemVertexStream>(16);
 
 
+    private KeyCode ActiveKey
+    {
+        get
+        {
+            if (_keyBindConfig == null) return _key;
+            ChartLaneType chartLane = _laneType == NoteSpawner.NoteType.Ground
+                ? ChartLaneType.Ground : ChartLaneType.Upper;
+            KeyCode bound = _keyBindConfig.GetKey(chartLane, _laneIndex);
+            return bound != KeyCode.None ? bound : _key;
+        }
+    }
+
     public void SetLaneType(NoteSpawner.NoteType t) => _laneType = t;
+
+    public void SetKeyBindConfig(KeyBindConfig config, int laneIndex)
+    {
+        _keyBindConfig = config;
+        _laneIndex = laneIndex;
+    }
 
     public void RegisterTap(Note n)
     {
@@ -87,8 +109,9 @@ public class LaneJudge : MonoBehaviour
 
         AutoFailHoldIfTailIgnored();
 
-        if (Input.GetKeyDown(_key)) OnKeyDown();
-        if (Input.GetKeyUp(_key)) OnKeyUp();
+        KeyCode key = ActiveKey;
+        if (Input.GetKeyDown(key)) OnKeyDown();
+        if (Input.GetKeyUp(key)) OnKeyUp();
     }
 
     private void OnKeyDown()
@@ -187,7 +210,7 @@ public class LaneJudge : MonoBehaviour
             if (rhy != null) bpm = (float)rhy.Bpm;
 
             bool breaks = (judge == JudgeType.Ruin || judge == JudgeType.Miss);
-            ComboUI.I.OnHoldStart(judge.ToString(), breaks, bpm, _key);
+            ComboUI.I.OnHoldStart(judge.ToString(), breaks, bpm, ActiveKey);
         }
 
         _hold.StartHold();
@@ -274,7 +297,7 @@ public class LaneJudge : MonoBehaviour
         if (_hold.IsFailed) return;
         if (!_hold.IsActive) return;
 
-        if (!Input.GetKey(_key)) return;
+        if (!Input.GetKey(ActiveKey)) return;
 
         double now = AudioSettings.dspTime;
         double rawTailMs = (now - _hold.TailDspTime) * 1000.0 + _userOffsetMs;

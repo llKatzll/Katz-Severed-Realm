@@ -25,6 +25,9 @@ public class NoteSpawner : MonoBehaviour
         public float _yOffsetLocal;
     }
 
+    public NoteLane[] Lanes => _lanes;
+    public RhythmConductor Conductor => _conductor;
+
     [SerializeField] private RhythmConductor _conductor;
 
     [SerializeField] private Note _defaultTapPrefab;
