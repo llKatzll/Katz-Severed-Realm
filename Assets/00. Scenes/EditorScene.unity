@@ -413,7 +413,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000031550673}
+  m_AnchoredPosition: {x: 0, y: -0.0000021760472}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &37814852
@@ -1670,6 +1670,7 @@ GameObject:
   - component: {fileID: 228899868}
   - component: {fileID: 228899867}
   - component: {fileID: 228899866}
+  - component: {fileID: 228899869}
   m_Layer: 5
   m_Name: Ground_ChartZone
   m_TagString: Untagged
@@ -1766,6 +1767,35 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 228899864}
   m_CullTransparentMesh: 1
+--- !u!114 &228899869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 228899864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07bf06384816d764090f4abbddbc1844, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EditorTimeline
+  _scrollRect: {fileID: 228899866}
+  _content: {fileID: 30314957}
+  _editor: {fileID: 305774307}
+  _audioSource: {fileID: 1895824002}
+  _pixelsPerBeat: 80
+  _minPixelsPerBeat: 20
+  _maxPixelsPerBeat: 400
+  _zoomStep: 20
+  _bgColor: {r: 0.05, g: 0.05, b: 0.05, a: 1}
+  _columnLineColor: {r: 0.3, g: 0.3, b: 0.3, a: 1}
+  _beatLineColor: {r: 1, g: 1, b: 1, a: 1}
+  _halfBeatLineColor: {r: 0, g: 0.5, b: 1, a: 0.7}
+  _subBeatLineColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.4}
+  _tapNoteColor: {r: 1, g: 1, b: 1, a: 1}
+  _holdNoteColor: {r: 1, g: 0.85, b: 0.3, a: 1}
+  _dnNoteColor: {r: 0.8, g: 0.2, b: 0.8, a: 1}
+  _playheadColor: {r: 0, g: 1, b: 0, a: 0.8}
 --- !u!1 &253242715
 GameObject:
   m_ObjectHideFlags: 0
@@ -2116,21 +2146,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ChartEditorManager
   _chartMode: {fileID: 2145568749}
   _effectMode: {fileID: 1421412737}
-  _songDropdown: {fileID: 1618818974}
-  _diffDropdown: {fileID: 1482633309}
+  _loadSongButton: {fileID: 856317035}
+  _loadSongScrollView: {fileID: 801267404}
+  _loadSongExitButton: {fileID: 1848116133}
+  _loadSongContent: {fileID: 374138708}
   _songNameText: {fileID: 76372630}
-  _selectedText: {fileID: 0}
   _audioSource: {fileID: 1895824002}
-  _bpmInput: {fileID: 683107604}
+  _diffDropdown: {fileID: 1482633309}
+  _bpmInputChart: {fileID: 683107604}
+  _bpmInputEffect: {fileID: 2055312592}
   _bsdDropdown: {fileID: 1960400838}
   _saveButton: {fileID: 1582747750}
   _loadButton: {fileID: 1797921447}
   _exitButton: {fileID: 1568547596}
   _testPlayButton: {fileID: 1042332058}
   _effectModeButton: {fileID: 147820295}
-  _chartModeButton: {fileID: 1063727660}
   _playButton: {fileID: 812258014}
   _backButton: {fileID: 876893215}
+  _chartModeButton: {fileID: 1063727660}
+  _effectPlayButton: {fileID: 763828447}
+  _effectBackButton: {fileID: 2095654245}
+  _effectsSongDropdown: {fileID: 1618818974}
+  _camsSongDropdown: {fileID: 2018847283}
   _liveMappingText: {fileID: 2072972376}
   _changeSaveText: {fileID: 474140107}
   _groundTimeline: {fileID: 0}
@@ -3184,6 +3221,7 @@ GameObject:
   - component: {fileID: 398487927}
   - component: {fileID: 398487926}
   - component: {fileID: 398487925}
+  - component: {fileID: 398487928}
   m_Layer: 5
   m_Name: Upper_ChartZone
   m_TagString: Untagged
@@ -3280,6 +3318,35 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 398487923}
   m_CullTransparentMesh: 1
+--- !u!114 &398487928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 398487923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07bf06384816d764090f4abbddbc1844, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EditorTimeline
+  _scrollRect: {fileID: 398487925}
+  _content: {fileID: 793094269}
+  _editor: {fileID: 305774307}
+  _audioSource: {fileID: 1895824002}
+  _pixelsPerBeat: 80
+  _minPixelsPerBeat: 20
+  _maxPixelsPerBeat: 400
+  _zoomStep: 20
+  _bgColor: {r: 0.05, g: 0.05, b: 0.05, a: 1}
+  _columnLineColor: {r: 0.3, g: 0.3, b: 0.3, a: 1}
+  _beatLineColor: {r: 1, g: 1, b: 1, a: 1}
+  _halfBeatLineColor: {r: 0, g: 0.5, b: 1, a: 0.7}
+  _subBeatLineColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.4}
+  _tapNoteColor: {r: 1, g: 1, b: 1, a: 1}
+  _holdNoteColor: {r: 1, g: 0.85, b: 0.3, a: 1}
+  _dnNoteColor: {r: 0.8, g: 0.2, b: 0.8, a: 1}
+  _playheadColor: {r: 0, g: 1, b: 0, a: 0.8}
 --- !u!1 &399482609
 GameObject:
   m_ObjectHideFlags: 0
@@ -5935,7 +6002,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000031550673}
+  m_AnchoredPosition: {x: 0, y: -0.0000021760472}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &796689654

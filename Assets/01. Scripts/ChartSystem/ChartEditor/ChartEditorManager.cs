@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -8,28 +9,41 @@ public class ChartEditorManager : MonoBehaviour
     [SerializeField] private GameObject _chartMode;
     [SerializeField] private GameObject _effectMode;
 
-    [Header("Song")]
-    [SerializeField] private TMP_Dropdown _songDropdown;
-    [SerializeField] private TMP_Dropdown _diffDropdown;
+    [Header("Song Selection (ChartMode)")]
+    [SerializeField] private Button _loadSongButton;
+    [SerializeField] private GameObject _loadSongScrollView;
+    [SerializeField] private Button _loadSongExitButton;
+    [SerializeField] private Transform _loadSongContent;
     [SerializeField] private TMP_Text _songNameText;
-    [SerializeField] private TMP_Text _selectedText;
     [SerializeField] private AudioSource _audioSource;
 
-    [Header("BPM")]
-    [SerializeField] private TMP_InputField _bpmInput;
+    [Header("Difficulty")]
+    [SerializeField] private TMP_Dropdown _diffDropdown;
+
+    [Header("BPM (both modes)")]
+    [SerializeField] private TMP_InputField _bpmInputChart;
+    [SerializeField] private TMP_InputField _bpmInputEffect;
 
     [Header("BSD")]
     [SerializeField] private TMP_Dropdown _bsdDropdown;
 
-    [Header("Buttons")]
+    [Header("Buttons (ChartMode)")]
     [SerializeField] private Button _saveButton;
     [SerializeField] private Button _loadButton;
     [SerializeField] private Button _exitButton;
     [SerializeField] private Button _testPlayButton;
     [SerializeField] private Button _effectModeButton;
-    [SerializeField] private Button _chartModeButton;
     [SerializeField] private Button _playButton;
     [SerializeField] private Button _backButton;
+
+    [Header("Buttons (EffectMode)")]
+    [SerializeField] private Button _chartModeButton;
+    [SerializeField] private Button _effectPlayButton;
+    [SerializeField] private Button _effectBackButton;
+
+    [Header("Effect Mode Dropdowns")]
+    [SerializeField] private TMP_Dropdown _effectsSongDropdown;
+    [SerializeField] private TMP_Dropdown _camsSongDropdown;
 
     [Header("Live Mapping")]
     [SerializeField] private TMP_Text _liveMappingText;
@@ -64,32 +78,92 @@ public class ChartEditorManager : MonoBehaviour
         _allSongs = Resources.LoadAll<SongData>("Songs");
         System.Array.Sort(_allSongs, (a, b) => string.Compare(a.name, b.name, System.StringComparison.Ordinal));
 
-        SetupSongDropdown();
         SetupDiffDropdown();
         SetupBsdDropdown();
         SetupButtons();
-        SetupBpmInput();
+        SetupBpmInputs();
+        SetupEffectDropdowns();
+        SetupLoadSongUI();
 
         SetEffectMode(false);
         UpdateSaveIndicator();
     }
 
-    private void SetupSongDropdown()
+    private void SetupLoadSongUI()
     {
-        if (_songDropdown == null) return;
-        _songDropdown.ClearOptions();
-        var options = new System.Collections.Generic.List<string>();
+        if (_loadSongScrollView != null)
+            _loadSongScrollView.SetActive(false);
+
+        if (_loadSongButton != null)
+            _loadSongButton.onClick.AddListener(OpenLoadSongView);
+
+        if (_loadSongExitButton != null)
+            _loadSongExitButton.onClick.AddListener(CloseLoadSongView);
+
+        PopulateSongList();
+    }
+
+    private void PopulateSongList()
+    {
+        if (_loadSongContent == null) return;
+
+        for (int i = _loadSongContent.childCount - 1; i >= 0; i--)
+            Destroy(_loadSongContent.GetChild(i).gameObject);
+
         for (int i = 0; i < _allSongs.Length; i++)
-            options.Add(_allSongs[i].songName);
-        _songDropdown.AddOptions(options);
-        _songDropdown.onValueChanged.AddListener(OnSongSelected);
+        {
+            SongData song = _allSongs[i];
+            GameObject btnGo = new GameObject(song.songName, typeof(RectTransform), typeof(Button), typeof(Image));
+            btnGo.transform.SetParent(_loadSongContent, false);
+
+            RectTransform rt = btnGo.GetComponent<RectTransform>();
+            rt.sizeDelta = new Vector2(0f, 40f);
+
+            Image img = btnGo.GetComponent<Image>();
+            img.color = new Color(0.2f, 0.2f, 0.2f, 1f);
+
+            GameObject textGo = new GameObject("Text", typeof(RectTransform), typeof(TextMeshProUGUI));
+            textGo.transform.SetParent(btnGo.transform, false);
+            RectTransform textRt = textGo.GetComponent<RectTransform>();
+            textRt.anchorMin = Vector2.zero;
+            textRt.anchorMax = Vector2.one;
+            textRt.offsetMin = Vector2.zero;
+            textRt.offsetMax = Vector2.zero;
+
+            TextMeshProUGUI tmp = textGo.GetComponent<TextMeshProUGUI>();
+            tmp.text = song.songName;
+            tmp.fontSize = 18f;
+            tmp.alignment = TextAlignmentOptions.Center;
+            tmp.color = Color.white;
+
+            string songName = song.songName;
+            btnGo.GetComponent<Button>().onClick.AddListener(() => OnSongItemClicked(songName));
+        }
+    }
+
+    private void OpenLoadSongView()
+    {
+        if (_loadSongScrollView != null)
+            _loadSongScrollView.SetActive(true);
+    }
+
+    private void CloseLoadSongView()
+    {
+        if (_loadSongScrollView != null)
+            _loadSongScrollView.SetActive(false);
+    }
+
+    private void OnSongItemClicked(string songName)
+    {
+        CloseLoadSongView();
+        LoadSong(songName, _currentDifficulty);
     }
 
     private void SetupDiffDropdown()
     {
         if (_diffDropdown == null) return;
         _diffDropdown.ClearOptions();
-        _diffDropdown.AddOptions(new System.Collections.Generic.List<string>
+        _diffDropdown.AddOptions(new List<string>
             { "Easy", "Normal", "Hard", "Expert", "Master" });
         _diffDropdown.onValueChanged.AddListener(OnDiffSelected);
     }
@@ -98,7 +172,7 @@ public class ChartEditorManager : MonoBehaviour
     {
         if (_bsdDropdown == null) return;
         _bsdDropdown.ClearOptions();
-        var options = new System.Collections.Generic.List<string>();
+        var options = new List<string>();
         for (int i = 0; i < BsdValues.Length; i++)
             options.Add("1/" + BsdValues[i]);
         _bsdDropdown.AddOptions(options);
@@ -110,17 +184,48 @@ public class ChartEditorManager : MonoBehaviour
         if (_saveButton != null) _saveButton.onClick.AddListener(OnSave);
         if (_loadButton != null) _loadButton.onClick.AddListener(OnLoad);
         if (_exitButton != null) _exitButton.onClick.AddListener(OnExit);
+        if (_testPlayButton != null) _testPlayButton.onClick.AddListener(OnTestPlay);
         if (_effectModeButton != null) _effectModeButton.onClick.AddListener(() => SetEffectMode(true));
         if (_chartModeButton != null) _chartModeButton.onClick.AddListener(() => SetEffectMode(false));
         if (_playButton != null) _playButton.onClick.AddListener(OnPlayPause);
         if (_backButton != null) _backButton.onClick.AddListener(OnBack);
+        if (_effectPlayButton != null) _effectPlayButton.onClick.AddListener(OnPlayPause);
+        if (_effectBackButton != null) _effectBackButton.onClick.AddListener(OnBack);
     }
 
-    private void SetupBpmInput()
+    private void SetupBpmInputs()
     {
-        if (_bpmInput == null) return;
-        _bpmInput.contentType = TMP_InputField.ContentType.DecimalNumber;
-        _bpmInput.onEndEdit.AddListener(OnBpmChanged);
+        if (_bpmInputChart != null)
+        {
+            _bpmInputChart.contentType = TMP_InputField.ContentType.DecimalNumber;
+            _bpmInputChart.onEndEdit.AddListener(OnBpmChanged);
+        }
+        if (_bpmInputEffect != null)
+        {
+            _bpmInputEffect.contentType = TMP_InputField.ContentType.DecimalNumber;
+            _bpmInputEffect.onEndEdit.AddListener(OnBpmChanged);
+        }
+    }
+
+    private void SetupEffectDropdowns()
+    {
+        if (_allSongs == null) return;
+
+        var songNames = new List<string>();
+        for (int i = 0; i < _allSongs.Length; i++)
+            songNames.Add(_allSongs[i].songName);
+
+        if (_effectsSongDropdown != null)
+        {
+            _effectsSongDropdown.ClearOptions();
+            _effectsSongDropdown.AddOptions(songNames);
+        }
+
+        if (_camsSongDropdown != null)
+        {
+            _camsSongDropdown.ClearOptions();
+            _camsSongDropdown.AddOptions(songNames);
+        }
     }
 
     private void Update()
@@ -164,20 +269,24 @@ public class ChartEditorManager : MonoBehaviour
             _currentChart.audioOffset = 0f;
         }
 
-        if (_bpmInput != null)
-            _bpmInput.text = _currentChart.bpm.ToString("F1");
+        SyncBpmFields();
 
         if (_songNameText != null)
             _songNameText.text = songName;
-
-        if (_selectedText != null)
-            _selectedText.text = "Selected";
 
         _hasUnsavedChanges = false;
         UpdateSaveIndicator();
 
         if (_groundTimeline != null) _groundTimeline.SetChart(_currentChart, ChartLaneType.Ground);
         if (_upperTimeline != null) _upperTimeline.SetChart(_currentChart, ChartLaneType.Upper);
+    }
+
+    private void SyncBpmFields()
+    {
+        if (_currentChart == null) return;
+        string bpmStr = _currentChart.bpm.ToString("F1");
+        if (_bpmInputChart != null) _bpmInputChart.text = bpmStr;
+        if (_bpmInputEffect != null) _bpmInputEffect.text = bpmStr;
     }
 
     private SongData FindSongData(string songName)
@@ -190,24 +299,12 @@ public class ChartEditorManager : MonoBehaviour
         return null;
     }
 
-    private void OnSongSelected(int index)
-    {
-        if (index < 0 || index >= _allSongs.Length) return;
-        if (_hasUnsavedChanges)
-        {
-            Debug.LogWarning("[ChartEditor] Unsaved changes! Save first.");
-        }
-        LoadSong(_allSongs[index].songName, _currentDifficulty);
-    }
-
     private void OnDiffSelected(int index)
     {
         if (_diffDropdown == null) return;
         string diff = _diffDropdown.options[index].text;
         if (_hasUnsavedChanges)
-        {
             Debug.LogWarning("[ChartEditor] Unsaved changes! Save first.");
-        }
         if (!string.IsNullOrEmpty(_currentSongName))
             LoadSong(_currentSongName, diff);
     }
@@ -219,6 +316,7 @@ public class ChartEditorManager : MonoBehaviour
         if (float.TryParse(val, out bpm) && bpm > 0f)
         {
             _currentChart.bpm = bpm;
+            SyncBpmFields();
             MarkUnsaved();
         }
     }
@@ -240,15 +338,10 @@ public class ChartEditorManager : MonoBehaviour
     private void OnPlayPause()
     {
         if (_audioSource == null || _audioSource.clip == null) return;
-
         if (_audioSource.isPlaying)
-        {
             _audioSource.Pause();
-        }
         else
-        {
             _audioSource.Play();
-        }
     }
 
     private void OnBack()
@@ -281,6 +374,11 @@ public class ChartEditorManager : MonoBehaviour
             return;
         }
         UnityEngine.SceneManagement.SceneManager.LoadScene("SongSelect");
+    }
+
+    private void OnTestPlay()
+    {
+        Debug.Log("[ChartEditor] TestPlay (not yet implemented)");
     }
 
     private void OnUndo()
