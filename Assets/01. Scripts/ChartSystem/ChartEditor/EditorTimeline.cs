@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class EditorTimeline : MonoBehaviour
 {
     private const int COLUMN_COUNT = 4;
+    public const float SV_ZONE_WIDTH = 40f;
 
     [Header("References")]
     [SerializeField] private ScrollRect _scrollRect;
@@ -19,6 +20,7 @@ public class EditorTimeline : MonoBehaviour
     [SerializeField] private GameObject _lnBodyPrefab;
     [SerializeField] private GameObject _lnTailPrefab;
     [SerializeField] private GameObject _dimensionPrefab;
+    [SerializeField] private GameObject _svPrefab;
 
     [Header("Settings")]
     [SerializeField] private float _pixelsPerBeat = 80f;
@@ -38,10 +40,57 @@ public class EditorTimeline : MonoBehaviour
     private GameObject _playhead;
 
     private float _viewportHeight;
+    private Material _gridMaterialInstance;
 
     public float PixelsPerBeat => _pixelsPerBeat;
     public RectTransform Content => _content;
     public ScrollRect ScrollRectRef => _scrollRect;
+
+    public float ScrollPosition
+    {
+        get => _scrollRect != null ? _scrollRect.verticalNormalizedPosition : 0f;
+        set
+        {
+            if (_scrollRect != null)
+                _scrollRect.verticalNormalizedPosition = Mathf.Clamp01(value);
+        }
+    }
+
+    private void Awake()
+    {
+        _totalBeats = 200f;
+
+        if (_scrollRect != null)
+        {
+            _scrollRect.horizontal = false;
+            _scrollRect.vertical = true;
+            _scrollRect.scrollSensitivity = 0f;
+            _scrollRect.inertia = false;
+        }
+
+        SetupSVClipping();
+        SyncShaderParams();
+    }
+
+    private void SetupSVClipping()
+    {
+        if (_scrollRect == null || _scrollRect.viewport == null) return;
+
+        GameObject viewportGO = _scrollRect.viewport.gameObject;
+
+        Mask oldMask = viewportGO.GetComponent<Mask>();
+        if (oldMask != null)
+        {
+            oldMask.enabled = false;
+            Destroy(oldMask);
+        }
+
+        RectMask2D mask2D = viewportGO.GetComponent<RectMask2D>();
+        if (mask2D == null)
+            mask2D = viewportGO.AddComponent<RectMask2D>();
+
+        mask2D.padding = new Vector4(-SV_ZONE_WIDTH, 0f, 0f, 0f);
+    }
 
     public void SetChart(ChartData chart, ChartLaneType laneType)
     {
@@ -82,14 +131,24 @@ public class EditorTimeline : MonoBehaviour
     public void SyncShaderParams()
     {
         if (_gridRawImage == null) return;
-        Material mat = _gridRawImage.material;
-        if (mat == null) return;
+
+        if (_gridMaterialInstance == null)
+        {
+            _gridMaterialInstance = Instantiate(_gridRawImage.material);
+            _gridRawImage.material = _gridMaterialInstance;
+        }
 
         int bsd = _editor != null ? _editor.CurrentBsd : 4;
 
-        mat.SetFloat("_TotalBeats", _totalBeats);
-        mat.SetFloat("_BSD", bsd);
-        mat.SetFloat("_Columns", COLUMN_COUNT);
+        _gridMaterialInstance.SetFloat("_TotalBeats", _totalBeats);
+        _gridMaterialInstance.SetFloat("_BSD", bsd);
+        _gridMaterialInstance.SetFloat("_Columns", COLUMN_COUNT);
+    }
+
+    private void OnDestroy()
+    {
+        if (_gridMaterialInstance != null)
+            Destroy(_gridMaterialInstance);
     }
 
     public void RebuildNotes()
@@ -112,7 +171,7 @@ public class EditorTimeline : MonoBehaviour
             if (nd.lane < 0 || nd.lane >= COLUMN_COUNT) continue;
 
             float y = BeatToY(nd.beat);
-            float x = nd.lane * colWidth + 1f;
+            float cx = nd.lane * colWidth + colWidth * 0.5f;
             float w = colWidth - 2f;
 
             bool isHold = nd.noteType == ChartNoteType.Hold
@@ -120,28 +179,52 @@ public class EditorTimeline : MonoBehaviour
 
             if (isHold)
             {
-                SpawnHoldVisual(nd, x, y, w);
+                SpawnHoldVisual(nd, cx, y, w);
             }
             else
             {
                 GameObject prefab = nd.noteType == ChartNoteType.Dimension
                     ? _dimensionPrefab : _tapPrefab;
-                SpawnSingleNote(prefab, x, y, w);
+                SpawnSingleNote(prefab, cx, y, w);
+            }
+        }
+
+        if (_chart.svNotes != null && _svPrefab != null)
+        {
+            for (int i = 0; i < _chart.svNotes.Count; i++)
+            {
+                SVData sv = _chart.svNotes[i];
+                float y = BeatToY(sv.beat);
+                SpawnSVNote(sv, -(SV_ZONE_WIDTH * 0.5f), y);
             }
         }
     }
 
-    private void SpawnHoldVisual(NoteData nd, float x, float y, float w)
+    private void SpawnSVNote(SVData sv, float cx, float y)
+    {
+        GameObject go = Instantiate(_svPrefab, _content);
+        RectTransform rt = go.GetComponent<RectTransform>();
+        if (rt != null)
+        {
+            rt.anchorMin = Vector2.zero;
+            rt.anchorMax = Vector2.zero;
+            rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.anchoredPosition = new Vector2(cx, y);
+            rt.sizeDelta = new Vector2(SV_ZONE_WIDTH - 4f, _pixelsPerBeat * 0.15f);
+        }
+
+        TMPro.TMP_Text label = go.GetComponentInChildren<TMPro.TMP_Text>();
+        if (label != null)
+            label.text = sv.amount.ToString("F2");
+
+        ApplyNoteAlpha(go, 0.85f);
+        _noteObjects.Add(go);
+    }
+
+    private void SpawnHoldVisual(NoteData nd, float cx, float y, float w)
     {
         float endY = BeatToY(nd.holdEndBeat);
         float holdHeight = endY - y;
-
-        if (_lnHeadPrefab != null)
-        {
-            GameObject head = Instantiate(_lnHeadPrefab, _content);
-            SetNoteRect(head, x, y, w);
-            _noteObjects.Add(head);
-        }
 
         if (_lnBodyPrefab != null)
         {
@@ -149,16 +232,26 @@ public class EditorTimeline : MonoBehaviour
             RectTransform rt = body.GetComponent<RectTransform>();
             rt.anchorMin = Vector2.zero;
             rt.anchorMax = Vector2.zero;
-            rt.pivot = new Vector2(0f, 0f);
-            rt.anchoredPosition = new Vector2(x, y);
+            rt.pivot = new Vector2(0.5f, 0f);
+            rt.anchoredPosition = new Vector2(cx, y);
             rt.sizeDelta = new Vector2(w, holdHeight);
+            ApplyNoteAlpha(body, 0.75f);
             _noteObjects.Add(body);
+        }
+
+        if (_lnHeadPrefab != null)
+        {
+            GameObject head = Instantiate(_lnHeadPrefab, _content);
+            SetNoteRect(head, cx, y, w);
+            ApplyNoteAlpha(head, 0.75f);
+            _noteObjects.Add(head);
         }
 
         if (_lnTailPrefab != null)
         {
             GameObject tail = Instantiate(_lnTailPrefab, _content);
-            SetNoteRect(tail, x, endY, w);
+            SetNoteRect(tail, cx, endY, w);
+            ApplyNoteAlpha(tail, 0.75f);
             _noteObjects.Add(tail);
         }
     }
@@ -167,11 +260,12 @@ public class EditorTimeline : MonoBehaviour
     {
         if (prefab == null) return;
         GameObject go = Instantiate(prefab, _content);
-        SetNoteRect(go, x, y - _pixelsPerBeat * 0.075f, w);
+        SetNoteRect(go, x, y, w);
+        ApplyNoteAlpha(go, 0.75f);
         _noteObjects.Add(go);
     }
 
-    private void SetNoteRect(GameObject go, float x, float y, float w)
+    private void SetNoteRect(GameObject go, float cx, float y, float w)
     {
         RectTransform rt = go.GetComponent<RectTransform>();
         if (rt == null) return;
@@ -179,9 +273,18 @@ public class EditorTimeline : MonoBehaviour
         float h = _pixelsPerBeat * 0.15f;
         rt.anchorMin = Vector2.zero;
         rt.anchorMax = Vector2.zero;
-        rt.pivot = new Vector2(0f, 0f);
-        rt.anchoredPosition = new Vector2(x, y);
+        rt.pivot = new Vector2(0.5f, 0.5f);
+        rt.anchoredPosition = new Vector2(cx, y);
         rt.sizeDelta = new Vector2(w, h);
+    }
+
+    private void ApplyNoteAlpha(GameObject go, float alpha)
+    {
+        CanvasGroup cg = go.GetComponent<CanvasGroup>();
+        if (cg == null) cg = go.AddComponent<CanvasGroup>();
+        cg.alpha = alpha;
+        cg.blocksRaycasts = false;
+        cg.interactable = false;
     }
 
     private void LateUpdate()
@@ -280,8 +383,8 @@ public class EditorTimeline : MonoBehaviour
         rt.anchorMin = new Vector2(0f, 0f);
         rt.anchorMax = new Vector2(0f, 0f);
         rt.pivot = new Vector2(0f, 0.5f);
-        rt.anchoredPosition = new Vector2(0f, y);
-        rt.sizeDelta = new Vector2(_content.rect.width, 2f);
+        rt.anchoredPosition = new Vector2(-SV_ZONE_WIDTH, y);
+        rt.sizeDelta = new Vector2(_content.rect.width + SV_ZONE_WIDTH, 2f);
         _playhead.transform.SetAsLastSibling();
     }
 
@@ -299,9 +402,16 @@ public class EditorTimeline : MonoBehaviour
     public int XToColumn(float localX)
     {
         if (_content == null) return -1;
+        if (localX < 0f) return -1;
+
         float colWidth = _content.rect.width / COLUMN_COUNT;
         int col = Mathf.FloorToInt(localX / colWidth);
         return Mathf.Clamp(col, 0, COLUMN_COUNT - 1);
+    }
+
+    public bool IsInSVZone(float localX)
+    {
+        return localX >= -SV_ZONE_WIDTH && localX < 0f;
     }
 
     public float SnapBeat(float beat)
@@ -309,5 +419,26 @@ public class EditorTimeline : MonoBehaviour
         int bsd = _editor != null ? _editor.CurrentBsd : 4;
         float snap = 1f / bsd;
         return Mathf.Round(beat / snap) * snap;
+    }
+
+    public bool ScreenToContentLocal(Vector2 screenPos, out Vector2 localBottomLeft)
+    {
+        localBottomLeft = Vector2.zero;
+        if (_content == null) return false;
+
+        Camera cam = null;
+        Canvas canvas = _content.GetComponentInParent<Canvas>();
+        if (canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay)
+            cam = canvas.worldCamera;
+
+        Vector2 rawLocal;
+        if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            _content, screenPos, cam, out rawLocal))
+            return false;
+
+        localBottomLeft = new Vector2(
+            rawLocal.x + _content.rect.width * _content.pivot.x,
+            rawLocal.y + _content.rect.height * _content.pivot.y);
+        return true;
     }
 }

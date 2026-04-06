@@ -1827,6 +1827,7 @@ MonoBehaviour:
   _lnBodyPrefab: {fileID: 378344175968318487, guid: 29252f8049b102f489c958193eea2985, type: 3}
   _lnTailPrefab: {fileID: 3653371831085751326, guid: 4c23e897527289e46bcad34b2244dd00, type: 3}
   _dimensionPrefab: {fileID: 7095928221220051631, guid: 89444df8a1ba3b54982672955b4b214b, type: 3}
+  _svPrefab: {fileID: 1092490926671935875, guid: 4bd3dbf5faff12f488c10d034deaf523, type: 3}
   _pixelsPerBeat: 80
   _minPixelsPerBeat: 20
   _maxPixelsPerBeat: 400
@@ -1848,6 +1849,10 @@ MonoBehaviour:
   _editor: {fileID: 305774307}
   _laneType: 0
   _currentNoteType: 0
+  _tapCursorPrefab: {fileID: 5273741380778138508, guid: c976a8a10da326c44979976c80039140, type: 3}
+  _lnHeadCursorPrefab: {fileID: 5769320851983259175, guid: ee271d6cc9f22df4283f69fb59e2e56a, type: 3}
+  _svCursorPrefab: {fileID: 1092490926671935875, guid: 4bd3dbf5faff12f488c10d034deaf523, type: 3}
+  _dimensionCursorPrefab: {fileID: 7095928221220051631, guid: 89444df8a1ba3b54982672955b4b214b, type: 3}
 --- !u!1 &253242715
 GameObject:
   m_ObjectHideFlags: 0
@@ -3401,6 +3406,7 @@ MonoBehaviour:
   _lnBodyPrefab: {fileID: 378344175968318487, guid: 29252f8049b102f489c958193eea2985, type: 3}
   _lnTailPrefab: {fileID: 3653371831085751326, guid: 4c23e897527289e46bcad34b2244dd00, type: 3}
   _dimensionPrefab: {fileID: 7095928221220051631, guid: 89444df8a1ba3b54982672955b4b214b, type: 3}
+  _svPrefab: {fileID: 1092490926671935875, guid: 4bd3dbf5faff12f488c10d034deaf523, type: 3}
   _pixelsPerBeat: 80
   _minPixelsPerBeat: 20
   _maxPixelsPerBeat: 400
@@ -3422,6 +3428,10 @@ MonoBehaviour:
   _editor: {fileID: 305774307}
   _laneType: 1
   _currentNoteType: 0
+  _tapCursorPrefab: {fileID: 5273741380778138508, guid: c976a8a10da326c44979976c80039140, type: 3}
+  _lnHeadCursorPrefab: {fileID: 5769320851983259175, guid: ee271d6cc9f22df4283f69fb59e2e56a, type: 3}
+  _svCursorPrefab: {fileID: 1092490926671935875, guid: 4bd3dbf5faff12f488c10d034deaf523, type: 3}
+  _dimensionCursorPrefab: {fileID: 7095928221220051631, guid: 89444df8a1ba3b54982672955b4b214b, type: 3}
 --- !u!1 &399482609
 GameObject:
   m_ObjectHideFlags: 0

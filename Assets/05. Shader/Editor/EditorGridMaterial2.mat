@@ -41,7 +41,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BSD: 2
+    - _BSD: 4
     - _ColorMask: 15
     - _Columns: 4
     - _LineThickness: 0.02
@@ -50,7 +50,7 @@ Material:
     - _StencilOp: 0
     - _StencilReadMask: 255
     - _StencilWriteMask: 255
-    - _TotalBeats: 20
+    - _TotalBeats: 100
     - _UIMaskSoftnessX: 1
     - _UIMaskSoftnessY: 1
     m_Colors:

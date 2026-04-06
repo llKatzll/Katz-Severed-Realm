@@ -108,6 +108,26 @@ public class ChartEditorManager : MonoBehaviour
         SetEffectMode(false);
         UpdateSaveIndicator();
         UpdateNoteTypeVisual();
+        EnsureDefaultChart();
+    }
+
+    private void EnsureDefaultChart()
+    {
+        if (_currentChart != null) return;
+
+        _currentChart = new ChartData();
+        _currentChart.songName = "Untitled";
+        _currentChart.difficulty = "Easy";
+        _currentChart.bpm = 120f;
+        _currentChart.audioOffset = 0f;
+
+        SyncBpmFields();
+
+        if (_songNameText != null)
+            _songNameText.text = _currentChart.songName;
+
+        if (_groundTimeline != null) _groundTimeline.SetChart(_currentChart, ChartLaneType.Ground);
+        if (_upperTimeline != null) _upperTimeline.SetChart(_currentChart, ChartLaneType.Upper);
     }
 
     private void SetupLoadSongUI()
@@ -321,6 +341,8 @@ public class ChartEditorManager : MonoBehaviour
         SyncTimelineScroll();
     }
 
+    private float _lastSyncedScroll = -1f;
+
     private void SyncTimelineScroll()
     {
         if (_groundTimeline == null || _upperTimeline == null) return;
@@ -329,8 +351,21 @@ public class ChartEditorManager : MonoBehaviour
         float gVal = _groundTimeline.ScrollRectRef.verticalNormalizedPosition;
         float uVal = _upperTimeline.ScrollRectRef.verticalNormalizedPosition;
 
-        if (Mathf.Abs(gVal - uVal) > 0.001f)
+        if (Mathf.Abs(gVal - uVal) < 0.001f) return;
+
+        bool groundChanged = Mathf.Abs(gVal - _lastSyncedScroll) > 0.001f;
+        bool upperChanged = Mathf.Abs(uVal - _lastSyncedScroll) > 0.001f;
+
+        if (groundChanged)
+        {
             _upperTimeline.ScrollRectRef.verticalNormalizedPosition = gVal;
+            _lastSyncedScroll = gVal;
+        }
+        else if (upperChanged)
+        {
+            _groundTimeline.ScrollRectRef.verticalNormalizedPosition = uVal;
+            _lastSyncedScroll = uVal;
+        }
     }
 
     public void LoadSong(string songName, string difficulty)
@@ -339,12 +374,13 @@ public class ChartEditorManager : MonoBehaviour
         _currentDifficulty = difficulty;
 
         SongData songData = FindSongData(songName);
-        if (songData == null) return;
-
-        if (songData.fullClip != null)
-            _audioSource.clip = songData.fullClip;
-        else if (songData.previewClip != null)
-            _audioSource.clip = songData.previewClip;
+        if (songData != null)
+        {
+            if (songData.fullClip != null)
+                _audioSource.clip = songData.fullClip;
+            else if (songData.previewClip != null)
+                _audioSource.clip = songData.previewClip;
+        }
 
         string path = ChartUtility.GetChartPath(songName, difficulty);
         ChartData loaded = ChartUtility.LoadFromFile(path);
@@ -352,6 +388,8 @@ public class ChartEditorManager : MonoBehaviour
         if (loaded != null)
         {
             _currentChart = loaded;
+            if (_currentChart.notes == null)
+                _currentChart.notes = new List<NoteData>();
         }
         else
         {
