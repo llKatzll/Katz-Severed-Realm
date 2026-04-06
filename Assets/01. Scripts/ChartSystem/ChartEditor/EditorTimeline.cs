@@ -11,6 +11,14 @@ public class EditorTimeline : MonoBehaviour
     [SerializeField] private RectTransform _content;
     [SerializeField] private ChartEditorManager _editor;
     [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private RawImage _gridRawImage;
+
+    [Header("Note Prefabs")]
+    [SerializeField] private GameObject _tapPrefab;
+    [SerializeField] private GameObject _lnHeadPrefab;
+    [SerializeField] private GameObject _lnBodyPrefab;
+    [SerializeField] private GameObject _lnTailPrefab;
+    [SerializeField] private GameObject _dimensionPrefab;
 
     [Header("Settings")]
     [SerializeField] private float _pixelsPerBeat = 80f;
@@ -19,30 +27,21 @@ public class EditorTimeline : MonoBehaviour
     [SerializeField] private float _zoomStep = 20f;
 
     [Header("Colors")]
-    [SerializeField] private Color _bgColor = new Color(0.05f, 0.05f, 0.05f, 1f);
-    [SerializeField] private Color _columnLineColor = new Color(0.3f, 0.3f, 0.3f, 1f);
-    [SerializeField] private Color _beatLineColor = Color.white;
-    [SerializeField] private Color _halfBeatLineColor = new Color(0f, 0.5f, 1f, 0.7f);
-    [SerializeField] private Color _subBeatLineColor = new Color(0.5f, 0.5f, 0.5f, 0.4f);
-    [SerializeField] private Color _tapNoteColor = Color.white;
-    [SerializeField] private Color _holdNoteColor = new Color(1f, 0.85f, 0.3f, 1f);
-    [SerializeField] private Color _dnNoteColor = new Color(0.8f, 0.2f, 0.8f, 1f);
     [SerializeField] private Color _playheadColor = new Color(0f, 1f, 0f, 0.8f);
 
     private ChartData _chart;
     private ChartLaneType _laneType;
     private float _totalBeats;
     private float _contentHeight;
-    private bool _isScrolling;
 
     private readonly List<GameObject> _noteObjects = new List<GameObject>(256);
-    private readonly List<GameObject> _gridLines = new List<GameObject>(128);
     private GameObject _playhead;
 
     private float _viewportHeight;
 
     public float PixelsPerBeat => _pixelsPerBeat;
     public RectTransform Content => _content;
+    public ScrollRect ScrollRectRef => _scrollRect;
 
     public void SetChart(ChartData chart, ChartLaneType laneType)
     {
@@ -77,90 +76,20 @@ public class EditorTimeline : MonoBehaviour
         _contentHeight = _totalBeats * _pixelsPerBeat;
         _content.sizeDelta = new Vector2(_content.sizeDelta.x, _contentHeight);
 
-        RebuildGrid();
+        SyncShaderParams();
     }
 
-    private void RebuildGrid()
+    public void SyncShaderParams()
     {
-        for (int i = 0; i < _gridLines.Count; i++)
-        {
-            if (_gridLines[i] != null) Destroy(_gridLines[i]);
-        }
-        _gridLines.Clear();
-
-        if (_content == null || _chart == null) return;
-
-        float contentW = _content.rect.width;
-        float colWidth = contentW / COLUMN_COUNT;
-
-        for (int c = 1; c < COLUMN_COUNT; c++)
-        {
-            float x = c * colWidth;
-            CreateLine(_content, x, 0f, x, _contentHeight, _columnLineColor, 1f);
-        }
+        if (_gridRawImage == null) return;
+        Material mat = _gridRawImage.material;
+        if (mat == null) return;
 
         int bsd = _editor != null ? _editor.CurrentBsd : 4;
-        float subdivisionBeats = 1f / bsd;
 
-        int totalSubdivisions = Mathf.CeilToInt(_totalBeats / subdivisionBeats);
-        for (int i = 0; i <= totalSubdivisions; i++)
-        {
-            float beat = i * subdivisionBeats;
-            float y = BeatToY(beat);
-
-            Color lineColor;
-            float lineWidth;
-
-            float beatMod = beat % 1f;
-            if (beatMod < 0.001f || beatMod > 0.999f)
-            {
-                lineColor = _beatLineColor;
-                lineWidth = 2f;
-            }
-            else if (Mathf.Abs(beatMod - 0.5f) < 0.001f)
-            {
-                lineColor = _halfBeatLineColor;
-                lineWidth = 1.5f;
-            }
-            else
-            {
-                lineColor = _subBeatLineColor;
-                lineWidth = 1f;
-            }
-
-            CreateLine(_content, 0f, y, contentW, y, lineColor, lineWidth);
-        }
-    }
-
-    private GameObject CreateLine(RectTransform parent, float x1, float y1, float x2, float y2, Color color, float width)
-    {
-        GameObject go = new GameObject("Line", typeof(RectTransform), typeof(Image));
-        go.transform.SetParent(parent, false);
-
-        RectTransform rt = go.GetComponent<RectTransform>();
-        Image img = go.GetComponent<Image>();
-        img.color = color;
-
-        bool isHorizontal = Mathf.Abs(y2 - y1) < 0.01f;
-        if (isHorizontal)
-        {
-            rt.anchorMin = new Vector2(0f, 0f);
-            rt.anchorMax = new Vector2(0f, 0f);
-            rt.pivot = new Vector2(0f, 0.5f);
-            rt.anchoredPosition = new Vector2(x1, y1);
-            rt.sizeDelta = new Vector2(x2 - x1, width);
-        }
-        else
-        {
-            rt.anchorMin = new Vector2(0f, 0f);
-            rt.anchorMax = new Vector2(0f, 0f);
-            rt.pivot = new Vector2(0.5f, 0f);
-            rt.anchoredPosition = new Vector2(x1, 0f);
-            rt.sizeDelta = new Vector2(width, y2 > y1 ? y2 - y1 : _contentHeight);
-        }
-
-        _gridLines.Add(go);
-        return go;
+        mat.SetFloat("_TotalBeats", _totalBeats);
+        mat.SetFloat("_BSD", bsd);
+        mat.SetFloat("_Columns", COLUMN_COUNT);
     }
 
     public void RebuildNotes()
@@ -175,7 +104,6 @@ public class EditorTimeline : MonoBehaviour
 
         float contentW = _content.rect.width;
         float colWidth = contentW / COLUMN_COUNT;
-        float noteHeight = _pixelsPerBeat * 0.15f;
 
         for (int i = 0; i < _chart.notes.Count; i++)
         {
@@ -184,51 +112,76 @@ public class EditorTimeline : MonoBehaviour
             if (nd.lane < 0 || nd.lane >= COLUMN_COUNT) continue;
 
             float y = BeatToY(nd.beat);
-            float x = nd.lane * colWidth;
+            float x = nd.lane * colWidth + 1f;
+            float w = colWidth - 2f;
 
-            Color noteColor;
-            if (nd.noteType == ChartNoteType.Dimension)
-                noteColor = _dnNoteColor;
-            else if (nd.noteType == ChartNoteType.Hold)
-                noteColor = _holdNoteColor;
-            else
-                noteColor = _tapNoteColor;
+            bool isHold = nd.noteType == ChartNoteType.Hold
+                || (nd.noteType == ChartNoteType.Dimension && nd.holdEndBeat > nd.beat);
 
-            if (nd.noteType == ChartNoteType.Hold ||
-                (nd.noteType == ChartNoteType.Dimension && nd.holdEndBeat > nd.beat))
+            if (isHold)
             {
-                float endY = BeatToY(nd.holdEndBeat);
-                float holdHeight = endY - y;
-                CreateNoteRect(x, y, colWidth - 2f, holdHeight, noteColor, 0.6f);
-                CreateNoteRect(x, y, colWidth - 2f, noteHeight, noteColor, 1f);
-                CreateNoteRect(x, endY - noteHeight, colWidth - 2f, noteHeight, noteColor, 1f);
+                SpawnHoldVisual(nd, x, y, w);
             }
             else
             {
-                CreateNoteRect(x, y - noteHeight * 0.5f, colWidth - 2f, noteHeight, noteColor, 1f);
+                GameObject prefab = nd.noteType == ChartNoteType.Dimension
+                    ? _dimensionPrefab : _tapPrefab;
+                SpawnSingleNote(prefab, x, y, w);
             }
         }
     }
 
-    private GameObject CreateNoteRect(float x, float y, float w, float h, Color color, float alpha)
+    private void SpawnHoldVisual(NoteData nd, float x, float y, float w)
     {
-        GameObject go = new GameObject("Note", typeof(RectTransform), typeof(Image));
-        go.transform.SetParent(_content, false);
+        float endY = BeatToY(nd.holdEndBeat);
+        float holdHeight = endY - y;
 
-        RectTransform rt = go.GetComponent<RectTransform>();
-        rt.anchorMin = new Vector2(0f, 0f);
-        rt.anchorMax = new Vector2(0f, 0f);
-        rt.pivot = new Vector2(0f, 0f);
-        rt.anchoredPosition = new Vector2(x + 1f, y);
-        rt.sizeDelta = new Vector2(w, h);
+        if (_lnHeadPrefab != null)
+        {
+            GameObject head = Instantiate(_lnHeadPrefab, _content);
+            SetNoteRect(head, x, y, w);
+            _noteObjects.Add(head);
+        }
 
-        Image img = go.GetComponent<Image>();
-        Color c = color;
-        c.a = alpha;
-        img.color = c;
+        if (_lnBodyPrefab != null)
+        {
+            GameObject body = Instantiate(_lnBodyPrefab, _content);
+            RectTransform rt = body.GetComponent<RectTransform>();
+            rt.anchorMin = Vector2.zero;
+            rt.anchorMax = Vector2.zero;
+            rt.pivot = new Vector2(0f, 0f);
+            rt.anchoredPosition = new Vector2(x, y);
+            rt.sizeDelta = new Vector2(w, holdHeight);
+            _noteObjects.Add(body);
+        }
 
+        if (_lnTailPrefab != null)
+        {
+            GameObject tail = Instantiate(_lnTailPrefab, _content);
+            SetNoteRect(tail, x, endY, w);
+            _noteObjects.Add(tail);
+        }
+    }
+
+    private void SpawnSingleNote(GameObject prefab, float x, float y, float w)
+    {
+        if (prefab == null) return;
+        GameObject go = Instantiate(prefab, _content);
+        SetNoteRect(go, x, y - _pixelsPerBeat * 0.075f, w);
         _noteObjects.Add(go);
-        return go;
+    }
+
+    private void SetNoteRect(GameObject go, float x, float y, float w)
+    {
+        RectTransform rt = go.GetComponent<RectTransform>();
+        if (rt == null) return;
+
+        float h = _pixelsPerBeat * 0.15f;
+        rt.anchorMin = Vector2.zero;
+        rt.anchorMax = Vector2.zero;
+        rt.pivot = new Vector2(0f, 0f);
+        rt.anchoredPosition = new Vector2(x, y);
+        rt.sizeDelta = new Vector2(w, h);
     }
 
     private void LateUpdate()

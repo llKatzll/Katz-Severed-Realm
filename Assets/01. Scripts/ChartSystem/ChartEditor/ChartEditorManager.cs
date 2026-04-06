@@ -55,6 +55,23 @@ public class ChartEditorManager : MonoBehaviour
     [SerializeField] private EditorTimeline _groundTimeline;
     [SerializeField] private EditorTimeline _upperTimeline;
 
+    [Header("NoteType Buttons")]
+    [SerializeField] private Button _tapButton;
+    [SerializeField] private Button _holdButton;
+    [SerializeField] private Button _dimensionButton;
+    [SerializeField] private Button _svButton;
+
+    [Header("NoteType Colors")]
+    [SerializeField] private Color _noteTypeBtnSelected = Color.white;
+    [SerializeField] private Color _noteTypeBtnDeselected = new Color(0.4f, 0.4f, 0.4f, 1f);
+
+    [Header("NotePlacer")]
+    [SerializeField] private EditorNotePlacer _groundPlacer;
+    [SerializeField] private EditorNotePlacer _upperPlacer;
+
+    private ChartNoteType _currentNoteType = ChartNoteType.Tap;
+    private bool _svMode;
+
     private ChartData _currentChart;
     private SongData[] _allSongs;
     private bool _isEffectMode;
@@ -66,6 +83,8 @@ public class ChartEditorManager : MonoBehaviour
     private static readonly int[] BsdValues = { 1, 2, 3, 4, 6, 8, 12, 16 };
 
     public ChartData CurrentChart => _currentChart;
+    public ChartNoteType CurrentNoteType => _currentNoteType;
+    public bool SVMode => _svMode;
     public bool IsLiveMapping => _isLiveMapping;
     public bool IsPlaying => _audioSource != null && _audioSource.isPlaying;
     public float CurrentBeat => _audioSource != null && _currentChart != null && _currentChart.bpm > 0
@@ -81,12 +100,14 @@ public class ChartEditorManager : MonoBehaviour
         SetupDiffDropdown();
         SetupBsdDropdown();
         SetupButtons();
+        SetupNoteTypeButtons();
         SetupBpmInputs();
         SetupEffectDropdowns();
         SetupLoadSongUI();
 
         SetEffectMode(false);
         UpdateSaveIndicator();
+        UpdateNoteTypeVisual();
     }
 
     private void SetupLoadSongUI()
@@ -177,6 +198,13 @@ public class ChartEditorManager : MonoBehaviour
             options.Add("1/" + BsdValues[i]);
         _bsdDropdown.AddOptions(options);
         _bsdDropdown.value = 3;
+        _bsdDropdown.onValueChanged.AddListener(OnBsdChanged);
+    }
+
+    private void OnBsdChanged(int index)
+    {
+        if (_groundTimeline != null) _groundTimeline.SyncShaderParams();
+        if (_upperTimeline != null) _upperTimeline.SyncShaderParams();
     }
 
     private void SetupButtons()
@@ -228,6 +256,57 @@ public class ChartEditorManager : MonoBehaviour
         }
     }
 
+    private void SetupNoteTypeButtons()
+    {
+        if (_tapButton != null)
+            _tapButton.onClick.AddListener(() => SelectNoteType(ChartNoteType.Tap));
+        if (_holdButton != null)
+            _holdButton.onClick.AddListener(() => SelectNoteType(ChartNoteType.Hold));
+        if (_dimensionButton != null)
+            _dimensionButton.onClick.AddListener(() => SelectNoteType(ChartNoteType.Dimension));
+        if (_svButton != null)
+            _svButton.onClick.AddListener(ToggleSVMode);
+    }
+
+    public void SelectNoteType(ChartNoteType type)
+    {
+        _currentNoteType = type;
+        _svMode = false;
+        ApplyNoteTypeToPlacer();
+        UpdateNoteTypeVisual();
+    }
+
+    private void ToggleSVMode()
+    {
+        _svMode = !_svMode;
+        if (_svMode)
+            _currentNoteType = ChartNoteType.Tap;
+        ApplyNoteTypeToPlacer();
+        UpdateNoteTypeVisual();
+    }
+
+    private void ApplyNoteTypeToPlacer()
+    {
+        if (_groundPlacer != null) _groundPlacer.CurrentNoteType = _currentNoteType;
+        if (_upperPlacer != null) _upperPlacer.CurrentNoteType = _currentNoteType;
+    }
+
+    private void UpdateNoteTypeVisual()
+    {
+        SetBtnColor(_tapButton, !_svMode && _currentNoteType == ChartNoteType.Tap);
+        SetBtnColor(_holdButton, !_svMode && _currentNoteType == ChartNoteType.Hold);
+        SetBtnColor(_dimensionButton, !_svMode && _currentNoteType == ChartNoteType.Dimension);
+        SetBtnColor(_svButton, _svMode);
+    }
+
+    private void SetBtnColor(Button btn, bool selected)
+    {
+        if (btn == null) return;
+        Image img = btn.GetComponent<Image>();
+        if (img != null)
+            img.color = selected ? _noteTypeBtnSelected : _noteTypeBtnDeselected;
+    }
+
     private void Update()
     {
         if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Tab))
@@ -238,6 +317,20 @@ public class ChartEditorManager : MonoBehaviour
 
         if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Z))
             OnUndo();
+
+        SyncTimelineScroll();
+    }
+
+    private void SyncTimelineScroll()
+    {
+        if (_groundTimeline == null || _upperTimeline == null) return;
+        if (_groundTimeline.ScrollRectRef == null || _upperTimeline.ScrollRectRef == null) return;
+
+        float gVal = _groundTimeline.ScrollRectRef.verticalNormalizedPosition;
+        float uVal = _upperTimeline.ScrollRectRef.verticalNormalizedPosition;
+
+        if (Mathf.Abs(gVal - uVal) > 0.001f)
+            _upperTimeline.ScrollRectRef.verticalNormalizedPosition = gVal;
     }
 
     public void LoadSong(string songName, string difficulty)
@@ -318,6 +411,8 @@ public class ChartEditorManager : MonoBehaviour
             _currentChart.bpm = bpm;
             SyncBpmFields();
             MarkUnsaved();
+            if (_groundTimeline != null) _groundTimeline.SyncShaderParams();
+            if (_upperTimeline != null) _upperTimeline.SyncShaderParams();
         }
     }
 
