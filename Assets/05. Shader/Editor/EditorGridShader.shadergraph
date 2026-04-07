@@ -49,9 +49,6 @@
             "m_Id": "e0ba60cc682f42999b50c62fc89d0541"
         },
         {
-            "m_Id": "03d6314435194e2489df62ae91af118c"
-        },
-        {
             "m_Id": "3598eee6663140f690d5730a9e5f77a1"
         },
         {
@@ -340,9 +337,6 @@
             },
             {
                 "m_Id": "e0ba60cc682f42999b50c62fc89d0541"
-            },
-            {
-                "m_Id": "03d6314435194e2489df62ae91af118c"
             }
         ]
     },
@@ -365,40 +359,6 @@
             "m_Id": "0ca949c504ab432ca0230a22b15c9bdc"
         }
     ]
-}
-
-{
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.BlockNode",
-    "m_ObjectId": "03d6314435194e2489df62ae91af118c",
-    "m_Group": {
-        "m_Id": ""
-    },
-    "m_Name": "SurfaceDescription.AlphaClipThreshold",
-    "m_DrawState": {
-        "m_Expanded": true,
-        "m_Position": {
-            "serializedVersion": "2",
-            "x": 0.0,
-            "y": 0.0,
-            "width": 0.0,
-            "height": 0.0
-        }
-    },
-    "m_Slots": [
-        {
-            "m_Id": "741f4b8cd2fd402db21837ca9dc394e2"
-        }
-    ],
-    "synonyms": [],
-    "m_Precision": 0,
-    "m_PreviewExpanded": true,
-    "m_DismissedVersion": 0,
-    "m_PreviewMode": 0,
-    "m_CustomColors": {
-        "m_SerializableColors": []
-    },
-    "m_SerializedDescriptor": "SurfaceDescription.AlphaClipThreshold"
 }
 
 {
@@ -685,10 +645,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -408.0,
+            "x": -435.0,
             "y": -17.0,
-            "width": 238.0,
-            "height": 286.0
+            "width": 240.0,
+            "height": 334.0
         }
     },
     "m_Slots": [
@@ -741,7 +701,7 @@
     "m_FunctionName": "GridLogic",
     "m_FunctionSource": "",
     "m_FunctionSourceUsePragmas": true,
-    "m_FunctionBody": "float beatPos = UV.y * TotalBeats;\nfloat colPos = UV.x * Columns;\n\nfloat beatFrac = abs(frac(beatPos + 0.5) - 0.5);\nfloat halfFrac = abs(frac(beatPos * 2.0 + 0.5) - 0.5);\nfloat subFrac = abs(frac(beatPos * BSD + 0.5) - 0.5);\nfloat colFrac = abs(frac(colPos + 0.5) - 0.5);\n\nfloat beatLine = 1.0 - saturate(beatFrac / LineThickness);\nfloat halfLine = 1.0 - saturate(halfFrac / (LineThickness * 0.75));\nfloat subLine = 1.0 - saturate(subFrac / (LineThickness * 0.5));\nfloat colLine = 1.0 - saturate(colFrac / (LineThickness * 0.8));\n\nfloat4 color = BgColor;\ncolor = lerp(color, ColumnLineColor, colLine * ColumnLineColor.a);\ncolor = lerp(color, SubBeatColor, subLine * SubBeatColor.a);\ncolor = lerp(color, HalfBeatColor, halfLine * HalfBeatColor.a);\ncolor = lerp(color, BeatLineColor, beatLine * BeatLineColor.a);\n\nOutColor = color;"
+    "m_FunctionBody": "float beatPos = UV.y * TotalBeats;\r\nfloat colPos = UV.x * Columns;\r\n\r\nfloat beatFrac = abs(frac(beatPos) - 0.5) * 2.0;\r\nfloat halfFrac = abs(frac(beatPos * 2.0) - 0.5) * 2.0;\r\nfloat subFrac = abs(frac(beatPos * BSD) - 0.5) * 2.0;\r\nfloat colFrac = abs(frac(colPos) - 0.5) * 2.0;\r\n\r\nfloat beatLine = 1.0 - saturate(beatFrac / LineThickness);\r\nfloat halfLine = 1.0 - saturate(halfFrac / (LineThickness * 0.75));\r\nfloat subLine = 1.0 - saturate(subFrac / (LineThickness * 0.5));\r\nfloat colLine = 1.0 - saturate(colFrac / (LineThickness * 0.8));\r\n\r\nfloat4 color = BgColor;\r\ncolor = lerp(color, ColumnLineColor, colLine * ColumnLineColor.a);\r\ncolor = lerp(color, SubBeatColor, subLine * SubBeatColor.a);\r\ncolor = lerp(color, HalfBeatColor, halfLine * HalfBeatColor.a);\r\ncolor = lerp(color, BeatLineColor, beatLine * BeatLineColor.a);\r\n\r\nOutColor = color;\n"
 }
 
 {
@@ -1194,21 +1154,6 @@
     "m_StageCapability": 3,
     "m_Value": 0.0,
     "m_DefaultValue": 0.0,
-    "m_Labels": []
-}
-
-{
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
-    "m_ObjectId": "741f4b8cd2fd402db21837ca9dc394e2",
-    "m_Id": 0,
-    "m_DisplayName": "Alpha Clip Threshold",
-    "m_SlotType": 0,
-    "m_Hidden": false,
-    "m_ShaderOutputName": "AlphaClipThreshold",
-    "m_StageCapability": 2,
-    "m_Value": 0.5,
-    "m_DefaultValue": 0.5,
     "m_Labels": []
 }
 

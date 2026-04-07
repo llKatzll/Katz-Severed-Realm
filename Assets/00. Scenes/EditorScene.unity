@@ -1828,7 +1828,6 @@ MonoBehaviour:
   _lnTailPrefab: {fileID: 3653371831085751326, guid: 4c23e897527289e46bcad34b2244dd00, type: 3}
   _dimensionPrefab: {fileID: 7095928221220051631, guid: 89444df8a1ba3b54982672955b4b214b, type: 3}
   _svPrefab: {fileID: 1092490926671935875, guid: 4bd3dbf5faff12f488c10d034deaf523, type: 3}
-  _pixelsPerBeat: 80
   _minPixelsPerBeat: 20
   _maxPixelsPerBeat: 400
   _zoomStep: 20
@@ -3407,7 +3406,6 @@ MonoBehaviour:
   _lnTailPrefab: {fileID: 3653371831085751326, guid: 4c23e897527289e46bcad34b2244dd00, type: 3}
   _dimensionPrefab: {fileID: 7095928221220051631, guid: 89444df8a1ba3b54982672955b4b214b, type: 3}
   _svPrefab: {fileID: 1092490926671935875, guid: 4bd3dbf5faff12f488c10d034deaf523, type: 3}
-  _pixelsPerBeat: 80
   _minPixelsPerBeat: 20
   _maxPixelsPerBeat: 400
   _zoomStep: 20

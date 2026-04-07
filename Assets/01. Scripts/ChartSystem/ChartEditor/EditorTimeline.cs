@@ -6,6 +6,7 @@ public class EditorTimeline : MonoBehaviour
 {
     private const int COLUMN_COUNT = 4;
     public const float SV_ZONE_WIDTH = 40f;
+    private const float JUDGELINE_RATIO = 0.25f;
 
     [Header("References")]
     [SerializeField] private ScrollRect _scrollRect;
@@ -23,7 +24,6 @@ public class EditorTimeline : MonoBehaviour
     [SerializeField] private GameObject _svPrefab;
 
     [Header("Settings")]
-    [SerializeField] private float _pixelsPerBeat = 80f;
     [SerializeField] private float _minPixelsPerBeat = 20f;
     [SerializeField] private float _maxPixelsPerBeat = 400f;
     [SerializeField] private float _zoomStep = 20f;
@@ -31,30 +31,38 @@ public class EditorTimeline : MonoBehaviour
     [Header("Colors")]
     [SerializeField] private Color _playheadColor = new Color(0f, 1f, 0f, 0.8f);
 
+    private float _pixelsPerBeat = 80f;
     private ChartData _chart;
     private ChartLaneType _laneType;
     private float _totalBeats;
     private float _contentHeight;
+    private float _bottomPadding;
 
     private readonly List<GameObject> _noteObjects = new List<GameObject>(256);
     private GameObject _playhead;
+    private GameObject _judgeLine;
 
     private float _viewportHeight;
     private Material _gridMaterialInstance;
 
-    public float PixelsPerBeat => _pixelsPerBeat;
-    public RectTransform Content => _content;
-    public ScrollRect ScrollRectRef => _scrollRect;
-
-    public float ScrollPosition
+    public float PixelsPerBeat
     {
-        get => _scrollRect != null ? _scrollRect.verticalNormalizedPosition : 0f;
+        get => _pixelsPerBeat;
         set
         {
-            if (_scrollRect != null)
-                _scrollRect.verticalNormalizedPosition = Mathf.Clamp01(value);
+            float clamped = Mathf.Clamp(value, _minPixelsPerBeat, _maxPixelsPerBeat);
+            if (Mathf.Abs(_pixelsPerBeat - clamped) < 0.01f) return;
+
+            float beatBefore = _editor != null ? _editor.CurrentBeat : 0f;
+            _pixelsPerBeat = clamped;
+            RebuildContent();
+            RebuildNotes();
+            ScrollToBeat(beatBefore);
         }
     }
+
+    public RectTransform Content => _content;
+    public ScrollRect ScrollRectRef => _scrollRect;
 
     private void Awake()
     {
@@ -102,14 +110,16 @@ public class EditorTimeline : MonoBehaviour
         CalculateTotalBeats();
         RebuildContent();
         RebuildNotes();
+        ScrollToBeat(0f);
     }
 
     private void CalculateTotalBeats()
     {
         if (_audioSource != null && _audioSource.clip != null && _chart.bpm > 0)
         {
-            float totalTime = _audioSource.clip.length;
-            _totalBeats = (totalTime - _chart.audioOffset) / (60f / _chart.bpm);
+            float secPerBeat = 60f / _chart.bpm;
+            float totalTime = _audioSource.clip.length + 3f;
+            _totalBeats = (totalTime - _chart.audioOffset) / secPerBeat;
         }
         else
         {
@@ -122,10 +132,32 @@ public class EditorTimeline : MonoBehaviour
     {
         if (_content == null) return;
 
-        _contentHeight = _totalBeats * _pixelsPerBeat;
+        _viewportHeight = GetViewportHeight();
+        _bottomPadding = _viewportHeight * JUDGELINE_RATIO;
+        _contentHeight = _bottomPadding + _totalBeats * _pixelsPerBeat;
         _content.sizeDelta = new Vector2(_content.sizeDelta.x, _contentHeight);
 
+        if (_gridRawImage != null)
+        {
+            RectTransform gridRT = _gridRawImage.GetComponent<RectTransform>();
+            gridRT.anchorMin = Vector2.zero;
+            gridRT.anchorMax = new Vector2(1f, 1f);
+            gridRT.offsetMin = new Vector2(0f, _bottomPadding);
+            gridRT.offsetMax = Vector2.zero;
+            Debug.Log("[Grid] padding=" + _bottomPadding
+                + " gridH=" + (_contentHeight - _bottomPadding)
+                + " ppb=" + _pixelsPerBeat
+                + " totalBeats=" + _totalBeats
+                + " contentH=" + _contentHeight);
+        }
+
         SyncShaderParams();
+    }
+
+    private float GetViewportHeight()
+    {
+        if (_scrollRect == null) return 400f;
+        return _scrollRect.GetComponent<RectTransform>().rect.height;
     }
 
     public void SyncShaderParams()
@@ -178,9 +210,7 @@ public class EditorTimeline : MonoBehaviour
                 || (nd.noteType == ChartNoteType.Dimension && nd.holdEndBeat > nd.beat);
 
             if (isHold)
-            {
                 SpawnHoldVisual(nd, cx, y, w);
-            }
             else
             {
                 GameObject prefab = nd.noteType == ChartNoteType.Dimension
@@ -289,12 +319,13 @@ public class EditorTimeline : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (_audioSource != null && _audioSource.isPlaying && _chart != null)
+        if (_editor != null && _editor.IsPlaying && _chart != null)
         {
-            float beat = _editor != null ? _editor.CurrentBeat : 0f;
+            float beat = _editor.CurrentBeat;
             ScrollToBeat(beat);
         }
 
+        UpdateJudgeLine();
         UpdatePlayhead();
         HandleZoomInput();
     }
@@ -303,10 +334,15 @@ public class EditorTimeline : MonoBehaviour
     {
         if (_scrollRect == null) return;
 
+        Camera cam = null;
+        Canvas canvas = GetComponentInParent<Canvas>();
+        if (canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay)
+            cam = canvas.worldCamera;
+
         RectTransform scrollRt = _scrollRect.GetComponent<RectTransform>();
         Vector2 localPoint;
         if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            scrollRt, Input.mousePosition, null, out localPoint))
+            scrollRt, Input.mousePosition, cam, out localPoint))
             return;
 
         if (!scrollRt.rect.Contains(localPoint)) return;
@@ -316,20 +352,19 @@ public class EditorTimeline : MonoBehaviour
 
         if (Input.GetKey(KeyCode.LeftControl))
         {
-            float oldPpb = _pixelsPerBeat;
-            _pixelsPerBeat += scroll > 0 ? _zoomStep : -_zoomStep;
-            _pixelsPerBeat = Mathf.Clamp(_pixelsPerBeat, _minPixelsPerBeat, _maxPixelsPerBeat);
-
-            if (Mathf.Abs(oldPpb - _pixelsPerBeat) > 0.01f)
-            {
-                RebuildContent();
-                RebuildNotes();
-            }
+            float delta = scroll > 0 ? _zoomStep : -_zoomStep;
+            if (_editor != null)
+                _editor.SyncZoom(_pixelsPerBeat + delta);
+            else
+                PixelsPerBeat = _pixelsPerBeat + delta;
         }
         else
         {
-            float seekAmount = Input.GetKey(KeyCode.LeftShift) ? 4f : 1f;
-            float beatDelta = scroll > 0 ? -seekAmount : seekAmount;
+            int bsd = _editor != null ? _editor.CurrentBsd : 4;
+            float step = 1f / bsd;
+            float beatDelta = scroll > 0 ? -step : step;
+            if (Input.GetKey(KeyCode.LeftShift))
+                beatDelta *= 4f;
             SeekByBeats(beatDelta);
         }
     }
@@ -337,30 +372,55 @@ public class EditorTimeline : MonoBehaviour
     public void ScrollToBeat(float beat)
     {
         if (_scrollRect == null || _content == null) return;
-        if (_contentHeight <= 0f) return;
 
-        _viewportHeight = _scrollRect.GetComponent<RectTransform>().rect.height;
+        _viewportHeight = GetViewportHeight();
+        if (_contentHeight <= _viewportHeight) return;
+
         float y = BeatToY(beat);
-        float normalizedY = (y - _viewportHeight * 0.5f) / (_contentHeight - _viewportHeight);
+        float scrollY = y - _viewportHeight * JUDGELINE_RATIO;
+        float normalizedY = scrollY / (_contentHeight - _viewportHeight);
         normalizedY = Mathf.Clamp01(normalizedY);
         _scrollRect.verticalNormalizedPosition = normalizedY;
     }
 
     private void SeekByBeats(float beatDelta)
     {
-        if (_audioSource == null || _editor == null) return;
+        if (_editor == null) return;
         float currentBeat = _editor.CurrentBeat;
-        float newBeat = currentBeat + beatDelta;
-        newBeat = Mathf.Max(0f, newBeat);
+        float newBeat = Mathf.Max(0f, currentBeat + beatDelta);
 
-        float newTime = _editor.BeatToTime(newBeat);
-        if (_audioSource.clip != null)
-            newTime = Mathf.Clamp(newTime, 0f, _audioSource.clip.length);
+        _editor.SeekToBeat(newBeat);
 
-        _audioSource.time = newTime;
-
-        if (!_audioSource.isPlaying)
+        if (!_editor.IsPlaying)
             ScrollToBeat(newBeat);
+    }
+
+    private void UpdateJudgeLine()
+    {
+        if (_scrollRect == null) return;
+
+        RectTransform viewportRT = _scrollRect.viewport;
+        if (viewportRT == null) return;
+
+        if (_judgeLine == null)
+        {
+            _judgeLine = new GameObject("JudgeLine", typeof(RectTransform), typeof(Image));
+            _judgeLine.transform.SetParent(viewportRT, false);
+            Image img = _judgeLine.GetComponent<Image>();
+            img.color = _playheadColor;
+            img.raycastTarget = false;
+        }
+
+        RectTransform rt = _judgeLine.GetComponent<RectTransform>();
+        float vpW = viewportRT.rect.width;
+        float vpH = viewportRT.rect.height;
+
+        rt.anchorMin = Vector2.zero;
+        rt.anchorMax = Vector2.zero;
+        rt.pivot = new Vector2(0.5f, 0.5f);
+        rt.anchoredPosition = new Vector2(vpW * 0.5f - SV_ZONE_WIDTH * 0.5f, vpH * JUDGELINE_RATIO);
+        rt.sizeDelta = new Vector2(vpW + SV_ZONE_WIDTH, 2f);
+        _judgeLine.transform.SetAsLastSibling();
     }
 
     private void UpdatePlayhead()
@@ -375,13 +435,13 @@ public class EditorTimeline : MonoBehaviour
             _playhead = new GameObject("Playhead", typeof(RectTransform), typeof(Image));
             _playhead.transform.SetParent(_content, false);
             Image img = _playhead.GetComponent<Image>();
-            img.color = _playheadColor;
+            img.color = new Color(_playheadColor.r, _playheadColor.g, _playheadColor.b, 0.3f);
             img.raycastTarget = false;
         }
 
         RectTransform rt = _playhead.GetComponent<RectTransform>();
-        rt.anchorMin = new Vector2(0f, 0f);
-        rt.anchorMax = new Vector2(0f, 0f);
+        rt.anchorMin = Vector2.zero;
+        rt.anchorMax = Vector2.zero;
         rt.pivot = new Vector2(0f, 0.5f);
         rt.anchoredPosition = new Vector2(-SV_ZONE_WIDTH, y);
         rt.sizeDelta = new Vector2(_content.rect.width + SV_ZONE_WIDTH, 2f);
@@ -390,13 +450,13 @@ public class EditorTimeline : MonoBehaviour
 
     public float BeatToY(float beat)
     {
-        return beat * _pixelsPerBeat;
+        return _bottomPadding + beat * _pixelsPerBeat;
     }
 
     public float YToBeat(float y)
     {
         if (_pixelsPerBeat <= 0f) return 0f;
-        return y / _pixelsPerBeat;
+        return (y - _bottomPadding) / _pixelsPerBeat;
     }
 
     public int XToColumn(float localX)
@@ -418,7 +478,8 @@ public class EditorTimeline : MonoBehaviour
     {
         int bsd = _editor != null ? _editor.CurrentBsd : 4;
         float snap = 1f / bsd;
-        return Mathf.Round(beat / snap) * snap;
+        int steps = Mathf.RoundToInt(beat / snap);
+        return steps * snap;
     }
 
     public bool ScreenToContentLocal(Vector2 screenPos, out Vector2 localBottomLeft)

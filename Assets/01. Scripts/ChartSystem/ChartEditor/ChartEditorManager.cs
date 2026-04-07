@@ -82,19 +82,53 @@ public class ChartEditorManager : MonoBehaviour
 
     private static readonly int[] BsdValues = { 1, 2, 3, 4, 6, 8, 12, 16 };
 
+    private double _startDspTime;
+    private double _pausedSongTime;
+    private bool _dspPlaying;
+
     public ChartData CurrentChart => _currentChart;
     public ChartNoteType CurrentNoteType => _currentNoteType;
     public bool SVMode => _svMode;
     public bool IsLiveMapping => _isLiveMapping;
-    public bool IsPlaying => _audioSource != null && _audioSource.isPlaying;
-    public float CurrentBeat => _audioSource != null && _currentChart != null && _currentChart.bpm > 0
-        ? (_audioSource.time - _currentChart.audioOffset) / (60f / _currentChart.bpm)
-        : 0f;
+    public bool IsPlaying => _dspPlaying;
     public int CurrentBsd => BsdValues[_bsdDropdown != null ? _bsdDropdown.value : 3];
+
+    public double SecPerBeat
+    {
+        get
+        {
+            if (_currentChart == null || _currentChart.bpm <= 0f) return 0.5;
+            return 60.0 / _currentChart.bpm;
+        }
+    }
+
+    public double SongTimeDsp
+    {
+        get
+        {
+            if (_dspPlaying)
+                return AudioSettings.dspTime - _startDspTime;
+            return _pausedSongTime;
+        }
+    }
+
+    public float CurrentBeat
+    {
+        get
+        {
+            double spb = SecPerBeat;
+            if (spb <= 0.0) return 0f;
+            double offset = _currentChart != null ? _currentChart.audioOffset : 0.0;
+            return (float)((SongTimeDsp - offset) / spb);
+        }
+    }
 
     private void Start()
     {
         _allSongs = Resources.LoadAll<SongData>("Songs");
+        Debug.Log("[ChartEditor] Found " + _allSongs.Length + " SongData assets in Resources/Songs");
+        for (int i = 0; i < _allSongs.Length; i++)
+            Debug.Log("[ChartEditor] Song[" + i + "]: " + _allSongs[i].songName);
         System.Array.Sort(_allSongs, (a, b) => string.Compare(a.name, b.name, System.StringComparison.Ordinal));
 
         SetupDiffDropdown();
@@ -120,6 +154,11 @@ public class ChartEditorManager : MonoBehaviour
         _currentChart.difficulty = "Easy";
         _currentChart.bpm = 120f;
         _currentChart.audioOffset = 0f;
+        _currentChart.notes = new List<NoteData>();
+        _currentChart.svNotes = new List<SVData>();
+
+        _dspPlaying = false;
+        _pausedSongTime = 0.0;
 
         SyncBpmFields();
 
@@ -151,31 +190,49 @@ public class ChartEditorManager : MonoBehaviour
         for (int i = _loadSongContent.childCount - 1; i >= 0; i--)
             Destroy(_loadSongContent.GetChild(i).gameObject);
 
+        VerticalLayoutGroup vlg = _loadSongContent.GetComponent<VerticalLayoutGroup>();
+        if (vlg == null)
+            vlg = _loadSongContent.gameObject.AddComponent<VerticalLayoutGroup>();
+        vlg.childForceExpandWidth = true;
+        vlg.childForceExpandHeight = false;
+        vlg.childControlWidth = true;
+        vlg.childControlHeight = false;
+        vlg.spacing = 4f;
+        vlg.padding = new RectOffset(4, 4, 4, 4);
+
+        ContentSizeFitter csf = _loadSongContent.GetComponent<ContentSizeFitter>();
+        if (csf == null)
+            csf = _loadSongContent.gameObject.AddComponent<ContentSizeFitter>();
+        csf.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
         for (int i = 0; i < _allSongs.Length; i++)
         {
             SongData song = _allSongs[i];
-            GameObject btnGo = new GameObject(song.songName, typeof(RectTransform), typeof(Button), typeof(Image));
+            GameObject btnGo = new GameObject(song.songName,
+                typeof(RectTransform), typeof(Button), typeof(Image), typeof(LayoutElement));
             btnGo.transform.SetParent(_loadSongContent, false);
 
-            RectTransform rt = btnGo.GetComponent<RectTransform>();
-            rt.sizeDelta = new Vector2(0f, 40f);
+            LayoutElement le = btnGo.GetComponent<LayoutElement>();
+            le.preferredHeight = 40f;
+            le.minHeight = 40f;
 
             Image img = btnGo.GetComponent<Image>();
-            img.color = new Color(0.2f, 0.2f, 0.2f, 1f);
+            img.color = new Color(0.25f, 0.25f, 0.25f, 1f);
 
             GameObject textGo = new GameObject("Text", typeof(RectTransform), typeof(TextMeshProUGUI));
             textGo.transform.SetParent(btnGo.transform, false);
             RectTransform textRt = textGo.GetComponent<RectTransform>();
             textRt.anchorMin = Vector2.zero;
             textRt.anchorMax = Vector2.one;
-            textRt.offsetMin = Vector2.zero;
-            textRt.offsetMax = Vector2.zero;
+            textRt.offsetMin = new Vector2(8f, 0f);
+            textRt.offsetMax = new Vector2(-8f, 0f);
 
             TextMeshProUGUI tmp = textGo.GetComponent<TextMeshProUGUI>();
             tmp.text = song.songName;
-            tmp.fontSize = 18f;
-            tmp.alignment = TextAlignmentOptions.Center;
+            tmp.fontSize = 16f;
+            tmp.alignment = TextAlignmentOptions.MidlineLeft;
             tmp.color = Color.white;
+            tmp.overflowMode = TMPro.TextOverflowModes.Ellipsis;
 
             string songName = song.songName;
             btnGo.GetComponent<Button>().onClick.AddListener(() => OnSongItemClicked(songName));
@@ -368,18 +425,38 @@ public class ChartEditorManager : MonoBehaviour
         }
     }
 
+    public void SyncZoom(float newPpb)
+    {
+        if (_groundTimeline != null) _groundTimeline.PixelsPerBeat = newPpb;
+        if (_upperTimeline != null) _upperTimeline.PixelsPerBeat = newPpb;
+
+        float beat = CurrentBeat;
+        if (_groundTimeline != null) _groundTimeline.ScrollToBeat(beat);
+        if (_upperTimeline != null) _upperTimeline.ScrollToBeat(beat);
+    }
+
     public void LoadSong(string songName, string difficulty)
     {
         _currentSongName = songName;
         _currentDifficulty = difficulty;
 
+        _dspPlaying = false;
+        _pausedSongTime = 0.0;
+        if (_audioSource != null)
+        {
+            _audioSource.Stop();
+            _audioSource.time = 0f;
+        }
+
         SongData songData = FindSongData(songName);
+        float songBpm = 120f;
         if (songData != null)
         {
             if (songData.fullClip != null)
                 _audioSource.clip = songData.fullClip;
             else if (songData.previewClip != null)
                 _audioSource.clip = songData.previewClip;
+            songBpm = songData.bpm > 0f ? songData.bpm : 120f;
         }
 
         string path = ChartUtility.GetChartPath(songName, difficulty);
@@ -390,13 +467,15 @@ public class ChartEditorManager : MonoBehaviour
             _currentChart = loaded;
             if (_currentChart.notes == null)
                 _currentChart.notes = new List<NoteData>();
+            if (_currentChart.svNotes == null)
+                _currentChart.svNotes = new List<SVData>();
         }
         else
         {
             _currentChart = new ChartData();
             _currentChart.songName = songName;
             _currentChart.difficulty = difficulty;
-            _currentChart.bpm = 120f;
+            _currentChart.bpm = songBpm;
             _currentChart.audioOffset = 0f;
         }
 
@@ -471,15 +550,27 @@ public class ChartEditorManager : MonoBehaviour
     private void OnPlayPause()
     {
         if (_audioSource == null || _audioSource.clip == null) return;
-        if (_audioSource.isPlaying)
+
+        if (_dspPlaying)
+        {
+            _pausedSongTime = AudioSettings.dspTime - _startDspTime;
+            _dspPlaying = false;
             _audioSource.Pause();
+        }
         else
+        {
+            _startDspTime = AudioSettings.dspTime - _pausedSongTime;
+            _dspPlaying = true;
+            _audioSource.time = (float)_pausedSongTime;
             _audioSource.Play();
+        }
     }
 
     private void OnBack()
     {
         if (_audioSource == null) return;
+        _dspPlaying = false;
+        _pausedSongTime = 0.0;
         _audioSource.Stop();
         _audioSource.time = 0f;
     }
@@ -531,15 +622,58 @@ public class ChartEditorManager : MonoBehaviour
         _changeSaveText.gameObject.SetActive(_hasUnsavedChanges);
     }
 
+    public double BeatToSongTime(double beat)
+    {
+        double offset = _currentChart != null ? _currentChart.audioOffset : 0.0;
+        return beat * SecPerBeat + offset;
+    }
+
+    public double SongTimeToBeat(double songTime)
+    {
+        double spb = SecPerBeat;
+        if (spb <= 0.0) return 0.0;
+        double offset = _currentChart != null ? _currentChart.audioOffset : 0.0;
+        return (songTime - offset) / spb;
+    }
+
     public float BeatToTime(float beat)
     {
-        if (_currentChart == null || _currentChart.bpm <= 0f) return 0f;
-        return beat * (60f / _currentChart.bpm) + _currentChart.audioOffset;
+        return (float)BeatToSongTime(beat);
     }
 
     public float TimeToBeat(float time)
     {
-        if (_currentChart == null || _currentChart.bpm <= 0f) return 0f;
-        return (time - _currentChart.audioOffset) / (60f / _currentChart.bpm);
+        return (float)SongTimeToBeat(time);
+    }
+
+    public void SeekToBeat(float beat)
+    {
+        double targetSongTime = BeatToSongTime(beat);
+        if (targetSongTime < 0.0) targetSongTime = 0.0;
+
+        if (_audioSource != null && _audioSource.clip != null)
+        {
+            float clipLen = _audioSource.clip.length;
+            if (targetSongTime > clipLen) targetSongTime = clipLen;
+        }
+
+        if (_dspPlaying)
+        {
+            _startDspTime = AudioSettings.dspTime - targetSongTime;
+            if (_audioSource != null)
+                _audioSource.time = (float)targetSongTime;
+        }
+        else
+        {
+            _pausedSongTime = targetSongTime;
+            if (_audioSource != null)
+                _audioSource.time = (float)targetSongTime;
+        }
+
+        if (!_dspPlaying)
+        {
+            if (_groundTimeline != null) _groundTimeline.ScrollToBeat(beat);
+            if (_upperTimeline != null) _upperTimeline.ScrollToBeat(beat);
+        }
     }
 }
