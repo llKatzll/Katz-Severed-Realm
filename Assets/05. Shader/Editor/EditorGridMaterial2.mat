@@ -41,16 +41,18 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - GridHeight: 1000
     - _BSD: 4
     - _ColorMask: 15
     - _Columns: 4
+    - _GridHeight: 1000
     - _LineThickness: 0.02
     - _Stencil: 0
     - _StencilComp: 8
     - _StencilOp: 0
     - _StencilReadMask: 255
     - _StencilWriteMask: 255
-    - _TotalBeats: 100
+    - _TotalBeats: 200
     - _UIMaskSoftnessX: 1
     - _UIMaskSoftnessY: 1
     m_Colors:
