@@ -10,30 +10,45 @@ public static class ChartUtility
 
     public static ChartData FromJson(string json)
     {
+        if (string.IsNullOrEmpty(json)) return null;
         return JsonUtility.FromJson<ChartData>(json);
     }
 
-    public static void SaveToFile(ChartData data, string filePath)
+    public static bool SaveToFile(ChartData data, string filePath)
     {
-        string dir = Path.GetDirectoryName(filePath);
-        if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
-            Directory.CreateDirectory(dir);
+        try
+        {
+            string dir = Path.GetDirectoryName(filePath);
+            if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
 
-        string json = ToJson(data);
-        File.WriteAllText(filePath, json);
-        Debug.Log("[ChartUtility] Saved: " + filePath);
+            data.SortAll();
+            File.WriteAllText(filePath, ToJson(data));
+            return true;
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError("[ChartUtility] Save failed: " + e.Message);
+            return false;
+        }
     }
 
     public static ChartData LoadFromFile(string filePath)
     {
-        if (!File.Exists(filePath))
+        if (!File.Exists(filePath)) return null;
+
+        try
         {
-            Debug.LogWarning("[ChartUtility] File not found: " + filePath);
+            string json = File.ReadAllText(filePath);
+            ChartData data = FromJson(json);
+            if (data != null) data.SortAll();
+            return data;
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError("[ChartUtility] Load failed: " + e.Message);
             return null;
         }
-
-        string json = File.ReadAllText(filePath);
-        return FromJson(json);
     }
 
     public static string GetChartDirectory()
@@ -43,7 +58,6 @@ public static class ChartUtility
 
     public static string GetChartPath(string songName, string difficulty)
     {
-        string fileName = songName + "_" + difficulty + ".json";
-        return Path.Combine(GetChartDirectory(), fileName);
+        return Path.Combine(GetChartDirectory(), songName + "_" + difficulty + ".json");
     }
 }
