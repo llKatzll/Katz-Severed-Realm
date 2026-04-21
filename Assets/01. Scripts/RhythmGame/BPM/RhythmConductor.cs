@@ -4,24 +4,29 @@ public class RhythmConductor : MonoBehaviour
 {
     [SerializeField] private double _bpm = 120.0;
     [SerializeField] private AudioSource _audio;
+    [SerializeField] private double _audioOffset;
 
     private double _startDspTime;
+    private double _pausedSongTime;
     private bool _started;
+    private bool _paused;
 
     public double Bpm => _bpm;
     public double SecPerBeat => (_bpm > 0.0) ? (60.0 / _bpm) : 0.5;
-    public double CurrentBeat => SongTime / SecPerBeat;
-
+    public double CurrentBeat => (SongTime - _audioOffset) / SecPerBeat;
+    public double AudioOffset => _audioOffset;
     public bool Started => _started;
+    public bool Paused => _paused;
+    public bool IsPlaying => _started && !_paused;
 
     public double SongTime
     {
         get
         {
             if (!_started) return 0.0;
+            if (_paused) return _pausedSongTime;
             double t = AudioSettings.dspTime - _startDspTime;
-            if (t < 0.0) t = 0.0;
-            return t;
+            return t > 0.0 ? t : 0.0;
         }
     }
 
@@ -30,17 +35,87 @@ public class RhythmConductor : MonoBehaviour
         StartSong();
     }
 
+    public void SetBpm(double bpm)
+    {
+        if (bpm <= 0.0) return;
+        _bpm = bpm;
+    }
+
+    public void SetAudioOffset(double offset)
+    {
+        _audioOffset = offset;
+    }
+
     public void StartSong()
     {
-        if (_started) return;
-
         _startDspTime = AudioSettings.dspTime;
+        _pausedSongTime = 0.0;
         _started = true;
+        _paused = false;
 
         if (_audio != null)
         {
             _audio.Stop();
+            _audio.time = 0f;
             _audio.Play();
+        }
+    }
+
+    public void Pause()
+    {
+        if (!_started || _paused) return;
+
+        _pausedSongTime = AudioSettings.dspTime - _startDspTime;
+        _paused = true;
+
+        if (_audio != null) _audio.Pause();
+    }
+
+    public void Resume()
+    {
+        if (!_started || !_paused) return;
+
+        _startDspTime = AudioSettings.dspTime - _pausedSongTime;
+        _paused = false;
+
+        if (_audio != null) _audio.UnPause();
+    }
+
+    public void TogglePlayPause()
+    {
+        if (!_started) { StartSong(); return; }
+        if (_paused) Resume(); else Pause();
+    }
+
+    public void Stop()
+    {
+        _started = false;
+        _paused = false;
+        _pausedSongTime = 0.0;
+
+        if (_audio != null) _audio.Stop();
+    }
+
+    public void SeekToBeat(double beat)
+    {
+        if (beat < 0.0) beat = 0.0;
+        double targetTime = beat * SecPerBeat + _audioOffset;
+        if (targetTime < 0.0) targetTime = 0.0;
+
+        if (_paused || !_started)
+        {
+            _pausedSongTime = targetTime;
+            if (!_started) { _started = true; _paused = true; }
+        }
+        else
+        {
+            _startDspTime = AudioSettings.dspTime - targetTime;
+        }
+
+        if (_audio != null && _audio.clip != null)
+        {
+            float clampedTime = Mathf.Clamp((float)targetTime, 0f, _audio.clip.length);
+            _audio.time = clampedTime;
         }
     }
 
@@ -48,7 +123,7 @@ public class RhythmConductor : MonoBehaviour
     {
         if (!_started) return AudioSettings.dspTime;
         if (beat < 0.0) beat = 0.0;
-        return _startDspTime + (beat * SecPerBeat);
+        return _startDspTime + _audioOffset + (beat * SecPerBeat);
     }
 
     private void OnValidate()
