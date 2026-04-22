@@ -16,7 +16,7 @@ public class ComboUI : MonoBehaviour
 
     [Header("Display Observe")]
     [SerializeField] private bool _useSmoothDisplay = true;
-    [SerializeField] private float _displayCountPerSec = 60f; // È­¸é¿¡¼­ ÃÊ´ç ¸î ÄÞº¸·Î ¿Ã¶ó°¡ º¸ÀÌ°Ô ÇÒÁö
+    [SerializeField] private float _displayCountPerSec = 60f;
 
     [Header("Debug")]
     [SerializeField] private bool _logHoldTick = false;
@@ -209,7 +209,7 @@ public class ComboUI : MonoBehaviour
 
     private float CalcHoldTickSec(float bpm)
     {
-        float safeBpm = Mathf.Clamp(bpm, 1f, 999f); // bpm ÀÌ»óÄ¡ ¹æ¾î(°üÃø¿ë)
+        float safeBpm = Mathf.Clamp(bpm, 1f, 999f); // bpm ï¿½Ì»ï¿½Ä¡ ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
         float ticksPerMin = safeBpm * Mathf.Max(0.01f, _holdTickMul);
         float sec = 60f / ticksPerMin;
         return Mathf.Max(_minTickSec, sec);

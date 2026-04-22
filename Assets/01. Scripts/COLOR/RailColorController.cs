@@ -20,7 +20,7 @@ public class RailColorController : MonoBehaviour
     private DimensionType _lastPreviewDimension;
     private bool _lastPreviewState;
 
-    private MaterialPropertyBlock _mpb; //mpb mpb √÷∞Ì mpb
+    private MaterialPropertyBlock _mpb;
     private bool _initialized;
 
     private static readonly int IdColor = Shader.PropertyToID("_Color");
