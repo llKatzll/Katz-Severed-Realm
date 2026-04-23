@@ -181,7 +181,7 @@ public class Scrolling : MonoBehaviour
             if (_songBars[i] == null) continue;
 
             var rt = _songBars[i].GetComponent<RectTransform>();
-            float totalAngle = NormalizeAngle(_targetRotationZ + rt.localEulerAngles.z);
+            float totalAngle = AngleUtils.Normalize(_targetRotationZ + rt.localEulerAngles.z);
             int slotOffset = Mathf.RoundToInt(totalAngle / _rotationPerSlot);
             int songIdx = WrapSongIndex(_centerSongIndex + slotOffset);
 
@@ -209,7 +209,7 @@ public class Scrolling : MonoBehaviour
             if (rt == null) continue;
 
             float barLocalZ = rt.localEulerAngles.z;
-            float totalAngle = NormalizeAngle(pivotZ + barLocalZ);
+            float totalAngle = AngleUtils.Normalize(pivotZ + barLocalZ);
             float absAngle = Mathf.Abs(totalAngle);
 
             bool isNearHorizontal = absAngle <= _selectionAngleThreshold;
@@ -265,10 +265,4 @@ public class Scrolling : MonoBehaviour
         }
     }
 
-    private float NormalizeAngle(float angle)
-    {
-        while (angle > 180f) angle -= 360f;
-        while (angle < -180f) angle += 360f;
-        return angle;
-    }
 }

@@ -40,7 +40,7 @@ public class SongBar : MonoBehaviour
 
         float pivotZ = _pivot.localEulerAngles.z;
         float barLocalZ = transform.localEulerAngles.z;
-        float totalAngle = NormalizeAngle(pivotZ + barLocalZ);
+        float totalAngle = AngleUtils.Normalize(pivotZ + barLocalZ);
 
         bool shouldBeSelected = Mathf.Abs(totalAngle) <= _selectionThreshold;
 
@@ -86,10 +86,4 @@ public class SongBar : MonoBehaviour
             _songNameText.text = _songData.songName;
     }
 
-    private float NormalizeAngle(float angle)
-    {
-        while (angle > 180f) angle -= 360f;
-        while (angle < -180f) angle += 360f;
-        return angle;
-    }
 }
