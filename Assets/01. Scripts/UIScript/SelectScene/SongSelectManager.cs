@@ -75,7 +75,6 @@ public class SongSelectManager : MonoBehaviour
             _previewPlayer.PlayPreview(_currentSong);
         }
 
-        Debug.Log("[SongSelectManager] Song selected: " + _currentSong.songName);
     }
 
     public void OnSongBarDeselected(SongBar bar)
@@ -104,7 +103,6 @@ public class SongSelectManager : MonoBehaviour
             _infoDisplay.ChangeDifficulty(newDifficulty);
         }
 
-        Debug.Log("[SongSelectManager] Difficulty changed: " + newDifficulty);
     }
 
     public void OnStartButtonPressed()
@@ -115,7 +113,6 @@ public class SongSelectManager : MonoBehaviour
             return;
         }
 
-        Debug.Log("[SongSelectManager] Starting: " + _currentSong.songName + " [" + _currentDifficulty + "]");
     }
 
     public SongData GetCurrentSong() => _currentSong;

@@ -152,7 +152,6 @@ public class NoteSpawner : MonoBehaviour
     public void SetSpawnDimension(DimensionType dimension)
     {
         _currentSpawnDimension = dimension;
-        Debug.Log("[NoteSpawner] Spawn dimension set to: " + dimension);
     }
 
     private void SpawnOneAtBeat(double hitBeat)
