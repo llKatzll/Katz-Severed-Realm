@@ -13,8 +13,19 @@ public class ChartNoteSpawner : MonoBehaviour
     [SerializeField] private Note _tapPrefab;
     [SerializeField] private HoldNote _holdPrefab;
 
-    [Header("Dimension")]
-    [SerializeField] private DimensionType _defaultDimension = DimensionType.Dismaller;
+    [Header("Dimension Note - Ground")]
+    [SerializeField] private Note _dimensionTapPrefabGround;
+    [SerializeField] private HoldNote _dimensionHoldPrefabGround;
+
+    [Header("Dimension Note - Upper")]
+    [SerializeField] private Note _dimensionTapPrefabUpper;
+    [SerializeField] private HoldNote _dimensionHoldPrefabUpper;
+
+    [Header("Sorting Order")]
+    [SerializeField] private int _sortGroundNote = 0;
+    [SerializeField] private int _sortGroundDN = 1;
+    [SerializeField] private int _sortUpperNote = 2;
+    [SerializeField] private int _sortUpperDN = 3;
 
     private List<NoteData> _sortedNotes;
     private int _nextIndex;
@@ -82,12 +93,20 @@ public class ChartNoteSpawner : MonoBehaviour
 
         double hitDsp = cond.DspTimeAtBeat(nd.beat);
         float travelSec = ApproachBeats * (float)cond.SecPerBeat;
-        DimensionType dim = nd.noteType == ChartNoteType.Dimension ? _defaultDimension : DimensionType.Dismaller;
+
+        if (nd.noteType == ChartNoteType.Dimension)
+        {
+            if (nd.IsHold)
+                SpawnDimensionHold(lane, travelSec, hitDsp, nd, cond);
+            else
+                SpawnDimensionTap(lane, travelSec, hitDsp);
+            return;
+        }
 
         if (nd.IsHold)
-            SpawnHold(lane, travelSec, hitDsp, nd, dim, cond);
+            SpawnHold(lane, travelSec, hitDsp, nd, cond);
         else
-            SpawnTap(lane, travelSec, hitDsp, dim);
+            SpawnTap(lane, travelSec, hitDsp);
     }
 
     private int ResolveLaneIndex(NoteData nd, NoteSpawner.NoteLane[] lanes)
@@ -105,24 +124,24 @@ public class ChartNoteSpawner : MonoBehaviour
         return nd.laneType == ChartLaneType.Ground ? nd.lane : _groundLaneCount + nd.lane;
     }
 
-    private void SpawnTap(NoteSpawner.NoteLane lane, float travelSec, double hitDsp, DimensionType dim)
+    private void SpawnTap(NoteSpawner.NoteLane lane, float travelSec, double hitDsp)
     {
         Note prefab = _tapPrefab != null ? _tapPrefab : lane._tapPrefab;
         if (prefab == null) return;
 
         Note note = Instantiate(prefab);
-        note.SetDimension(dim);
         note.InitFollow(lane._hitPoint, lane._spawnPoint, lane._hitPoint, lane._despawnPoint,
             travelSec, lane._noteType, lane._yOffsetLocal);
 
         if (lane._noteParent != null) note.transform.SetParent(lane._noteParent, true);
         note.SetExpectedHitDspTime(hitDsp);
+        note.SetSortingOrder(lane._noteType == NoteSpawner.NoteType.Ground ? _sortGroundNote : _sortUpperNote);
 
         LaneJudge judge = GetJudge(lane);
         if (judge != null) judge.RegisterTap(note);
     }
 
-    private void SpawnHold(NoteSpawner.NoteLane lane, float travelSec, double hitDsp, NoteData nd, DimensionType dim, RhythmConductor cond)
+    private void SpawnHold(NoteSpawner.NoteLane lane, float travelSec, double hitDsp, NoteData nd, RhythmConductor cond)
     {
         HoldNote prefab = _holdPrefab != null ? _holdPrefab : lane._holdPrefab;
         if (prefab == null) return;
@@ -130,7 +149,6 @@ public class ChartNoteSpawner : MonoBehaviour
         LaneJudge judge = GetJudge(lane);
 
         HoldNote hold = Instantiate(prefab);
-        hold.SetDimension(dim);
         hold.InitFollow(lane._hitPoint, lane._spawnPoint, lane._hitPoint, lane._despawnPoint,
             travelSec, lane._noteType, lane._yOffsetLocal);
 
@@ -139,11 +157,55 @@ public class ChartNoteSpawner : MonoBehaviour
 
         double holdBeats = Mathf.Max(0f, nd.holdEndBeat - nd.beat);
         hold.SetupHoldBeats(holdBeats, cond.SecPerBeat);
+        hold.SetSortingOrder(lane._noteType == NoteSpawner.NoteType.Ground ? _sortGroundNote : _sortUpperNote);
 
         if (judge != null && !judge.RegisterHold(hold))
         {
             Destroy(hold.gameObject);
         }
+    }
+
+    private void SpawnDimensionTap(NoteSpawner.NoteLane lane, float travelSec, double hitDsp)
+    {
+        bool isGround = lane._noteType == NoteSpawner.NoteType.Ground;
+        Note prefab = isGround
+            ? (_dimensionTapPrefabGround != null ? _dimensionTapPrefabGround : _tapPrefab)
+            : (_dimensionTapPrefabUpper != null ? _dimensionTapPrefabUpper : _tapPrefab);
+        if (prefab == null) return;
+
+        Note note = Instantiate(prefab);
+        note.MarkAsDimensionNote();
+        note.InitFollow(lane._hitPoint, lane._spawnPoint, lane._hitPoint, lane._despawnPoint,
+            travelSec, lane._noteType, lane._yOffsetLocal);
+
+        if (lane._noteParent != null) note.transform.SetParent(lane._noteParent, true);
+        note.SetExpectedHitDspTime(hitDsp);
+        note.SetSortingOrder(isGround ? _sortGroundDN : _sortUpperDN);
+
+        if (DimensionNoteJudge.I != null) DimensionNoteJudge.I.RegisterTap(note);
+    }
+
+    private void SpawnDimensionHold(NoteSpawner.NoteLane lane, float travelSec, double hitDsp, NoteData nd, RhythmConductor cond)
+    {
+        bool isGround = lane._noteType == NoteSpawner.NoteType.Ground;
+        HoldNote prefab = isGround
+            ? (_dimensionHoldPrefabGround != null ? _dimensionHoldPrefabGround : _holdPrefab)
+            : (_dimensionHoldPrefabUpper != null ? _dimensionHoldPrefabUpper : _holdPrefab);
+        if (prefab == null) return;
+
+        HoldNote hold = Instantiate(prefab);
+        hold.MarkAsDimensionNote();
+        hold.InitFollow(lane._hitPoint, lane._spawnPoint, lane._hitPoint, lane._despawnPoint,
+            travelSec, lane._noteType, lane._yOffsetLocal);
+
+        if (lane._noteParent != null) hold.transform.SetParent(lane._noteParent, true);
+        hold.SetExpectedHitDspTime(hitDsp);
+
+        double holdBeats = Mathf.Max(0f, nd.holdEndBeat - nd.beat);
+        hold.SetupHoldBeats(holdBeats, cond.SecPerBeat);
+        hold.SetSortingOrder(isGround ? _sortGroundDN : _sortUpperDN);
+
+        if (DimensionNoteJudge.I != null) DimensionNoteJudge.I.RegisterHold(hold);
     }
 
     private LaneJudge GetJudge(NoteSpawner.NoteLane lane)

@@ -2,9 +2,6 @@ using UnityEngine;
 
 public class Note : MonoBehaviour
 {
-    [Header("Dimension")]
-    [SerializeField] private DimensionType _dimension = DimensionType.Dismaller;
-
     protected float _travelTime;
     protected NoteSpawner.NoteType _noteType;
 
@@ -34,18 +31,12 @@ public class Note : MonoBehaviour
     protected float _moveSignS;
 
     public NoteSpawner.NoteType NoteType => _noteType;
-    public DimensionType Dimension => _dimension;
+    public Transform HitPointRef => _hitPointRef;
+    public bool IsDimensionNote { get; private set; }
 
-    private bool _isShowingWrongDimension;
-    private bool _isShowingCorridor;
-    private GameObject _noiseEffectInstance;
-    [System.NonSerialized] protected Renderer[] _renderers;
-    protected Color[] _originalColors;
-    protected string[] _originalColorProperties;
-
-    public void SetDimension(DimensionType dim)
+    public void MarkAsDimensionNote()
     {
-        _dimension = dim;
+        IsDimensionNote = true;
     }
 
     public void InitFollow(
@@ -107,22 +98,6 @@ public class Note : MonoBehaviour
 
         if (_rotateSource != null)
             transform.rotation = _rotateSource.rotation;
-
-        CacheRenderers();
-
-        if (DimensionManager.I != null)
-        {
-            DimensionManager.I.OnDimensionChanged += OnDimensionChanged;
-            DimensionManager.I.OnCorridorStarted += OnCorridorStarted;
-            DimensionManager.I.OnCorridorEnded += OnCorridorEnded;
-        }
-
-        if (RuntimeColorPalette.I != null)
-        {
-            RuntimeColorPalette.I.OnColorsChanged += OnColorsChanged;
-        }
-
-        UpdateNoteVisual();
     }
 
     protected void UpdateLocalPositions()
@@ -141,205 +116,47 @@ public class Note : MonoBehaviour
             _despawnLocal = _hitLocal;
     }
 
-    private void CacheRenderers()
+    public void ApplyColor(Color color)
     {
-        _renderers = GetComponentsInChildren<Renderer>(true);
-        _originalColors = new Color[_renderers.Length];
-        _originalColorProperties = new string[_renderers.Length];
-
-        for (int i = 0; i < _renderers.Length; i++)
+        var renderers = GetComponentsInChildren<Renderer>(true);
+        for (int i = 0; i < renderers.Length; i++)
         {
-            if (_renderers[i] != null && _renderers[i].material != null)
+            if (renderers[i] == null) continue;
+            var mat = renderers[i].material;
+            if (mat == null) continue;
+
+            mat.color = color;
+
+            if (mat.HasProperty("_BaseColor"))
+                mat.SetColor("_BaseColor", color);
+            if (mat.HasProperty("_Color"))
+                mat.SetColor("_Color", color);
+            if (mat.HasProperty("_TintColor"))
+                mat.SetColor("_TintColor", color);
+            if (mat.HasProperty("_EmissionColor"))
             {
-                var mat = _renderers[i].material;
-
-                if (mat.HasProperty("_EmissionColor"))
-                {
-                    Color emissionCol = mat.GetColor("_EmissionColor");
-                    if (emissionCol.r > 0.01f || emissionCol.g > 0.01f || emissionCol.b > 0.01f)
-                    {
-                        _originalColors[i] = emissionCol;
-                        _originalColorProperties[i] = "_EmissionColor";
-                        continue;
-                    }
-                }
-
-                if (mat.HasProperty("_Color"))
-                {
-                    _originalColors[i] = mat.GetColor("_Color");
-                    _originalColorProperties[i] = "_Color";
-                }
-                else if (mat.HasProperty("_BaseColor"))
-                {
-                    _originalColors[i] = mat.GetColor("_BaseColor");
-                    _originalColorProperties[i] = "_BaseColor";
-                }
-                else
-                {
-                    _originalColors[i] = mat.color;
-                    _originalColorProperties[i] = "_Color";
-                }
+                mat.EnableKeyword("_EMISSION");
+                mat.SetColor("_EmissionColor", color);
+                mat.globalIlluminationFlags = MaterialGlobalIlluminationFlags.None;
             }
         }
-    }
 
-    private void OnDimensionChanged(DimensionType newDimension)
-    {
-        UpdateNoteVisual();
-    }
-
-    private void OnCorridorStarted()
-    {
-        UpdateNoteVisual();
-    }
-
-    private void OnCorridorEnded()
-    {
-        UpdateNoteVisual();
-    }
-
-    private void OnColorsChanged()
-    {
-        _isShowingCorridor = false;
-        _isShowingWrongDimension = false;
-        UpdateNoteVisual();
-    }
-
-    protected virtual void UpdateNoteVisual()
-    {
-        if (DimensionManager.I == null) return;
-
-        bool inCorridor = DimensionManager.I.IsCorridorActive;
-        bool inWrongDimension = DimensionManager.I.IsNoteInWrongDimension(_dimension);
-
-        if (inCorridor)
+        var particles = GetComponentsInChildren<ParticleSystem>(true);
+        for (int i = 0; i < particles.Length; i++)
         {
-            if (!_isShowingCorridor)
-            {
-                DestroyNoiseEffect();
-                ApplyCorridorColor();
-                _isShowingCorridor = true;
-                _isShowingWrongDimension = false;
-            }
-        }
-        else if (inWrongDimension)
-        {
-            if (!_isShowingWrongDimension || _isShowingCorridor)
-            {
-                ApplyWrongDimensionColor();
-                SpawnNoiseEffect();
-                _isShowingWrongDimension = true;
-                _isShowingCorridor = false;
-            }
-        }
-        else
-        {
-            if (_isShowingWrongDimension || _isShowingCorridor)
-            {
-                RestoreOriginalColor();
-                DestroyNoiseEffect();
-                _isShowingWrongDimension = false;
-                _isShowingCorridor = false;
-            }
+            if (particles[i] == null) continue;
+            var main = particles[i].main;
+            main.startColor = new ParticleSystem.MinMaxGradient(color);
         }
     }
 
-    protected virtual void UpdateWrongDimensionVisual()
+    public void SetSortingOrder(int order)
     {
-        UpdateNoteVisual();
-    }
-
-    protected virtual void ApplyCorridorColor()
-    {
-        Color corridorColor;
-
-        if (RuntimeColorPalette.I != null)
+        var renderers = GetComponentsInChildren<Renderer>(true);
+        for (int i = 0; i < renderers.Length; i++)
         {
-            corridorColor = RuntimeColorPalette.I.GetCorridorColor(_noteType);
-        }
-        else if (DimensionManager.I != null)
-        {
-            corridorColor = DimensionManager.I.GetCorridorNoteColor(_noteType);
-        }
-        else
-        {
-            corridorColor = new Color(0f, 4f, 2f, 1f);
-        }
-
-        for (int i = 0; i < _renderers.Length; i++)
-        {
-            if (_renderers[i] != null && _renderers[i].material != null)
-            {
-                var mat = _renderers[i].material;
-
-                if (mat.HasProperty("_EmissionColor"))
-                {
-                    mat.EnableKeyword("_EMISSION");
-                    mat.SetColor("_EmissionColor", corridorColor);
-                }
-            }
-        }
-    }
-
-    private void ApplyWrongDimensionColor()
-    {
-        if (DimensionManager.I == null) return;
-
-        Color wrongColor = DimensionManager.I.GetWrongDimensionColor(_dimension);
-
-        for (int i = 0; i < _renderers.Length; i++)
-        {
-            if (_renderers[i] != null && _renderers[i].material != null)
-            {
-                var mat = _renderers[i].material;
-
-                if (mat.HasProperty("_EmissionColor"))
-                {
-                    mat.EnableKeyword("_EMISSION");
-                    mat.SetColor("_EmissionColor", wrongColor);
-                }
-            }
-        }
-    }
-
-    private void RestoreOriginalColor()
-    {
-        for (int i = 0; i < _renderers.Length; i++)
-        {
-            if (_renderers[i] != null && _renderers[i].material != null &&
-                _originalColors != null && i < _originalColors.Length &&
-                _originalColorProperties != null && i < _originalColorProperties.Length)
-            {
-                var mat = _renderers[i].material;
-                string prop = _originalColorProperties[i];
-
-                if (!string.IsNullOrEmpty(prop) && mat.HasProperty(prop))
-                {
-                    mat.SetColor(prop, _originalColors[i]);
-                }
-            }
-        }
-    }
-
-    private void SpawnNoiseEffect()
-    {
-        if (DimensionManager.I == null) return;
-        if (_noiseEffectInstance != null) return;
-
-        GameObject noisePrefab = DimensionManager.I.GetWrongDimensionNoisePrefab(_dimension, false);
-        if (noisePrefab != null)
-        {
-            _noiseEffectInstance = Instantiate(noisePrefab, transform);
-            _noiseEffectInstance.transform.localPosition = Vector3.zero;
-        }
-    }
-
-    private void DestroyNoiseEffect()
-    {
-        if (_noiseEffectInstance != null)
-        {
-            Destroy(_noiseEffectInstance);
-            _noiseEffectInstance = null;
+            if (renderers[i] != null)
+                renderers[i].sortingOrder = order;
         }
     }
 
@@ -408,18 +225,5 @@ public class Note : MonoBehaviour
 
     protected virtual void OnDestroy()
     {
-        if (DimensionManager.I != null)
-        {
-            DimensionManager.I.OnDimensionChanged -= OnDimensionChanged;
-            DimensionManager.I.OnCorridorStarted -= OnCorridorStarted;
-            DimensionManager.I.OnCorridorEnded -= OnCorridorEnded;
-        }
-
-        if (RuntimeColorPalette.I != null)
-        {
-            RuntimeColorPalette.I.OnColorsChanged -= OnColorsChanged;
-        }
-
-        DestroyNoiseEffect();
     }
 }

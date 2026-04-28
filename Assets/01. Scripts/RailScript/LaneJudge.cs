@@ -47,9 +47,6 @@ public class LaneJudge : MonoBehaviour
     [SerializeField] private GameObject _emptyHitPrefab;
     [SerializeField] private float _emptyDestroySec = 0.2f;
 
-    [Header("Debug")]
-    [SerializeField] private bool _enableDimensionDebug = false;
-
     private GameObject _holdLoopFx;
     private readonly List<Note> _tapNotes = new List<Note>(64);
     private HoldNote _hold;
@@ -177,15 +174,6 @@ public class LaneJudge : MonoBehaviour
         if (rawMs < -_ruinMs)
         {
             return false;
-        }
-
-        if (!CanJudgeNoteDimension(_hold.Dimension, false))
-        {
-            if (_enableDimensionDebug)
-                Debug.Log("[LaneJudge] Hold start blocked - wrong dimension: " + _hold.Dimension);
-
-            SpawnEmptyHit();
-            return true;
         }
 
         JudgeType judge = JudgeFromRawMs(rawMs);
@@ -349,18 +337,6 @@ public class LaneJudge : MonoBehaviour
             return false;
         }
 
-        if (!CanJudgeNoteDimension(target.Dimension, false))
-        {
-            if (_enableDimensionDebug)
-                Debug.Log("[LaneJudge] Tap blocked - wrong dimension: " + target.Dimension);
-
-            if (ComboUI.I != null)
-                ComboUI.I.OnTapResult("Miss", true);
-
-            SpawnEmptyHit();
-            return true;
-        }
-
         JudgeType judge = JudgeFromRawMs(rawMs);
 
         if (ComboUI.I != null)
@@ -376,12 +352,6 @@ public class LaneJudge : MonoBehaviour
 
         Destroy(target.gameObject);
         return true;
-    }
-
-    private bool CanJudgeNoteDimension(DimensionType noteDimension, bool isLongNoteInProgress)
-    {
-        if (DimensionManager.I == null) return true;
-        return DimensionManager.I.CanJudgeNote(noteDimension, isLongNoteInProgress);
     }
 
     private JudgeType JudgeFromRawMs(double rawMs)
@@ -412,19 +382,6 @@ public class LaneJudge : MonoBehaviour
     private Color GetJudgeColor(NoteSpawner.NoteType laneType, JudgeType judge)
     {
         Color c = Color.white;
-
-        if (DimensionManager.I != null && DimensionManager.I.IsCorridorActive)
-        {
-            if (RuntimeColorPalette.I != null)
-                return RuntimeColorPalette.I.GetCorridorColor(laneType);
-            return DimensionManager.I.GetCorridorHitFxColor(laneType);
-        }
-
-        if (judge == JudgeType.Severance)
-        {
-            if (RuntimeColorPalette.I != null)
-                return RuntimeColorPalette.I.GetSevHitFxColor(laneType);
-        }
 
         if (_palette == null)
             return c;

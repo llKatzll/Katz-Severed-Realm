@@ -36,11 +36,6 @@ public class HoldNote : Note
         if (_body != null)
             _bodyBaseScale = _body.localScale;
 
-        _renderers = GetComponentsInChildren<Renderer>(true);
-
-        _originalColors = new Color[_renderers.Length];
-        _originalColorProperties = new string[_renderers.Length];
-
         IsActive = false;
         IsFailed = false;
         _built = false;
@@ -387,37 +382,4 @@ public class HoldNote : Note
         }
     }
 
-    protected override void ApplyCorridorColor()
-    {
-        Color corridorColor;
-
-        if (RuntimeColorPalette.I != null)
-        {
-            corridorColor = RuntimeColorPalette.I.GetCorridorColor(NoteType);
-        }
-        else if (DimensionManager.I != null)
-        {
-            corridorColor = DimensionManager.I.GetCorridorNoteColor(NoteType);
-        }
-        else
-        {
-            corridorColor = new Color(0f, 4f, 2f, 1f);
-        }
-
-        if (_renderers == null) return;
-
-        for (int i = 0; i < _renderers.Length; i++)
-        {
-            if (_renderers[i] != null && _renderers[i].material != null)
-            {
-                var mat = _renderers[i].material;
-
-                if (mat.HasProperty("_EmissionColor"))
-                {
-                    mat.EnableKeyword("_EMISSION");
-                    mat.SetColor("_EmissionColor", corridorColor);
-                }
-            }
-        }
-    }
 }
