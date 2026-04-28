@@ -5,6 +5,7 @@ public class RhythmConductor : MonoBehaviour
     [SerializeField] private double _bpm = 120.0;
     [SerializeField] private AudioSource _audio;
     [SerializeField] private double _audioOffset;
+    [SerializeField] private bool _autoStart = false;
 
     private double _startDspTime;
     private double _pausedSongTime;
@@ -18,6 +19,7 @@ public class RhythmConductor : MonoBehaviour
     public bool Started => _started;
     public bool Paused => _paused;
     public bool IsPlaying => _started && !_paused;
+    public AudioSource Audio => _audio;
 
     public double SongTime
     {
@@ -32,7 +34,7 @@ public class RhythmConductor : MonoBehaviour
 
     private void Start()
     {
-        StartSong();
+        if (_autoStart) StartSong();
     }
 
     public void SetBpm(double bpm)

@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 31831c5adab81c24abfa571160b6ea5b, type: 3}
-  m_Name: 001_Inferno
+  m_Name: 001_Upload_Your_Mind_Download_My_Soul
   m_EditorClassIdentifier: Assembly-CSharp::SongData
-  songName: Hello
-  artist: Katz
-  bpm: 200
-  hasTempoShift: 1
-  durationSeconds: 500
-  charter: K
-  mapper: A
+  songName: "Upload Your Mind \uFF1A\uFF1A Download My Soul"
+  artist: Camellia
+  bpm: 186
+  hasTempoShift: 0
+  durationSeconds: 284
+  charter: Kachesis
+  mapper: Kachesis
   songImage: {fileID: 21300000, guid: 99d08a1b3b7a6a14dbcefc10e11a2e04, type: 3}
   previewClip: {fileID: 8300000, guid: 69c93895a76cbf241a665ae143494154, type: 3}
   fullClip: {fileID: 8300000, guid: 9cb495fd4ab40834fac24afdd46fe1a0, type: 3}

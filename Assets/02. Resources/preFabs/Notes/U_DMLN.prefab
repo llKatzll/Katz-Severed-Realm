@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 3830387384161316300}
   - component: {fileID: 8966187339912851197}
   - component: {fileID: 1038964629886964767}
-  - component: {fileID: 16730591563293233}
   - component: {fileID: 911124527039597121}
   - component: {fileID: 3931766114324521378}
   m_Layer: 0
@@ -92,24 +91,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &16730591563293233
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1602829515965037964}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 894f644e7bfaf7b48bcb9e48d2289b45, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RailColorController
-  _railType: 0
-  _targetRenderers:
-  - {fileID: 1038964629886964767}
-  _autoFindChildren: 0
-  _previewInEditor: 0
-  _previewDimension: 0
 --- !u!65 &911124527039597121
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -169,7 +150,6 @@ GameObject:
   - component: {fileID: 6482017847433481294}
   - component: {fileID: 564477372545183251}
   - component: {fileID: 378612849798727483}
-  - component: {fileID: 7735450901596588834}
   - component: {fileID: 3438056757360386100}
   - component: {fileID: 1798187997587716126}
   m_Layer: 0
@@ -250,24 +230,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &7735450901596588834
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3933115375424780002}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 894f644e7bfaf7b48bcb9e48d2289b45, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RailColorController
-  _railType: 0
-  _targetRenderers:
-  - {fileID: 378612849798727483}
-  _autoFindChildren: 0
-  _previewInEditor: 0
-  _previewDimension: 0
 --- !u!65 &3438056757360386100
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -363,7 +325,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c959990d9a326c4a9f9456af6ff2ca0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HoldNote
-  _dimension: 0
   _head: {fileID: 7028774666138232}
   _body: {fileID: 3830387384161316300}
   _tail: {fileID: 6482017847433481294}
@@ -378,7 +339,6 @@ GameObject:
   - component: {fileID: 7028774666138232}
   - component: {fileID: 656523559714994191}
   - component: {fileID: 4388355599999011452}
-  - component: {fileID: 4731523863667675018}
   - component: {fileID: 358861833183462079}
   - component: {fileID: 7170041960723525785}
   m_Layer: 0
@@ -459,24 +419,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &4731523863667675018
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6969606791122936661}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 894f644e7bfaf7b48bcb9e48d2289b45, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RailColorController
-  _railType: 0
-  _targetRenderers:
-  - {fileID: 4388355599999011452}
-  _autoFindChildren: 0
-  _previewInEditor: 0
-  _previewDimension: 0
 --- !u!65 &358861833183462079
 BoxCollider:
   m_ObjectHideFlags: 0

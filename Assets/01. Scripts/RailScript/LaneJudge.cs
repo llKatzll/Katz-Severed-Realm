@@ -184,6 +184,7 @@ public class LaneJudge : MonoBehaviour
             StopHoldLoopFx();
 
             if (ComboUI.I != null) ComboUI.I.OnHoldFail("Miss");
+            if (ScoreManager.I != null) ScoreManager.I.ReportJudge(JudgeType.Miss);
 
             _hold = null;
             return true;
@@ -200,6 +201,8 @@ public class LaneJudge : MonoBehaviour
             bool breaks = (judge == JudgeType.Ruin || judge == JudgeType.Miss);
             ComboUI.I.OnHoldStart(judge.ToString(), breaks, bpm, ActiveKey);
         }
+
+        if (ScoreManager.I != null) ScoreManager.I.ReportJudge(judge);
 
         _hold.StartHold();
 
@@ -226,11 +229,12 @@ public class LaneJudge : MonoBehaviour
             StopHoldLoopFx();
 
             if (ComboUI.I != null) ComboUI.I.OnHoldFail("Miss");
+            if (ScoreManager.I != null) ScoreManager.I.ReportJudge(JudgeType.Miss);
 
             _hold = null;
             return;
         }
-        
+
         JudgeType judge = JudgeFromRawMsTail(rawMs);
 
         if (judge == JudgeType.Miss)
@@ -239,6 +243,7 @@ public class LaneJudge : MonoBehaviour
             StopHoldLoopFx();
 
             if (ComboUI.I != null) ComboUI.I.OnHoldFail("Miss");
+            if (ScoreManager.I != null) ScoreManager.I.ReportJudge(JudgeType.Miss);
 
             _hold = null;
             return;
@@ -251,6 +256,8 @@ public class LaneJudge : MonoBehaviour
             bool breaks = (judge == JudgeType.Ruin || judge == JudgeType.Miss);
             ComboUI.I.OnHoldEnd(judge.ToString(), breaks);
         }
+
+        if (ScoreManager.I != null) ScoreManager.I.ReportJudge(judge);
 
         StopHoldLoopFx();
         _hold.SuccessAndDestroy();
@@ -274,6 +281,7 @@ public class LaneJudge : MonoBehaviour
             StopHoldLoopFx();
 
             if (ComboUI.I != null) ComboUI.I.OnHoldFail("Miss");
+            if (ScoreManager.I != null) ScoreManager.I.ReportJudge(JudgeType.Miss);
 
             _hold = null;
         }
@@ -300,6 +308,7 @@ public class LaneJudge : MonoBehaviour
             StopHoldLoopFx();
 
             if (ComboUI.I != null) ComboUI.I.OnHoldFail("Miss");
+            if (ScoreManager.I != null) ScoreManager.I.ReportJudge(JudgeType.Miss);
 
             _hold = null;
         }
@@ -344,6 +353,8 @@ public class LaneJudge : MonoBehaviour
             bool breaks = (judge == JudgeType.Ruin || judge == JudgeType.Miss);
             ComboUI.I.OnTapResult(judge.ToString(), breaks);
         }
+
+        if (ScoreManager.I != null) ScoreManager.I.ReportJudge(judge);
 
         RemoveTap(target);
 
@@ -605,6 +616,8 @@ public class LaneJudge : MonoBehaviour
 
                 if (ComboUI.I != null)
                     ComboUI.I.OnTapResult("Miss", true);
+                if (ScoreManager.I != null)
+                    ScoreManager.I.ReportJudge(JudgeType.Miss);
             }
         }
     }

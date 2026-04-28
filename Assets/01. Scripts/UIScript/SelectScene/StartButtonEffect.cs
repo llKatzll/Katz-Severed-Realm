@@ -22,6 +22,12 @@ public class StartButtonEffect : MonoBehaviour
     [SerializeField] private float _returnDuration = 0.2f;
     [SerializeField] private float _delayBeforeLoad = 0.5f;
 
+    [Header("Transition")]
+    [SerializeField] private RectTransform _transitionRect;
+    [SerializeField] private float _transitionSlideTime = 1f;
+    [SerializeField] private float _transitionWaitY = 1100f;
+    [SerializeField] private float _transitionShowY = 0f;
+
     [Header("Scene")]
     [SerializeField] private string _inGameSceneName = "InGame";
 
@@ -33,6 +39,12 @@ public class StartButtonEffect : MonoBehaviour
             _button.onClick.AddListener(OnStartClicked);
 
         ApplyColors(_normalBgColor, _normalTextColor);
+
+        if (_transitionRect != null)
+        {
+            _transitionRect.gameObject.SetActive(true);
+            StartCoroutine(SlideTransition(_transitionShowY, -1100f, _transitionSlideTime, true));
+        }
     }
 
     private void OnStartClicked()
@@ -79,6 +91,13 @@ public class StartButtonEffect : MonoBehaviour
             );
         }
 
+        if (_transitionRect != null)
+        {
+            SetTransitionY(_transitionWaitY);
+            _transitionRect.gameObject.SetActive(true);
+            yield return StartCoroutine(SlideTransition(_transitionWaitY, _transitionShowY, _transitionSlideTime, false));
+        }
+
         yield return new WaitForSeconds(_delayBeforeLoad);
 
         SceneManager.LoadScene(_inGameSceneName);
@@ -98,5 +117,36 @@ public class StartButtonEffect : MonoBehaviour
             _buttonImage.color = bg;
         if (_buttonText != null)
             _buttonText.color = text;
+    }
+
+    private IEnumerator SlideTransition(float fromY, float toY, float duration, bool deactivateOnDone)
+    {
+        if (_transitionRect == null) yield break;
+
+        float t = 0f;
+        Vector2 pos = _transitionRect.anchoredPosition;
+
+        while (t < duration)
+        {
+            t += Time.unscaledDeltaTime;
+            float k = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(t / duration));
+            pos.y = Mathf.Lerp(fromY, toY, k);
+            _transitionRect.anchoredPosition = pos;
+            yield return null;
+        }
+
+        pos.y = toY;
+        _transitionRect.anchoredPosition = pos;
+
+        if (deactivateOnDone)
+            _transitionRect.gameObject.SetActive(false);
+    }
+
+    private void SetTransitionY(float y)
+    {
+        if (_transitionRect == null) return;
+        Vector2 pos = _transitionRect.anchoredPosition;
+        pos.y = y;
+        _transitionRect.anchoredPosition = pos;
     }
 }

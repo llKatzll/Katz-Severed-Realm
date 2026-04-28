@@ -160,6 +160,8 @@ public class DimensionNoteJudge : MonoBehaviour
                 ComboUI.I.OnTapResult(judge.ToString(), breaks);
             }
 
+            if (ScoreManager.I != null) ScoreManager.I.ReportJudge(judge);
+
             if (judge != JudgeType.Miss)
                 SpawnJudgedFx(_tapHitFxPrefab, hitRef, laneType, judge, _tapHitFxDestroySec);
 
@@ -208,6 +210,7 @@ public class DimensionNoteJudge : MonoBehaviour
             {
                 h.Fail(_palette, laneType);
                 if (ComboUI.I != null) ComboUI.I.OnHoldFail("Miss");
+                if (ScoreManager.I != null) ScoreManager.I.ReportJudge(JudgeType.Miss);
                 continue;
             }
 
@@ -220,6 +223,8 @@ public class DimensionNoteJudge : MonoBehaviour
                 bool breaks = (judge == JudgeType.Ruin || judge == JudgeType.Miss);
                 ComboUI.I.OnHoldStart(judge.ToString(), breaks, bpm, DimensionKey);
             }
+
+            if (ScoreManager.I != null) ScoreManager.I.ReportJudge(judge);
 
             SpawnJudgedFx(_holdHeadFxPrefab, hitRef, laneType, judge, _holdHeadFxDestroySec);
             h.StartHold();
@@ -245,6 +250,7 @@ public class DimensionNoteJudge : MonoBehaviour
         {
             h.Fail(_palette, laneType);
             if (ComboUI.I != null) ComboUI.I.OnHoldFail("Miss");
+            if (ScoreManager.I != null) ScoreManager.I.ReportJudge(JudgeType.Miss);
             return;
         }
 
@@ -254,6 +260,7 @@ public class DimensionNoteJudge : MonoBehaviour
         {
             h.Fail(_palette, laneType);
             if (ComboUI.I != null) ComboUI.I.OnHoldFail("Miss");
+            if (ScoreManager.I != null) ScoreManager.I.ReportJudge(JudgeType.Miss);
             return;
         }
 
@@ -264,6 +271,8 @@ public class DimensionNoteJudge : MonoBehaviour
             bool breaks = (judge == JudgeType.Ruin || judge == JudgeType.Miss);
             ComboUI.I.OnHoldEnd(judge.ToString(), breaks);
         }
+
+        if (ScoreManager.I != null) ScoreManager.I.ReportJudge(judge);
 
         h.SuccessAndDestroy();
     }
@@ -393,6 +402,7 @@ public class DimensionNoteJudge : MonoBehaviour
             {
                 _tapNotes.RemoveAt(i);
                 if (ComboUI.I != null) ComboUI.I.OnTapResult("Miss", true);
+                if (ScoreManager.I != null) ScoreManager.I.ReportJudge(JudgeType.Miss);
             }
         }
     }
@@ -411,6 +421,7 @@ public class DimensionNoteJudge : MonoBehaviour
                 _holds.RemoveAt(i);
                 h.Fail(_palette, h.NoteType);
                 if (ComboUI.I != null) ComboUI.I.OnHoldFail("Miss");
+                if (ScoreManager.I != null) ScoreManager.I.ReportJudge(JudgeType.Miss);
             }
         }
     }
@@ -430,6 +441,7 @@ public class DimensionNoteJudge : MonoBehaviour
             {
                 h.Fail(_palette, h.NoteType);
                 if (ComboUI.I != null) ComboUI.I.OnHoldFail("Miss");
+                if (ScoreManager.I != null) ScoreManager.I.ReportJudge(JudgeType.Miss);
                 _activeHolds.RemoveAt(i);
             }
         }
