@@ -5,9 +5,12 @@ public class EditorBootstrap : MonoBehaviour
     [Header("Panel")]
     [SerializeField] private Color _panelColor = Color.black;
 
+    [Header("Note Canvas")]
+    [SerializeField] private float _noteCanvasScale = 0.01f;
+
     [Header("Layout")]
     [SerializeField] private float _orthoSize = 5f;
-    [SerializeField] private float _beatHeight = 1f;
+    [SerializeField] private float _beatHeight = 3f;
     [SerializeField] private int _laneCount = 4;
     [SerializeField] private float _laneWidth = 1f;
     [SerializeField] private float _panelGap = 2f;
@@ -26,17 +29,20 @@ public class EditorBootstrap : MonoBehaviour
     private Transform _groundPanel;
     private Transform _upperPanel;
     private Transform _judgeLine;
+    private Canvas _noteCanvas;
 
     public Camera EditorCamera => _editorCamera;
     public Transform GroundPanel => _groundPanel;
     public Transform UpperPanel => _upperPanel;
     public Transform JudgeLine => _judgeLine;
+    public Canvas NoteCanvas => _noteCanvas;
     public float OrthoSize => _orthoSize;
     public float BeatHeight => _beatHeight;
     public int LaneCount => _laneCount;
     public float LaneWidth => _laneWidth;
     public float PanelGap => _panelGap;
     public float JudgeLineScreenRatio => _judgeLineScreenRatio;
+    public float NoteCanvasScale => _noteCanvasScale;
 
     private void Awake()
     {
@@ -49,6 +55,27 @@ public class EditorBootstrap : MonoBehaviour
 
         SetupJudgeLine();
         SetupColumnLines();
+        SetupNoteCanvas();
+    }
+
+    private void SetupNoteCanvas()
+    {
+        var go = new GameObject("NoteCanvas");
+        go.transform.SetParent(transform);
+
+        var rt = go.AddComponent<RectTransform>();
+        rt.position = Vector3.zero;
+        rt.sizeDelta = new Vector2(1f, 1f);
+        rt.localScale = new Vector3(_noteCanvasScale, _noteCanvasScale, 1f);
+
+        var canvas = go.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.WorldSpace;
+        canvas.worldCamera = _editorCamera;
+        canvas.sortingOrder = 10;
+
+        go.AddComponent<UnityEngine.UI.CanvasScaler>();
+
+        _noteCanvas = canvas;
     }
 
     private void SetupCamera()
@@ -66,6 +93,8 @@ public class EditorBootstrap : MonoBehaviour
         _editorCamera.clearFlags = CameraClearFlags.SolidColor;
         _editorCamera.nearClipPlane = 0.1f;
         _editorCamera.farClipPlane = 100f;
+
+        camGo.AddComponent<AudioListener>();
     }
 
     private Transform SetupPanel(string panelName, float centerX)
