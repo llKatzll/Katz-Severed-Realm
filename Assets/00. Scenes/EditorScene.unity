@@ -4894,6 +4894,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EditorPlayback
   _timeline: {fileID: 0}
   _audio: {fileID: 0}
+  _mixer: {fileID: 24100000, guid: 66fd0e66e39b4cc4fb903816da35d03b, type: 2}
+  _mixerGroup: {fileID: 24300002, guid: 66fd0e66e39b4cc4fb903816da35d03b, type: 2}
+  _pitchShiftParam: PitchShift
+  _preservePitch: 1
 --- !u!1 &755464632
 GameObject:
   m_ObjectHideFlags: 0
@@ -7254,7 +7258,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000061035156}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1006958829

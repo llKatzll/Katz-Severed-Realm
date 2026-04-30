@@ -58,6 +58,7 @@ public class InGameManager : MonoBehaviour
             return;
         }
         I = this;
+        Application.runInBackground = true;
     }
 
     private void Start()
@@ -117,10 +118,7 @@ public class InGameManager : MonoBehaviour
     {
         if (_conductor == null) return;
 
-        bool audioStopped = _conductor.Audio != null && !_conductor.Audio.isPlaying && _conductor.SongTime > 1.0;
-        bool timeOver = (float)_conductor.SongTime >= _songDuration;
-
-        if (audioStopped || timeOver)
+        if ((float)_conductor.SongTime >= _songDuration)
         {
             _songFinished = true;
             StartCoroutine(OutroSequence());

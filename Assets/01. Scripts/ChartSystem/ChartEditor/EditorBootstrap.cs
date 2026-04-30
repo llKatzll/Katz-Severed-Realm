@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EditorBootstrap : MonoBehaviour
@@ -24,6 +25,9 @@ public class EditorBootstrap : MonoBehaviour
     [Header("Column Lines")]
     [SerializeField] private Color _columnLineColor = new Color(0.6f, 0.6f, 0.6f, 0.7f);
     [SerializeField] private float _columnLineThickness = 0.05f;
+    [SerializeField] private float _columnLineMarginScale = 8f;
+
+    private readonly List<Transform> _columnLines = new List<Transform>();
 
     private Camera _editorCamera;
     private Transform _groundPanel;
@@ -158,14 +162,14 @@ public class EditorBootstrap : MonoBehaviour
     {
         float halfPanel = _laneCount * _laneWidth * 0.5f;
         float centerOffset = halfPanel + _panelGap * 0.5f;
-        float height = _totalBeats * _beatHeight;
+        float columnHeight = _orthoSize * _columnLineMarginScale;
 
         for (int i = 0; i <= _laneCount; i++)
         {
             float xGround = -centerOffset - halfPanel + i * _laneWidth;
             float xUpper = centerOffset - halfPanel + i * _laneWidth;
-            CreateColumnLine(xGround, height);
-            CreateColumnLine(xUpper, height);
+            CreateColumnLine(xGround, columnHeight);
+            CreateColumnLine(xUpper, columnHeight);
         }
     }
 
@@ -178,12 +182,29 @@ public class EditorBootstrap : MonoBehaviour
         var meshCollider = go.GetComponent<MeshCollider>();
         if (meshCollider != null) Destroy(meshCollider);
 
-        go.transform.position = new Vector3(x, height * 0.5f, -0.5f);
+        go.transform.position = new Vector3(x, 0f, -0.5f);
         go.transform.localScale = new Vector3(_columnLineThickness, height, 1f);
 
         var rend = go.GetComponent<MeshRenderer>();
         var mat = new Material(Shader.Find("Sprites/Default"));
         mat.color = _columnLineColor;
+        mat.renderQueue = 3001;
         rend.sharedMaterial = mat;
+
+        _columnLines.Add(go.transform);
+    }
+
+    private void LateUpdate()
+    {
+        if (_editorCamera == null) return;
+        float cameraY = _editorCamera.transform.position.y;
+        for (int i = 0; i < _columnLines.Count; i++)
+        {
+            var t = _columnLines[i];
+            if (t == null) continue;
+            var p = t.position;
+            p.y = cameraY;
+            t.position = p;
+        }
     }
 }

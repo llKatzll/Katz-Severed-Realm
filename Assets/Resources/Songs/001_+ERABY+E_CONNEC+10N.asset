@@ -29,7 +29,7 @@ MonoBehaviour:
     highScore: 0
     accuracy: 0
   - type: 1
-    level: 4
-    constant: 4.2
+    level: 3
+    constant: 3.8
     highScore: 0
     accuracy: 0
