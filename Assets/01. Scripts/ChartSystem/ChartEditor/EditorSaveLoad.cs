@@ -29,7 +29,30 @@ public class EditorSaveLoad : MonoBehaviour
         string path = ChartUtility.GetChartPath(data.songName, data.difficulty);
         bool ok = ChartUtility.SaveToFile(data, path);
         Debug.Log("[EditorSaveLoad] Save " + (ok ? "OK" : "FAIL") + ": " + path);
+
+        if (ok) RegisterDifficultyToSongData();
         return ok;
+    }
+
+    private void RegisterDifficultyToSongData()
+    {
+#if UNITY_EDITOR
+        if (_loadSong == null || _loadSong.CurrentSong == null) return;
+
+        var song = _loadSong.CurrentSong;
+        var diff = _loadSong.CurrentDifficulty;
+
+        if (song.HasDifficulty(diff)) return;
+
+        var list = new System.Collections.Generic.List<DifficultyData>();
+        if (song.difficulties != null) list.AddRange(song.difficulties);
+        list.Add(new DifficultyData { type = diff, level = 1, constant = 0f });
+        song.difficulties = list.ToArray();
+
+        EditorUtility.SetDirty(song);
+        AssetDatabase.SaveAssets();
+        Debug.Log("[EditorSaveLoad] Registered " + diff + " to SongData '" + song.songName + "'");
+#endif
     }
 
     public void OpenLoadDialog()

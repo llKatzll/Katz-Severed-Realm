@@ -133,6 +133,12 @@ public class InGameManager : MonoBehaviour
         {
             SetTransitionY(_transitionShowY);
             _transitionRect.gameObject.SetActive(true);
+        }
+
+        yield return StartCoroutine(WaitForLoading());
+
+        if (_transitionRect != null)
+        {
             yield return StartCoroutine(SlideTransition(_transitionShowY, _transitionHideY, _transitionSlideTime));
             _transitionRect.gameObject.SetActive(false);
         }
@@ -228,6 +234,35 @@ public class InGameManager : MonoBehaviour
         yield return new WaitForSeconds(_exitTransitionSec);
 
         SceneManager.LoadScene(_songSelectScene);
+    }
+
+    private IEnumerator WaitForLoading()
+    {
+        SongData song = GameManager.I != null ? GameManager.I.SelectedSong : null;
+        if (song != null && song.fullClip != null)
+        {
+            AudioClip clip = song.fullClip;
+            if (clip.loadState != AudioDataLoadState.Loaded)
+            {
+                clip.LoadAudioData();
+                while (clip.loadState == AudioDataLoadState.Loading)
+                {
+                    yield return null;
+                }
+            }
+        }
+
+        ChartNoteSpawner spawner = FindObjectOfType<ChartNoteSpawner>();
+        if (spawner != null)
+        {
+            float waitTimeout = 5f;
+            float elapsed = 0f;
+            while (!spawner.IsChartLoaded && elapsed < waitTimeout)
+            {
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+        }
     }
 
     private IEnumerator SlideTransition(float fromY, float toY, float duration)

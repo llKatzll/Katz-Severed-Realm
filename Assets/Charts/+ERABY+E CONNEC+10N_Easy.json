@@ -1,0 +1,80 @@
+{
+    "songName": "+ERABY+E CONNEC+10N",
+    "difficulty": "Easy",
+    "bpm": 230.0,
+    "audioOffset": 0.0,
+    "timingPoints": [],
+    "notes": [
+        {
+            "beat": 67.0,
+            "lane": 0,
+            "laneType": 0,
+            "noteType": 0,
+            "holdEndBeat": 0.0
+        },
+        {
+            "beat": 67.0,
+            "lane": 3,
+            "laneType": 0,
+            "noteType": 0,
+            "holdEndBeat": 0.0
+        },
+        {
+            "beat": 73.0,
+            "lane": 1,
+            "laneType": 0,
+            "noteType": 1,
+            "holdEndBeat": 83.0
+        },
+        {
+            "beat": 73.0,
+            "lane": 2,
+            "laneType": 0,
+            "noteType": 1,
+            "holdEndBeat": 83.0
+        },
+        {
+            "beat": 89.0,
+            "lane": 0,
+            "laneType": 0,
+            "noteType": 1,
+            "holdEndBeat": 99.0
+        },
+        {
+            "beat": 89.0,
+            "lane": 3,
+            "laneType": 0,
+            "noteType": 1,
+            "holdEndBeat": 99.0
+        },
+        {
+            "beat": 105.0,
+            "lane": 0,
+            "laneType": 1,
+            "noteType": 1,
+            "holdEndBeat": 115.0
+        },
+        {
+            "beat": 105.0,
+            "lane": 3,
+            "laneType": 1,
+            "noteType": 1,
+            "holdEndBeat": 115.0
+        },
+        {
+            "beat": 121.0,
+            "lane": 2,
+            "laneType": 1,
+            "noteType": 1,
+            "holdEndBeat": 137.0
+        },
+        {
+            "beat": 121.0,
+            "lane": 1,
+            "laneType": 1,
+            "noteType": 1,
+            "holdEndBeat": 137.0
+        }
+    ],
+    "svNotes": []
+}

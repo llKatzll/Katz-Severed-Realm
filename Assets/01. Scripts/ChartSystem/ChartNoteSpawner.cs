@@ -34,6 +34,17 @@ public class ChartNoteSpawner : MonoBehaviour
 
     private float ApproachBeats => Mathf.Max(0.0001f, _baseApproachBeats / Mathf.Max(0.0001f, _noteSpeedMul));
     private RhythmConductor Conductor => _noteSpawner != null ? _noteSpawner.Conductor : null;
+    public bool IsChartLoaded => _active;
+
+    private void Start()
+    {
+        if (GameManager.I == null) return;
+        var song = GameManager.I.SelectedSong;
+        if (song == null) return;
+
+        string difficulty = GameManager.I.SelectedDifficulty.ToString();
+        LoadChartFromFile(song.songName, difficulty);
+    }
 
     public void LoadChart(ChartData chart)
     {

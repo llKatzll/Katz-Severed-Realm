@@ -669,8 +669,8 @@ MonoBehaviour:
   _noteSpawner: {fileID: 1161246400}
   _baseApproachBeats: 5
   _noteSpeedMul: 3.5
-  _tapPrefab: {fileID: -356125614831666881, guid: 532b15ddc4752294687176137ebfb6ec, type: 3}
-  _holdPrefab: {fileID: -1344721013972580664, guid: 2882e918eb692cb4ca4215570eb89137, type: 3}
+  _tapPrefab: {fileID: 0}
+  _holdPrefab: {fileID: 0}
   _dimensionTapPrefabGround: {fileID: -356125614831666881, guid: 532b15ddc4752294687176137ebfb6ec, type: 3}
   _dimensionHoldPrefabGround: {fileID: -1344721013972580664, guid: 2882e918eb692cb4ca4215570eb89137, type: 3}
   _dimensionTapPrefabUpper: {fileID: 9015790616304044342, guid: 980ae86e70acf3a49a6518c77b12a754, type: 3}
@@ -5236,7 +5236,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1161246398}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 173a2199f8c531740a021984662650ca, type: 3}
   m_Name: 

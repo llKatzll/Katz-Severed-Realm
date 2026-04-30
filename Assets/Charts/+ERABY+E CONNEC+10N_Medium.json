@@ -1,0 +1,66 @@
+{
+    "songName": "+ERABY+E CONNEC+10N",
+    "difficulty": "Medium",
+    "bpm": 230.0,
+    "audioOffset": 0.0,
+    "timingPoints": [],
+    "notes": [
+        {
+            "beat": 67.0,
+            "lane": 0,
+            "laneType": 0,
+            "noteType": 0,
+            "holdEndBeat": 0.0
+        },
+        {
+            "beat": 67.0,
+            "lane": 3,
+            "laneType": 0,
+            "noteType": 0,
+            "holdEndBeat": 0.0
+        },
+        {
+            "beat": 83.0,
+            "lane": 1,
+            "laneType": 0,
+            "noteType": 0,
+            "holdEndBeat": 0.0
+        },
+        {
+            "beat": 83.0,
+            "lane": 2,
+            "laneType": 0,
+            "noteType": 0,
+            "holdEndBeat": 0.0
+        },
+        {
+            "beat": 99.0,
+            "lane": 0,
+            "laneType": 0,
+            "noteType": 0,
+            "holdEndBeat": 0.0
+        },
+        {
+            "beat": 99.0,
+            "lane": 3,
+            "laneType": 0,
+            "noteType": 0,
+            "holdEndBeat": 0.0
+        },
+        {
+            "beat": 115.0,
+            "lane": 1,
+            "laneType": 0,
+            "noteType": 0,
+            "holdEndBeat": 0.0
+        },
+        {
+            "beat": 115.0,
+            "lane": 2,
+            "laneType": 0,
+            "noteType": 0,
+            "holdEndBeat": 0.0
+        }
+    ],
+    "svNotes": []
+}

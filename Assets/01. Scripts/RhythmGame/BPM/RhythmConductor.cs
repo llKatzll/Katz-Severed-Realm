@@ -50,7 +50,10 @@ public class RhythmConductor : MonoBehaviour
 
     public void StartSong()
     {
-        _startDspTime = AudioSettings.dspTime;
+        const double scheduleDelay = 0.1;
+        double scheduledDsp = AudioSettings.dspTime + scheduleDelay;
+
+        _startDspTime = scheduledDsp;
         _pausedSongTime = 0.0;
         _started = true;
         _paused = false;
@@ -59,7 +62,7 @@ public class RhythmConductor : MonoBehaviour
         {
             _audio.Stop();
             _audio.time = 0f;
-            _audio.Play();
+            _audio.PlayScheduled(scheduledDsp);
         }
     }
 

@@ -97,7 +97,9 @@ public class EditorPlayback : MonoBehaviour
         double targetTime = startBeat * SecPerBeat + _audioOffset;
         if (targetTime < 0.0) targetTime = 0.0;
 
-        _startDspTime = AudioSettings.dspTime - targetTime / _pitch;
+        const double scheduleDelay = 0.1;
+        double scheduledDsp = AudioSettings.dspTime + scheduleDelay;
+        _startDspTime = scheduledDsp - targetTime / _pitch;
         _started = true;
         _paused = false;
 
@@ -105,7 +107,7 @@ public class EditorPlayback : MonoBehaviour
         {
             _audio.time = Mathf.Clamp((float)targetTime, 0f, _audio.clip.length);
             _audio.pitch = (float)_pitch;
-            _audio.Play();
+            _audio.PlayScheduled(scheduledDsp);
         }
 
         _lastObservedBeat = (float)startBeat;
@@ -123,7 +125,10 @@ public class EditorPlayback : MonoBehaviour
     public void Resume()
     {
         if (!_started || !_paused) return;
-        _startDspTime = AudioSettings.dspTime - _pausedSongTime / _pitch;
+
+        const double scheduleDelay = 0.1;
+        double scheduledDsp = AudioSettings.dspTime + scheduleDelay;
+        _startDspTime = scheduledDsp - _pausedSongTime / _pitch;
         _paused = false;
 
         if (_audio != null && _audio.clip != null)
@@ -131,7 +136,7 @@ public class EditorPlayback : MonoBehaviour
             float t = Mathf.Clamp((float)_pausedSongTime, 0f, _audio.clip.length);
             _audio.time = t;
             _audio.pitch = (float)_pitch;
-            _audio.Play();
+            _audio.PlayScheduled(scheduledDsp);
         }
 
         if (_timeline != null) _lastObservedBeat = _timeline.CurrentBeat;

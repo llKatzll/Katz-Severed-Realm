@@ -122,8 +122,6 @@ public class EditorUI : MonoBehaviour
     private void BindBsd()
     {
         if (_bsdDropdown == null) return;
-        _bsdDropdown.ClearOptions();
-        _bsdDropdown.AddOptions(new List<string> { "1/4", "1/8", "1/16", "1/32" });
         _bsdDropdown.value = 0;
         _bsdDropdown.onValueChanged.AddListener(OnBsdChanged);
         OnBsdChanged(0);
@@ -148,14 +146,24 @@ public class EditorUI : MonoBehaviour
 
     private void OnBsdChanged(int idx)
     {
-        if (_timeline == null) return;
-        switch (idx)
+        if (_timeline == null || _bsdDropdown == null) return;
+        if (idx < 0 || idx >= _bsdDropdown.options.Count) return;
+        string text = _bsdDropdown.options[idx].text;
+        _timeline.Bsd = ParseBsdText(text);
+    }
+
+    private int ParseBsdText(string text)
+    {
+        if (string.IsNullOrEmpty(text)) return 4;
+        int slashIdx = text.IndexOf('/');
+        if (slashIdx < 0)
         {
-            case 0: _timeline.Bsd = 4; break;
-            case 1: _timeline.Bsd = 8; break;
-            case 2: _timeline.Bsd = 16; break;
-            case 3: _timeline.Bsd = 32; break;
+            if (int.TryParse(text, out int direct) && direct > 0) return direct;
+            return 4;
         }
+        string numStr = text.Substring(slashIdx + 1).Trim();
+        if (int.TryParse(numStr, out int n) && n > 0) return n;
+        return 4;
     }
 
     private void SetMode(EditorPlaceMode mode)
