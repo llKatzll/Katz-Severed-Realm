@@ -267,6 +267,7 @@ MonoBehaviour:
   _holdLoopFxStopDestroySec: 0.2
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: 47e7700bbfea603418096236c0e2bb40, type: 3}
   _emptyDestroySec: 0.2
+  _hitFxCameraOffset: 0.3
 --- !u!114 &17181890
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -639,6 +640,7 @@ MonoBehaviour:
   _holdTailFxDestroySec: 0.3
   _emptyHitPrefab: {fileID: 0}
   _emptyDestroySec: 0.2
+  _hitFxCameraOffset: 0.3
 --- !u!4 &106970566
 Transform:
   m_ObjectHideFlags: 0
@@ -667,8 +669,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ChartNoteSpawner
   _noteSpawner: {fileID: 1161246400}
-  _baseApproachBeats: 5
-  _noteSpeedMul: 3.5
+  _noteSpeed: 6
+  _dimensionYOffsetExtra: 0.2
   _tapPrefab: {fileID: 0}
   _holdPrefab: {fileID: 0}
   _dimensionTapPrefabGround: {fileID: -356125614831666881, guid: 532b15ddc4752294687176137ebfb6ec, type: 3}
@@ -1159,7 +1161,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SongNameSizer
   textMesh: {fileID: 222877517}
-  maxFontSize: 120
+  maxFontSize: 100
   minFontSize: 30
   maxAllowedWidth: 1750
 --- !u!114 &222877517
@@ -1209,8 +1211,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 100
-  m_fontSizeBase: 100
+  m_fontSize: 80
+  m_fontSizeBase: 80
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 30
@@ -1705,7 +1707,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 6
+  m_SortingOrder: 100
   m_TargetDisplay: 0
 --- !u!224 &284133390
 RectTransform:
@@ -3174,6 +3176,55 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -20.835, y: 0, z: 0}
+--- !u!1 &729703693
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 729703694}
+  - component: {fileID: 729703695}
+  m_Layer: 0
+  m_Name: ScoreManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &729703694
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 729703693}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &729703695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 729703693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea3518b88ad19954f8e8a4b12dcdb4eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ScoreManager
+  _scoreText: {fileID: 823310716}
+  _accuracyText: {fileID: 510335915}
+  _totalNoteCount: 0
+  _accuracyShare: 0.7
+  _comboShare: 0.1
 --- !u!1 &738567379
 GameObject:
   m_ObjectHideFlags: 0
@@ -3438,6 +3489,7 @@ MonoBehaviour:
   _holdLoopFxStopDestroySec: 0.2
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: a28b98217eb767846839462972610979, type: 3}
   _emptyDestroySec: 0.2
+  _hitFxCameraOffset: 0.3
 --- !u!114 &803267090
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3759,6 +3811,7 @@ MonoBehaviour:
   _songNameShowSec: 1.5
   _readySec: 1
   _goSec: 0.5
+  _goFadeOutSec: 0.15
   _gaugeImage: {fileID: 1235183737}
   _resultGroup: {fileID: 923513837}
   _resultDelaySec: 5
@@ -4266,7 +4319,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &962409293
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4299,7 +4352,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SongNameSizer
   textMesh: {fileID: 962409295}
-  maxFontSize: 35
+  maxFontSize: 130
   minFontSize: 15
   maxAllowedWidth: 1400
 --- !u!114 &962409295
@@ -4685,6 +4738,7 @@ MonoBehaviour:
   _holdLoopFxStopDestroySec: 0.2
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: 47e7700bbfea603418096236c0e2bb40, type: 3}
   _emptyDestroySec: 0.2
+  _hitFxCameraOffset: 0.3
 --- !u!114 &1031235102
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5333,8 +5387,7 @@ MonoBehaviour:
     _tapPrefab: {fileID: 9015790616304044342, guid: 1fe615d7e15ae534ab718c41ff8abb9b, type: 3}
     _holdPrefab: {fileID: 899932709157541386, guid: 7537e552b47ad574586741a4f6006b09, type: 3}
     _yOffsetLocal: 0
-  _baseApproachBeats: 5
-  _noteSpeedMul: 3.5
+  _noteSpeed: 1.25
   _autoSpawn: 1
   _spawnIntervalBeats: 0.5
   _spawnRandomSingleLane: 1
@@ -5644,6 +5697,7 @@ MonoBehaviour:
   _holdLoopFxStopDestroySec: 0.2
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: a28b98217eb767846839462972610979, type: 3}
   _emptyDestroySec: 0.2
+  _hitFxCameraOffset: 0.3
 --- !u!114 &1234262242
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5799,11 +5853,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ComboUI
   _comboText: {fileID: 185954371}
   _judgeText: {fileID: 964053399}
-  _holdTickMul: 8
-  _minTickSec: 0.02
   _useSmoothDisplay: 1
   _displayCountPerSec: 60
-  _logHoldTick: 0
 --- !u!4 &1255481619
 Transform:
   m_ObjectHideFlags: 0
@@ -6165,6 +6216,7 @@ MonoBehaviour:
   _holdLoopFxStopDestroySec: 0.2
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: 47e7700bbfea603418096236c0e2bb40, type: 3}
   _emptyDestroySec: 0.2
+  _hitFxCameraOffset: 0.3
 --- !u!114 &1300446906
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6826,6 +6878,7 @@ MonoBehaviour:
   _holdLoopFxStopDestroySec: 0.2
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: a28b98217eb767846839462972610979, type: 3}
   _emptyDestroySec: 0.2
+  _hitFxCameraOffset: 0.3
 --- !u!114 &1479421251
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6897,7 +6950,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1563069714
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6930,8 +6983,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SongNameSizer
   textMesh: {fileID: 1563069716}
-  maxFontSize: 35
-  minFontSize: 15
+  maxFontSize: 120
+  minFontSize: 40
   maxAllowedWidth: 1400
 --- !u!114 &1563069716
 MonoBehaviour:
@@ -6980,8 +7033,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 80
-  m_fontSizeBase: 80
+  m_fontSize: 60
+  m_fontSizeBase: 60
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 30
@@ -7305,6 +7358,7 @@ MonoBehaviour:
   _holdLoopFxStopDestroySec: 0.2
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: 47e7700bbfea603418096236c0e2bb40, type: 3}
   _emptyDestroySec: 0.2
+  _hitFxCameraOffset: 0.3
 --- !u!114 &1653326923
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7574,6 +7628,7 @@ MonoBehaviour:
   _holdLoopFxStopDestroySec: 0.2
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: a28b98217eb767846839462972610979, type: 3}
   _emptyDestroySec: 0.2
+  _hitFxCameraOffset: 0.3
 --- !u!114 &1677809520
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8217,7 +8272,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SongNameSizer
   textMesh: {fileID: 2113569584}
-  maxFontSize: 35
+  maxFontSize: 80
   minFontSize: 15
   maxAllowedWidth: 1400
 --- !u!114 &2113569584
@@ -8335,7 +8390,6 @@ SceneRoots:
   - {fileID: 1362899131}
   - {fileID: 738567381}
   - {fileID: 2026075041}
-  - {fileID: 516172090}
   - {fileID: 1653508746}
   - {fileID: 705346014}
   - {fileID: 295136920}
@@ -8344,4 +8398,6 @@ SceneRoots:
   - {fileID: 923513836}
   - {fileID: 284133390}
   - {fileID: 106970566}
+  - {fileID: 729703694}
   - {fileID: 906491865}
+  - {fileID: 516172090}

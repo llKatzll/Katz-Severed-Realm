@@ -6,8 +6,12 @@ public class ChartNoteSpawner : MonoBehaviour
     [SerializeField] private NoteSpawner _noteSpawner;
 
     [Header("Approach")]
-    [SerializeField] private float _baseApproachBeats = 4f;
-    [SerializeField] private float _noteSpeedMul = 5f;
+    [SerializeField, Range(0.1f, 10f)] private float _noteSpeed = 5f;
+    private const float APPROACH_BEATS_AT_MAX_SPEED = 4f / 3.5f;
+    private const float MAX_SLIDER_VALUE = 10f;
+
+    [Header("Dimension Note Offset")]
+    [SerializeField] private float _dimensionYOffsetExtra = 0.2f;
 
     [Header("Prefabs")]
     [SerializeField] private Note _tapPrefab;
@@ -32,7 +36,7 @@ public class ChartNoteSpawner : MonoBehaviour
     private bool _active;
     private int _groundLaneCount = -1;
 
-    private float ApproachBeats => Mathf.Max(0.0001f, _baseApproachBeats / Mathf.Max(0.0001f, _noteSpeedMul));
+    private float ApproachBeats => (APPROACH_BEATS_AT_MAX_SPEED * MAX_SLIDER_VALUE) / Mathf.Max(0.0001f, _noteSpeed);
     private RhythmConductor Conductor => _noteSpawner != null ? _noteSpawner.Conductor : null;
     public bool IsChartLoaded => _active;
 
@@ -57,6 +61,16 @@ public class ChartNoteSpawner : MonoBehaviour
         _sortedNotes = chart.notes;
         _nextIndex = 0;
         _active = true;
+
+        if (ScoreManager.I != null)
+        {
+            int total = 0;
+            for (int i = 0; i < _sortedNotes.Count; i++)
+            {
+                total += _sortedNotes[i].IsHold ? 2 : 1;
+            }
+            ScoreManager.I.SetTotalNoteCount(total);
+        }
     }
 
     public void LoadChartFromFile(string songName, string difficulty)
@@ -187,7 +201,7 @@ public class ChartNoteSpawner : MonoBehaviour
         Note note = Instantiate(prefab);
         note.MarkAsDimensionNote();
         note.InitFollow(lane._hitPoint, lane._spawnPoint, lane._hitPoint, lane._despawnPoint,
-            travelSec, lane._noteType, lane._yOffsetLocal);
+            travelSec, lane._noteType, lane._yOffsetLocal + _dimensionYOffsetExtra);
 
         if (lane._noteParent != null) note.transform.SetParent(lane._noteParent, true);
         note.SetExpectedHitDspTime(hitDsp);
@@ -207,7 +221,7 @@ public class ChartNoteSpawner : MonoBehaviour
         HoldNote hold = Instantiate(prefab);
         hold.MarkAsDimensionNote();
         hold.InitFollow(lane._hitPoint, lane._spawnPoint, lane._hitPoint, lane._despawnPoint,
-            travelSec, lane._noteType, lane._yOffsetLocal);
+            travelSec, lane._noteType, lane._yOffsetLocal + _dimensionYOffsetExtra);
 
         if (lane._noteParent != null) hold.transform.SetParent(lane._noteParent, true);
         hold.SetExpectedHitDspTime(hitDsp);

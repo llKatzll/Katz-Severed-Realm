@@ -53,7 +53,7 @@ public class ResultUI : MonoBehaviour
         }
 
         if (_scoreText != null)
-            _scoreText.text = score.ToString("N0");
+            _scoreText.text = score.ToString("00,000,000");
 
         if (_maxComboNumText != null)
             _maxComboNumText.text = maxCombo.ToString();

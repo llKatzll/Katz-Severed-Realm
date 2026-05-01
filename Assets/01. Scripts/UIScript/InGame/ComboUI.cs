@@ -1,4 +1,3 @@
-using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -10,25 +9,14 @@ public class ComboUI : MonoBehaviour
     [SerializeField] private TMP_Text _comboText;
     [SerializeField] private TMP_Text _judgeText;
 
-    [Header("Hold Body Tick")]
-    [SerializeField] private float _holdTickMul = 2f;
-    [SerializeField] private float _minTickSec = 0.02f;
-
     [Header("Display Observe")]
     [SerializeField] private bool _useSmoothDisplay = true;
     [SerializeField] private float _displayCountPerSec = 60f;
-
-    [Header("Debug")]
-    [SerializeField] private bool _logHoldTick = false;
 
     private int _combo;
 
     private int _displayCombo;
     private float _displayComboF;
-
-    private Coroutine _holdTickCo;
-    private bool _holdTickRunning;
-    private KeyCode _holdKey;
 
     private void Awake()
     {
@@ -101,19 +89,15 @@ public class ComboUI : MonoBehaviour
         if (breaksCombo)
         {
             BreakCombo();
-            StopHoldBodyTick();
             return;
         }
 
         AddCombo(1);
-        StartHoldBodyTick(bpm, laneKey);
     }
 
     public void OnHoldEnd(string judgeLabel, bool breaksCombo)
     {
         SetJudgeText(judgeLabel);
-
-        StopHoldBodyTick();
 
         if (breaksCombo)
         {
@@ -127,7 +111,6 @@ public class ComboUI : MonoBehaviour
     public void OnHoldFail(string judgeLabel)
     {
         SetJudgeText(judgeLabel);
-        StopHoldBodyTick();
         BreakCombo();
     }
 
@@ -176,60 +159,5 @@ public class ComboUI : MonoBehaviour
             _comboText.text = "";
         else
             _comboText.text = shown.ToString();
-    }
-
-    private void StartHoldBodyTick(float bpm, KeyCode laneKey)
-    {
-        StopHoldBodyTick();
-
-        _holdKey = laneKey;
-
-        float tickSec = CalcHoldTickSec(bpm);
-
-        if (_logHoldTick)
-            Debug.Log("HoldTick Start bpm=" + bpm.ToString("F2") + " tickSec=" + tickSec.ToString("F4"));
-
-        _holdTickRunning = true;
-        _holdTickCo = StartCoroutine(HoldBodyTickCo(tickSec));
-    }
-
-    private void StopHoldBodyTick()
-    {
-        _holdTickRunning = false;
-
-        if (_holdTickCo != null)
-        {
-            StopCoroutine(_holdTickCo);
-            _holdTickCo = null;
-
-            if (_logHoldTick)
-                Debug.Log("HoldTick Stop");
-        }
-    }
-
-    private float CalcHoldTickSec(float bpm)
-    {
-        float safeBpm = Mathf.Clamp(bpm, 1f, 999f); // bpm �̻�ġ ���(������)
-        float ticksPerMin = safeBpm * Mathf.Max(0.01f, _holdTickMul);
-        float sec = 60f / ticksPerMin;
-        return Mathf.Max(_minTickSec, sec);
-    }
-
-    private IEnumerator HoldBodyTickCo(float tickSec)
-    {
-        _holdTickRunning = true;
-
-        while (_holdTickRunning)
-        {
-            if (!Input.GetKey(_holdKey))
-                yield break;
-
-            AddCombo(1);
-
-            if (_logHoldTick)
-                Debug.Log("HoldTick +1 combo=" + _combo);
-
-            yield return new WaitForSeconds(tickSec);
-        }
     }
 }

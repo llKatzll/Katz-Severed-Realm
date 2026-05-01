@@ -4691,7 +4691,7 @@ MonoBehaviour:
   _panelColor: {r: 0, g: 0, b: 0, a: 1}
   _noteCanvasScale: 0.01
   _orthoSize: 5
-  _beatHeight: 4
+  _beatHeight: 3
   _laneCount: 4
   _laneWidth: 0.8
   _panelGap: 3
@@ -4701,6 +4701,7 @@ MonoBehaviour:
   _judgeLineThickness: 0.05
   _columnLineColor: {r: 0.6, g: 0.6, b: 0.6, a: 0.7}
   _columnLineThickness: 0.05
+  _columnLineMarginScale: 8
 --- !u!4 &739525159
 Transform:
   m_ObjectHideFlags: 0
@@ -4894,10 +4895,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EditorPlayback
   _timeline: {fileID: 0}
   _audio: {fileID: 0}
-  _mixer: {fileID: 24100000, guid: 66fd0e66e39b4cc4fb903816da35d03b, type: 2}
-  _mixerGroup: {fileID: 24300002, guid: 66fd0e66e39b4cc4fb903816da35d03b, type: 2}
-  _pitchShiftParam: PitchShift
-  _preservePitch: 1
 --- !u!1 &755464632
 GameObject:
   m_ObjectHideFlags: 0

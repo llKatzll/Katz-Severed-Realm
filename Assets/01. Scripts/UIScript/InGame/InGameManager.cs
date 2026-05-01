@@ -27,19 +27,20 @@ public class InGameManager : MonoBehaviour
     [SerializeField] private TMP_Text _goText;
 
     [Header("Song Reveal Timing")]
-    [SerializeField] private float _revealFadeInSec = 0.5f;
-    [SerializeField] private float _artistShowSec = 1.5f;
-    [SerializeField] private float _songNameShowSec = 1.5f;
-    [SerializeField] private float _readySec = 1.0f;
-    [SerializeField] private float _goSec = 0.5f;
+    [SerializeField] private float _revealFadeInSec = 0.2f;
+    [SerializeField] private float _artistShowSec = 0.5f;
+    [SerializeField] private float _songNameShowSec = 0.5f;
+    [SerializeField] private float _readySec = 0.4f;
+    [SerializeField] private float _goSec = 0.3f;
+    [SerializeField] private float _goFadeOutSec = 0.15f;
 
     [Header("Gauge")]
     [SerializeField] private Image _gaugeImage;
 
     [Header("Result")]
     [SerializeField] private CanvasGroup _resultGroup;
-    [SerializeField] private float _resultDelaySec = 5f;
-    [SerializeField] private float _resultFadeInSec = 1f;
+    [SerializeField] private float _resultDelaySec = 2f;
+    [SerializeField] private float _resultFadeInSec = 0.5f;
 
     [Header("Scene")]
     [SerializeField] private string _songSelectScene = "SongSelect";
@@ -179,11 +180,11 @@ public class InGameManager : MonoBehaviour
             _goText.gameObject.SetActive(true);
             yield return StartCoroutine(FadeTMP(_goText, 0f, 1f, 0.15f));
             yield return new WaitForSeconds(_goSec);
-            yield return StartCoroutine(FadeTMP(_goText, 1f, 0f, 0.2f));
+            yield return StartCoroutine(FadeTMP(_goText, 1f, 0f, _goFadeOutSec));
             _goText.gameObject.SetActive(false);
         }
 
-        yield return StartCoroutine(FadeCanvasGroup(_songRevealGroup, 1f, 0f, 0.3f));
+        yield return StartCoroutine(FadeCanvasGroup(_songRevealGroup, 1f, 0f, _goFadeOutSec));
         _songRevealGroup.gameObject.SetActive(false);
 
         SongData song = GameManager.I != null ? GameManager.I.SelectedSong : null;

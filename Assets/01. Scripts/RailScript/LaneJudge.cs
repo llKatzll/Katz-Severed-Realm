@@ -47,6 +47,9 @@ public class LaneJudge : MonoBehaviour
     [SerializeField] private GameObject _emptyHitPrefab;
     [SerializeField] private float _emptyDestroySec = 0.2f;
 
+    [Header("FX Camera Offset")]
+    [SerializeField] private float _hitFxCameraOffset = 0.3f;
+
     private GameObject _holdLoopFx;
     private readonly List<Note> _tapNotes = new List<Note>(64);
     private HoldNote _hold;
@@ -494,6 +497,14 @@ public class LaneJudge : MonoBehaviour
     }
 
 
+    private Vector3 GetFxSpawnPos()
+    {
+        Camera cam = Camera.main;
+        if (cam == null) return transform.position;
+        Vector3 toCam = (cam.transform.position - transform.position).normalized;
+        return transform.position + toCam * _hitFxCameraOffset;
+    }
+
     private void SpawnTapHitFx(JudgeType judge, NoteSpawner.NoteType laneType)
     {
         if (judge == JudgeType.Miss) return;
@@ -502,7 +513,7 @@ public class LaneJudge : MonoBehaviour
 
         if (prefab == null) return;
 
-        GameObject fx = Instantiate(prefab, transform.position, transform.rotation);
+        GameObject fx = Instantiate(prefab, GetFxSpawnPos(), transform.rotation);
 
         Color c = GetJudgeColor(laneType, judge);
         ApplyFxColor(fx, c);
@@ -517,7 +528,7 @@ public class LaneJudge : MonoBehaviour
 
         if (_holdHeadFxPrefab == null) return;
 
-        GameObject fx = Instantiate(_holdHeadFxPrefab, transform.position, transform.rotation);
+        GameObject fx = Instantiate(_holdHeadFxPrefab, GetFxSpawnPos(), transform.rotation);
 
         Color c = GetJudgeColor(laneType, judge);
         ApplyFxColor(fx, c);
@@ -531,7 +542,7 @@ public class LaneJudge : MonoBehaviour
 
         if (_holdTailFxPrefab == null) return;
 
-        GameObject fx = Instantiate(_holdTailFxPrefab, transform.position, transform.rotation);
+        GameObject fx = Instantiate(_holdTailFxPrefab, GetFxSpawnPos(), transform.rotation);
 
         Color c = GetJudgeColor(laneType, judge);
         ApplyFxColor(fx, c);
@@ -549,7 +560,7 @@ public class LaneJudge : MonoBehaviour
 
         if (prefab == null) return;
 
-        _holdLoopFx = Instantiate(prefab, transform.position, transform.rotation);
+        _holdLoopFx = Instantiate(prefab, GetFxSpawnPos(), transform.rotation);
         ApplyFxColor(_holdLoopFx, c);
     }
 
@@ -567,7 +578,14 @@ public class LaneJudge : MonoBehaviour
     {
         if (_emptyHitPrefab == null) return;
 
-        GameObject fx = Instantiate(_emptyHitPrefab, transform.position, transform.rotation);
+        GameObject fx = Instantiate(_emptyHitPrefab, GetFxSpawnPos(), transform.rotation);
+
+        if (RuntimeColorPalette.I != null)
+        {
+            Color c = RuntimeColorPalette.I.GetRailColor(_laneType);
+            ApplyFxColor(fx, c);
+        }
+
         if (_emptyDestroySec > 0f) Destroy(fx, _emptyDestroySec);
     }
 

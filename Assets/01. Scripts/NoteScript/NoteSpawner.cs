@@ -48,9 +48,10 @@ public class NoteSpawner : MonoBehaviour
     [SerializeField] private NoteLane[] _lanes;
 
     [Header("Approach")]
-    [SerializeField] private float _baseApproachBeats = 4f;
-    [SerializeField] private float _noteSpeedMul = 5f;
-    private float ApproachBeats => Mathf.Max(0.0001f, _baseApproachBeats / Mathf.Max(0.0001f, _noteSpeedMul));
+    [SerializeField, Range(0.1f, 10f)] private float _noteSpeed = 5f;
+    private const float APPROACH_BEATS_AT_MAX_SPEED = 4f / 3.5f;
+    private const float MAX_SLIDER_VALUE = 10f;
+    private float ApproachBeats => (APPROACH_BEATS_AT_MAX_SPEED * MAX_SLIDER_VALUE) / Mathf.Max(0.0001f, _noteSpeed);
 
     [Header("Auto Spawn Test")]
     [SerializeField] private bool _autoSpawn = true;
@@ -76,8 +77,7 @@ public class NoteSpawner : MonoBehaviour
     private void OnValidate()
     {
         if (_spawnIntervalBeats <= 0f) _spawnIntervalBeats = 0.0001f;
-        if (_noteSpeedMul <= 0f) _noteSpeedMul = 0.0001f;
-        if (_baseApproachBeats <= 0f) _baseApproachBeats = 0.0001f;
+        if (_noteSpeed <= 0f) _noteSpeed = 0.0001f;
         if (_holdBeats < 0f) _holdBeats = 0f;
     }
 
