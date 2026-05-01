@@ -65,7 +65,7 @@ public class EditorLoadSong : MonoBehaviour
 
         if (_playback != null)
         {
-            _playback.SetClip(song.fullClip, song.bpm, 0.0);
+            _playback.SetClip(song.fullClip, song.bpm, song.audioOffsetSec);
         }
 
         ReloadChartForCurrentSongDifficulty();
@@ -77,7 +77,7 @@ public class EditorLoadSong : MonoBehaviour
         CurrentSong = song;
         if (_playback != null)
         {
-            _playback.SetClip(song.fullClip, song.bpm, 0.0);
+            _playback.SetClip(song.fullClip, song.bpm, song.audioOffsetSec);
         }
     }
 

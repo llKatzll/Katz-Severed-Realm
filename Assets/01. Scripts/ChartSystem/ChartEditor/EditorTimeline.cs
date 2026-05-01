@@ -13,6 +13,9 @@ public class EditorTimeline : MonoBehaviour
     private float _currentBeat;
     private Camera _cam;
 
+    private bool _middleDragging;
+    private Vector3 _middleDragLastMouse;
+
     public float CurrentBeat
     {
         get => _currentBeat;
@@ -52,8 +55,27 @@ public class EditorTimeline : MonoBehaviour
     private void HandleInput()
     {
         float wheel = Input.mouseScrollDelta.y;
-        if (Mathf.Abs(wheel) < 0.001f) return;
-        CurrentBeat += wheel * _scrollSpeed;
+        if (Mathf.Abs(wheel) >= 0.001f)
+            CurrentBeat += wheel * _scrollSpeed;
+
+        if (Input.GetMouseButtonDown(2))
+        {
+            _middleDragging = true;
+            _middleDragLastMouse = Input.mousePosition;
+        }
+        if (Input.GetMouseButtonUp(2))
+        {
+            _middleDragging = false;
+        }
+        if (_middleDragging)
+        {
+            Vector3 delta = Input.mousePosition - _middleDragLastMouse;
+            _middleDragLastMouse = Input.mousePosition;
+
+            float worldPerPixel = (_cam.orthographicSize * 2f) / Mathf.Max(1, Screen.height);
+            float beatPerPixel = worldPerPixel / Mathf.Max(0.0001f, _bootstrap.BeatHeight);
+            CurrentBeat -= delta.y * beatPerPixel;
+        }
     }
 
     private void UpdateCameraAndJudgeLine()

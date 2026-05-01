@@ -195,6 +195,7 @@ public class InGameManager : MonoBehaviour
         if (_conductor != null && song != null)
         {
             _conductor.SetBpm(song.bpm);
+            _conductor.SetAudioOffset(song.audioOffsetSec);
             if (song.fullClip != null && _conductor.Audio != null)
                 _conductor.Audio.clip = song.fullClip;
         }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class EditorPlayback : MonoBehaviour
 {
@@ -158,6 +159,12 @@ public class EditorPlayback : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(null);
+            TogglePlay();
+        }
+
         if (_timeline == null) return;
 
         if (IsPlaying)

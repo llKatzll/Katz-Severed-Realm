@@ -32,6 +32,9 @@ public class SongData : ScriptableObject
     public bool hasTempoShift;
     public float durationSeconds;
 
+    [Header("Timing")]
+    public double audioOffsetSec;
+
     [Header("Credits")]
     public string charter;
     public string mapper;

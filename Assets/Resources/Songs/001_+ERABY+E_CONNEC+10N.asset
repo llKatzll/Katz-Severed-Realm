@@ -17,6 +17,7 @@ MonoBehaviour:
   bpm: 230
   hasTempoShift: 0
   durationSeconds: 311
+  audioOffsetSec: 0.0652
   charter: Kachesis
   mapper: Kachesis
   songImage: {fileID: 21300000, guid: 99d08a1b3b7a6a14dbcefc10e11a2e04, type: 3}

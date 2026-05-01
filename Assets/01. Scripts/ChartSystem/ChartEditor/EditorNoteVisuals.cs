@@ -123,6 +123,7 @@ public class EditorNoteVisuals : MonoBehaviour
         float z = dim ? _dimensionZ : _noteZ;
 
         var go = Instantiate(prefab, new Vector3(x, y, z), Quaternion.identity, GetSpawnParent());
+        go.transform.position = new Vector3(x, y, z);
         ApplyWidth(go, dim);
         _spawned.Add(go);
     }
@@ -142,7 +143,9 @@ public class EditorNoteVisuals : MonoBehaviour
 
         if (bodyPrefab != null && bodyHeight > 0f)
         {
-            var body = Instantiate(bodyPrefab, new Vector3(x, (startY + endY) * 0.5f, baseZ), Quaternion.identity, GetSpawnParent());
+            var bodyPos = new Vector3(x, (startY + endY) * 0.5f, baseZ);
+            var body = Instantiate(bodyPrefab, bodyPos, Quaternion.identity, GetSpawnParent());
+            body.transform.position = bodyPos;
             ApplyWidth(body, dim, true);
             StretchBodyHeight(body, bodyHeight);
             _spawned.Add(body);
@@ -150,14 +153,18 @@ public class EditorNoteVisuals : MonoBehaviour
 
         if (headPrefab != null)
         {
-            var head = Instantiate(headPrefab, new Vector3(x, startY, baseZ + _headTailZOffset), Quaternion.identity, GetSpawnParent());
+            var headPos = new Vector3(x, startY, baseZ + _headTailZOffset);
+            var head = Instantiate(headPrefab, headPos, Quaternion.identity, GetSpawnParent());
+            head.transform.position = headPos;
             ApplyWidth(head, dim);
             _spawned.Add(head);
         }
 
         if (tailPrefab != null)
         {
-            var tail = Instantiate(tailPrefab, new Vector3(x, endY, baseZ + _headTailZOffset), Quaternion.identity, GetSpawnParent());
+            var tailPos = new Vector3(x, endY, baseZ + _headTailZOffset);
+            var tail = Instantiate(tailPrefab, tailPos, Quaternion.identity, GetSpawnParent());
+            tail.transform.position = tailPos;
             ApplyWidth(tail, dim);
             _spawned.Add(tail);
         }
@@ -211,7 +218,9 @@ public class EditorNoteVisuals : MonoBehaviour
         float y = _timeline.BeatToWorldY(beat);
         float z = isDimension ? _dimensionZ : _noteZ;
 
-        _previewHead = Instantiate(prefab, new Vector3(x, y, z + _headTailZOffset), Quaternion.identity, GetSpawnParent());
+        var pos = new Vector3(x, y, z + _headTailZOffset);
+        _previewHead = Instantiate(prefab, pos, Quaternion.identity, GetSpawnParent());
+        _previewHead.transform.position = pos;
         ApplyWidth(_previewHead, isDimension);
     }
 
