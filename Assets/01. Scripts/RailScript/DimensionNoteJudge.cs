@@ -38,9 +38,6 @@ public class DimensionNoteJudge : MonoBehaviour
     [SerializeField] private GameObject _emptyHitPrefab;
     [SerializeField] private float _emptyDestroySec = 0.2f;
 
-    [Header("FX Camera Offset")]
-    [SerializeField] private float _hitFxCameraOffset = 0.3f;
-
     private readonly List<Note> _tapNotes = new List<Note>(32);
     private readonly List<HoldNote> _holds = new List<HoldNote>(8);
     private readonly List<HoldNote> _activeHolds = new List<HoldNote>(8);
@@ -105,7 +102,7 @@ public class DimensionNoteJudge : MonoBehaviour
         judgedAnything |= StartAllHoldsInWindow();
 
         if (!judgedAnything)
-            SpawnEmptyHit(ApplyFxCameraOffset(transform.position));
+            SpawnEmptyHit(transform.position);
     }
 
     private void OnKeyUp()
@@ -288,20 +285,12 @@ public class DimensionNoteJudge : MonoBehaviour
         Vector3 pos = hitRef != null ? hitRef.position : transform.position;
         Quaternion rot = hitRef != null ? hitRef.rotation : Quaternion.identity;
 
-        GameObject fx = Instantiate(prefab, ApplyFxCameraOffset(pos), rot);
+        GameObject fx = Instantiate(prefab, pos, rot);
 
         Color c = GetJudgeColor(laneType, judge);
         ApplyFxColor(fx, c);
 
         if (life > 0f) Destroy(fx, life);
-    }
-
-    private Vector3 ApplyFxCameraOffset(Vector3 basePos)
-    {
-        Camera cam = Camera.main;
-        if (cam == null) return basePos;
-        Vector3 toCam = (cam.transform.position - basePos).normalized;
-        return basePos + toCam * _hitFxCameraOffset;
     }
 
     private Color GetJudgeColor(NoteSpawner.NoteType laneType, JudgeType judge)

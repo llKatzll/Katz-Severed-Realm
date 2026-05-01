@@ -85,7 +85,11 @@ public class EditorSaveLoad : MonoBehaviour
         if (_chart != null) _chart.LoadChart(data);
         Debug.Log("[EditorSaveLoad] Loaded: " + path);
 #else
-        Debug.LogWarning("[EditorSaveLoad] LoadDialog is only available in Unity Editor mode.");
+        if (_loadSong != null)
+        {
+            _loadSong.ReloadChartForCurrentSongDifficulty();
+            Debug.Log("[EditorSaveLoad] Reloaded current chart");
+        }
 #endif
     }
 

@@ -72,9 +72,11 @@ public class EditorInput : MonoBehaviour
         if (!_timeline.WorldXToLane(world.x, out lane, out type)) return false;
 
         float rawBeat = _timeline.WorldYToBeat(world.y);
+        Debug.Log($"[Click Raw] worldY={world.y:F4} rawBeat={rawBeat:F4} bsd={_timeline.Bsd}");
         if (rawBeat < 0f) return false;
 
         beat = _timeline.SnapBeat(rawBeat);
+        Debug.Log($"[Click Snap] snappedBeat={beat:F4} lane={lane} type={type}");
         if (beat < 0f) return false;
         return true;
     }

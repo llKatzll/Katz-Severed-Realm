@@ -75,7 +75,7 @@ public class SongInfoDisplay : MonoBehaviour
             _charterText.text = "Charter : " + song.charter;
 
         if (_mapperText != null)
-            _mapperText.text = "Mapper : " + song.mapper;
+            _mapperText.text = "Effecter : " + song.mapper;
 
         if (_songImage != null && song.songImage != null)
             _songImage.sprite = song.songImage;

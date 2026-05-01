@@ -9,6 +9,9 @@ public class EditorLoadSong : MonoBehaviour
     [SerializeField] private EditorPlayback _playback;
     [SerializeField] private DifficultyType _currentDifficulty = DifficultyType.Easy;
 
+    [Header("Default Song (Auto Load on Start)")]
+    [SerializeField] private SongData _defaultSong;
+
     public DifficultyType CurrentDifficulty
     {
         get => _currentDifficulty;
@@ -21,6 +24,14 @@ public class EditorLoadSong : MonoBehaviour
     {
         if (_chart == null) _chart = GetComponent<EditorChart>();
         if (_playback == null) _playback = GetComponent<EditorPlayback>();
+    }
+
+    private void Start()
+    {
+        if (_defaultSong != null && CurrentSong == null)
+        {
+            ApplySong(_defaultSong);
+        }
     }
 
     public void OpenLoadDialog()

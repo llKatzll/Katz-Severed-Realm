@@ -14,6 +14,9 @@ public class EditorBeatGrid : MonoBehaviour
     [SerializeField] private Color _halfBeatColor = new Color(0.35f, 0.55f, 1f, 0.85f);
     [SerializeField] private Color _quarterBeatColor = new Color(1f, 0.9f, 0.3f, 0.8f);
 
+    [Header("Beat Phase")]
+    [SerializeField] private float _beatPhaseOffset = 0f;
+
     private readonly List<Transform> _pool = new List<Transform>();
     private readonly List<MeshRenderer> _renderers = new List<MeshRenderer>();
 
@@ -79,12 +82,13 @@ public class EditorBeatGrid : MonoBehaviour
 
     private Color GetColorForBeat(float beat)
     {
+        float phase = beat + _beatPhaseOffset;
         const float eps = 0.0001f;
-        if (Mathf.Abs(beat - Mathf.Round(beat)) < eps) return _wholeBeatColor;
-        float b2 = beat * 2f;
-        if (Mathf.Abs(b2 - Mathf.Round(b2)) < eps) return _halfBeatColor;
-        float b4 = beat * 4f;
-        if (Mathf.Abs(b4 - Mathf.Round(b4)) < eps) return _quarterBeatColor;
+        if (Mathf.Abs(phase - Mathf.Round(phase)) < eps) return _wholeBeatColor;
+        float p2 = phase * 2f;
+        if (Mathf.Abs(p2 - Mathf.Round(p2)) < eps) return _halfBeatColor;
+        float p4 = phase * 4f;
+        if (Mathf.Abs(p4 - Mathf.Round(p4)) < eps) return _quarterBeatColor;
         return _lineColor;
     }
 

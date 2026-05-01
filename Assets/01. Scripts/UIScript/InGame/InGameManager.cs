@@ -18,6 +18,7 @@ public class InGameManager : MonoBehaviour
     [SerializeField] private float _transitionShowY = 0f;
     [SerializeField] private float _transitionWaitY = 1100f;
     [SerializeField] private float _exitTransitionSec = 5f;
+    [SerializeField] private float _postLoadingPauseSec = 0.1f;
 
     [Header("Song Reveal")]
     [SerializeField] private CanvasGroup _songRevealGroup;
@@ -135,6 +136,9 @@ public class InGameManager : MonoBehaviour
         }
 
         yield return StartCoroutine(WaitForLoading());
+
+        if (_postLoadingPauseSec > 0f)
+            yield return new WaitForSeconds(_postLoadingPauseSec);
 
         if (_transitionRect != null)
         {

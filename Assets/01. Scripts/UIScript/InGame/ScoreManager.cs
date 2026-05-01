@@ -13,10 +13,6 @@ public class ScoreManager : MonoBehaviour
     [Header("Note Count")]
     [SerializeField] private int _totalNoteCount = 0;
 
-    [Header("Score Share")]
-    [SerializeField, Range(0f, 1f)] private float _accuracyShare = 0.7f;
-    [SerializeField, Range(0f, 1f)] private float _comboShare = 0.3f;
-
     private double _score;
     private int _combo;
     private int _maxCombo;
@@ -93,27 +89,10 @@ public class ScoreManager : MonoBehaviour
         if (_totalNoteCount <= 0) return 0.0;
 
         double basePerNote = 10_000_000.0 / _totalNoteCount;
-        double judgmentWeight = GetJudgmentWeight(judge);
-        bool comboSurvived = (judge != JudgeType.Ruin && judge != JudgeType.Miss);
-
-        double accuracyScore = basePerNote * judgmentWeight * _accuracyShare;
-        double comboScore = comboSurvived ? basePerNote * _comboShare : 0.0;
+        double weight = GetAccuracyWeight(judge);
         double sevBonus = (judge == JudgeType.Severance) ? 1.0 : 0.0;
 
-        return accuracyScore + comboScore + sevBonus;
-    }
-
-    private double GetJudgmentWeight(JudgeType judge)
-    {
-        switch (judge)
-        {
-            case JudgeType.Severance: return 1.0;
-            case JudgeType.Clean:     return 1.0;
-            case JudgeType.Trace:     return 0.8;
-            case JudgeType.Fracture:  return 0.5;
-            case JudgeType.Ruin:      return 0.2;
-            default:                  return 0.0;
-        }
+        return basePerNote * weight + sevBonus;
     }
 
     private double GetAccuracyWeight(JudgeType judge)

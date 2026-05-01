@@ -4752,6 +4752,7 @@ MonoBehaviour:
   _wholeBeatColor: {r: 0.95, g: 0.3, b: 0.3, a: 0.85}
   _halfBeatColor: {r: 0.35, g: 0.55, b: 1, a: 0.85}
   _quarterBeatColor: {r: 1, g: 0.9, b: 0.3, a: 0.8}
+  _beatPhaseOffset: -0.125
 --- !u!114 &739525162
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4867,6 +4868,7 @@ MonoBehaviour:
   _chart: {fileID: 0}
   _playback: {fileID: 0}
   _currentDifficulty: 0
+  _defaultSong: {fileID: 11400000, guid: f174b047e5dc04347be8e14b14d4c3b7, type: 2}
 --- !u!114 &739525167
 MonoBehaviour:
   m_ObjectHideFlags: 0
