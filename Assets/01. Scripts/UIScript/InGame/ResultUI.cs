@@ -24,6 +24,7 @@ public class ResultUI : MonoBehaviour
     public void Populate()
     {
         SongData song = GameManager.I != null ? GameManager.I.SelectedSong : null;
+        DifficultyType diff = GameManager.I != null ? GameManager.I.SelectedDifficulty : DifficultyType.Easy;
 
         if (_songNameText != null)
             _songNameText.text = song != null ? song.songName : "Unknown";
@@ -45,6 +46,11 @@ public class ResultUI : MonoBehaviour
         }
 
         string rank = RankUtility.GetRank(score, totalNotes);
+
+        if (song != null)
+        {
+            ScoreRecord.SaveIfBetter(song.songName, diff, score, accuracy, totalNotes);
+        }
 
         if (_rankText != null)
         {

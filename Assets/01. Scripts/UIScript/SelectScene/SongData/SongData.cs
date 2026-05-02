@@ -17,9 +17,9 @@ public class DifficultyData
     public int level;
     public float constant;
 
-    [Header("Records")]
-    public int highScore;
-    public float accuracy;
+    [Header("Credits")]
+    public string charter;
+    public string mapper;
 }
 
 [CreateAssetMenu(menuName = "Katz/Song Data", fileName = "NewSong")]

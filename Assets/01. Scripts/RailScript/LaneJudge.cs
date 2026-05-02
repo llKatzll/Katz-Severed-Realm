@@ -50,6 +50,7 @@ public class LaneJudge : MonoBehaviour
     private GameObject _holdLoopFx;
     private readonly List<Note> _tapNotes = new List<Note>(64);
     private HoldNote _hold;
+    private readonly List<HoldNote> _holdQueue = new List<HoldNote>(8);
 
     private static readonly int IdColor = Shader.PropertyToID("_Color");
     private static readonly int IdBaseColor = Shader.PropertyToID("_BaseColor");
@@ -90,14 +91,46 @@ public class LaneJudge : MonoBehaviour
     public bool RegisterHold(HoldNote h)
     {
         if (h == null) return false;
-        if (_hold != null) return false;
-
-        _hold = h;
+        _holdQueue.Add(h);
+        PromoteNextHold();
         return true;
+    }
+
+    private void PromoteNextHold()
+    {
+        for (int i = _holdQueue.Count - 1; i >= 0; i--)
+        {
+            if (_holdQueue[i] == null) _holdQueue.RemoveAt(i);
+        }
+
+        if (_hold != null) return;
+        if (_holdQueue.Count == 0) return;
+
+        HoldNote next = null;
+        double minTime = double.MaxValue;
+        int nextIdx = -1;
+        for (int i = 0; i < _holdQueue.Count; i++)
+        {
+            double t = _holdQueue[i].HeadDspTime;
+            if (t < minTime)
+            {
+                minTime = t;
+                next = _holdQueue[i];
+                nextIdx = i;
+            }
+        }
+
+        if (next != null)
+        {
+            _hold = next;
+            _holdQueue.RemoveAt(nextIdx);
+        }
     }
 
     private void Update()
     {
+        PromoteNextHold();
+
         CleanupDeadTap();
         AutoMissTapNoInput();
 

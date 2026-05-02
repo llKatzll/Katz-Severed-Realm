@@ -71,12 +71,6 @@ public class SongInfoDisplay : MonoBehaviour
         if (_durationText != null)
             _durationText.text = song.GetFormattedDuration();
 
-        if (_charterText != null)
-            _charterText.text = "Charter : " + song.charter;
-
-        if (_mapperText != null)
-            _mapperText.text = "Effecter : " + song.mapper;
-
         if (_songImage != null && song.songImage != null)
             _songImage.sprite = song.songImage;
     }
@@ -106,17 +100,31 @@ public class SongInfoDisplay : MonoBehaviour
             _difficultyNameText.color = diffColor;
         }
 
+        string charter = !string.IsNullOrEmpty(diffData.charter) ? diffData.charter : song.charter;
+        string mapper = !string.IsNullOrEmpty(diffData.mapper) ? diffData.mapper : song.mapper;
+
+        if (_charterText != null)
+            _charterText.text = "Charter : " + charter;
+
+        if (_mapperText != null)
+            _mapperText.text = "Effecter : " + mapper;
+
+        int recordScore = ScoreRecord.GetHighScore(song.songName, difficulty);
+        float recordAcc = ScoreRecord.GetAccuracy(song.songName, difficulty);
+        int recordTotal = ScoreRecord.GetTotalNoteCount(song.songName, difficulty);
+        int rankNoteCount = recordTotal > 0 ? recordTotal : _maxNotesDefault;
+
         if (_scoreText != null)
-            _scoreText.text = diffData.highScore.ToString("N0");
+            _scoreText.text = recordScore.ToString("00,000,000");
 
         if (_rankText != null)
         {
-            string rank = RankUtility.GetRank(diffData.highScore, _maxNotesDefault);
+            string rank = RankUtility.GetRank(recordScore, rankNoteCount);
             _rankText.text = rank;
             _rankText.color = RankUtility.GetRankColor(rank);
         }
 
         if (_accuracyText != null)
-            _accuracyText.text = diffData.accuracy.ToString("F2") + "%";
+            _accuracyText.text = recordAcc.ToString("F2") + "%";
     }
 }

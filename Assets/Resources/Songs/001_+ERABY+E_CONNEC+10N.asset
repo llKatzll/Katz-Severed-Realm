@@ -25,12 +25,17 @@ MonoBehaviour:
   fullClip: {fileID: 8300000, guid: 94d2987dc75b6ca428e0b23bff7ca73c, type: 3}
   difficulties:
   - type: 0
-    level: 2
-    constant: 2.3
-    highScore: 0
-    accuracy: 0
+    level: 1
+    constant: 1.3
+    charter: Kachesis
+    mapper: Kachesis
   - type: 1
-    level: 3
-    constant: 3.8
-    highScore: 0
-    accuracy: 0
+    level: 4
+    constant: 4.2
+    charter: Kachesis
+    mapper: Kachesis
+  - type: 2
+    level: 1
+    constant: 0
+    charter: 
+    mapper: 

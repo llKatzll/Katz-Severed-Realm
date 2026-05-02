@@ -267,7 +267,6 @@ MonoBehaviour:
   _holdLoopFxStopDestroySec: 0.3
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: 47e7700bbfea603418096236c0e2bb40, type: 3}
   _emptyDestroySec: 0.2
-  _hitFxCameraOffset: 0.3
 --- !u!114 &17181890
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -640,7 +639,6 @@ MonoBehaviour:
   _holdTailFxDestroySec: 0.3
   _emptyHitPrefab: {fileID: 0}
   _emptyDestroySec: 0.2
-  _hitFxCameraOffset: 0.3
 --- !u!4 &106970566
 Transform:
   m_ObjectHideFlags: 0
@@ -3487,7 +3485,6 @@ MonoBehaviour:
   _holdLoopFxStopDestroySec: 0.3
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: a28b98217eb767846839462972610979, type: 3}
   _emptyDestroySec: 0.2
-  _hitFxCameraOffset: 0.3
 --- !u!114 &803267090
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4737,7 +4734,6 @@ MonoBehaviour:
   _holdLoopFxStopDestroySec: 0.3
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: 47e7700bbfea603418096236c0e2bb40, type: 3}
   _emptyDestroySec: 0.2
-  _hitFxCameraOffset: 0.3
 --- !u!114 &1031235102
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5696,7 +5692,6 @@ MonoBehaviour:
   _holdLoopFxStopDestroySec: 0.3
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: a28b98217eb767846839462972610979, type: 3}
   _emptyDestroySec: 0.2
-  _hitFxCameraOffset: 0.3
 --- !u!114 &1234262242
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6215,7 +6210,6 @@ MonoBehaviour:
   _holdLoopFxStopDestroySec: 0.3
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: 47e7700bbfea603418096236c0e2bb40, type: 3}
   _emptyDestroySec: 0.2
-  _hitFxCameraOffset: 0.3
 --- !u!114 &1300446906
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6877,7 +6871,6 @@ MonoBehaviour:
   _holdLoopFxStopDestroySec: 0.3
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: a28b98217eb767846839462972610979, type: 3}
   _emptyDestroySec: 0.2
-  _hitFxCameraOffset: 0.3
 --- !u!114 &1479421251
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7357,7 +7350,6 @@ MonoBehaviour:
   _holdLoopFxStopDestroySec: 0.3
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: 47e7700bbfea603418096236c0e2bb40, type: 3}
   _emptyDestroySec: 0.2
-  _hitFxCameraOffset: 0.3
 --- !u!114 &1653326923
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7627,7 +7619,6 @@ MonoBehaviour:
   _holdLoopFxStopDestroySec: 0.3
   _emptyHitPrefab: {fileID: 8163141537363357767, guid: a28b98217eb767846839462972610979, type: 3}
   _emptyDestroySec: 0.2
-  _hitFxCameraOffset: 0.3
 --- !u!114 &1677809520
 MonoBehaviour:
   m_ObjectHideFlags: 0
