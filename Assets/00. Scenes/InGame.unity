@@ -2535,7 +2535,7 @@ GameObject:
   m_Component:
   - component: {fileID: 515536519}
   m_Layer: 0
-  m_Name: RailControl_3
+  m_Name: GROUND3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6423,7 +6423,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1379952152}
   m_Layer: 0
-  m_Name: RailControl_4
+  m_Name: GROUND4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6899,7 +6899,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1488290273}
   m_Layer: 0
-  m_Name: RailControl_2
+  m_Name: GROUND2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7922,7 +7922,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1897652376}
   m_Layer: 0
-  m_Name: RailControl_1
+  m_Name: GROUND1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
