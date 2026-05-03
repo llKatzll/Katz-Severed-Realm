@@ -2007,6 +2007,86 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 223043836}
   m_CullTransparentMesh: 1
+--- !u!1 &258880066
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 258880067}
+  - component: {fileID: 258880069}
+  - component: {fileID: 258880068}
+  m_Layer: 5
+  m_Name: EffectChartZone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &258880067
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 258880066}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1011368733}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &258880068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 258880066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bb8c91ca23f8654aae5bd1a47a23345, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EffectBeatGrid
+  _bootstrap: {fileID: 258880069}
+  _timeline: {fileID: 739525160}
+  _lineThickness: 0.03
+  _lineMarginBeats: 5
+  _lineColor: {r: 0.55, g: 0.55, b: 0.55, a: 0.7}
+  _wholeBeatColor: {r: 0.95, g: 0.3, b: 0.3, a: 0.9}
+  _halfBeatColor: {r: 0.35, g: 0.55, b: 1, a: 0.85}
+  _quarterBeatColor: {r: 1, g: 0.9, b: 0.3, a: 0.8}
+  _beatPhaseOffset: 0
+--- !u!114 &258880069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 258880066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0d2936b367b0694a88caa65da44ba95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EffectBootstrap
+  _editorBootstrap: {fileID: 739525158}
+  _panelCenterX: -7
+  _panelColor: {r: 0, g: 0, b: 0, a: 1}
+  _laneCount: 6
+  _laneWidth: 0.4
+  _totalBeats: 1000
+  _columnLineColor: {r: 0.6, g: 0.6, b: 0.6, a: 0.7}
+  _columnLineThickness: 0.03
+  _columnLineMarginScale: 8
+  _noteCanvasScale: 0.01
 --- !u!1 &268981559
 GameObject:
   m_ObjectHideFlags: 0
@@ -3525,7 +3605,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0.000057161968}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &631064789
@@ -5899,6 +5979,7 @@ GameObject:
   - component: {fileID: 1011368732}
   - component: {fileID: 1011368731}
   - component: {fileID: 1011368730}
+  - component: {fileID: 1011368734}
   m_Layer: 5
   m_Name: EffectMode
   m_TagString: Untagged
@@ -5986,6 +6067,7 @@ RectTransform:
   - {fileID: 1450967442}
   - {fileID: 2126478952}
   - {fileID: 870179780}
+  - {fileID: 258880067}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -5993,6 +6075,28 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1011368734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1011368729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb1da25f22a3e91409cf91bd38d83724, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EffectListUI
+  _content: {fileID: 605341152}
+  _itemPrefab: {fileID: 3839475407354480308, guid: 84c031d88355b4e40b476c0370338342, type: 3}
+  _effButton: {fileID: 1549758525}
+  _camButton: {fileID: 710919517}
+  _railButton: {fileID: 725401183}
+  _scrButton: {fileID: 1517183866}
+  _effColor: {r: 0.015686274, g: 0.58241415, b: 1, a: 1}
+  _camColor: {r: 1, g: 0, b: 0, a: 1}
+  _railColor: {r: 0, g: 0.6792453, b: 0.09109859, a: 1}
+  _scrColor: {r: 0.69626236, g: 0, b: 1, a: 1}
 --- !u!1 &1027493822
 GameObject:
   m_ObjectHideFlags: 0

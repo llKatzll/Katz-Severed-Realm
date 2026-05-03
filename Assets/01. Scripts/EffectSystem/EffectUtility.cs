@@ -1,0 +1,67 @@
+using System.IO;
+using UnityEngine;
+
+public static class EffectUtility
+{
+    public static string ToJson(EffectData data)
+    {
+        return JsonUtility.ToJson(data, true);
+    }
+
+    public static EffectData FromJson(string json)
+    {
+        if (string.IsNullOrEmpty(json)) return null;
+        return JsonUtility.FromJson<EffectData>(json);
+    }
+
+    public static bool SaveToFile(EffectData data, string filePath)
+    {
+        try
+        {
+            string dir = Path.GetDirectoryName(filePath);
+            if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+
+            data.SortByBeat();
+            File.WriteAllText(filePath, ToJson(data));
+            return true;
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError("[EffectUtility] Save failed: " + e.Message);
+            return false;
+        }
+    }
+
+    public static EffectData LoadFromFile(string filePath)
+    {
+        if (!File.Exists(filePath)) return null;
+
+        try
+        {
+            string json = File.ReadAllText(filePath);
+            EffectData data = FromJson(json);
+            if (data != null) data.SortByBeat();
+            return data;
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError("[EffectUtility] Load failed: " + e.Message);
+            return null;
+        }
+    }
+
+    public static string GetEffectDirectory()
+    {
+#if UNITY_EDITOR
+        return Path.Combine(Application.dataPath, "Effects");
+#else
+        return Path.Combine(Application.persistentDataPath, "Effects");
+#endif
+    }
+
+    public static string GetEffectPath(string songName, string difficulty)
+    {
+        return Path.Combine(GetEffectDirectory(), songName + "_" + difficulty + ".eff.json");
+    }
+}
