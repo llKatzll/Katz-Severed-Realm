@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57ca7905e49f28f4fadfa77fd6583bc6, type: 3}
   m_Name: T_Boom
   m_EditorClassIdentifier: Assembly-CSharp::EffectPresetSO
-  presetId: 
-  displayName: 
-  category: 0
+  presetId: cam_boom
+  displayName: T_Boom
+  category: 1
   triggerType: 0
-  defaultDurationSec: 1
+  defaultDurationSec: 0.1
   particlePrefab: {fileID: 0}
   spawnOffset: {x: 0, y: 0, z: 0}
-  animationClip: {fileID: 0}
-  targetAnimatorPath: 
+  animationClip: {fileID: 7400000, guid: 14e7330249474114e93dd4b43d5785b9, type: 2}
+  targetAnimatorPath: Main Camera
   scrType: 0
   scrIntensityFrom: 0
   scrIntensityTo: 1

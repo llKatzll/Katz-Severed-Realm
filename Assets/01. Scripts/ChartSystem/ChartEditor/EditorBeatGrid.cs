@@ -98,7 +98,8 @@ public class EditorBeatGrid : MonoBehaviour
         {
             var go = GameObject.CreatePrimitive(PrimitiveType.Quad);
             go.name = "BeatLine_" + _pool.Count;
-            go.transform.SetParent(transform);
+            Transform parent = _bootstrap != null ? _bootstrap.ChartElementsParent : transform;
+            go.transform.SetParent(parent);
 
             var col = go.GetComponent<MeshCollider>();
             if (col != null) Destroy(col);

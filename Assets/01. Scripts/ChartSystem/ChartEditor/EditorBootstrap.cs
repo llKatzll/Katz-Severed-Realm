@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class EditorBootstrap : MonoBehaviour
 {
+    [Header("Hierarchy")]
+    [SerializeField] private Transform _chartElementsParent;
+
     [Header("Panel")]
     [SerializeField] private Color _panelColor = Color.black;
 
@@ -47,6 +50,7 @@ public class EditorBootstrap : MonoBehaviour
     public float PanelGap => _panelGap;
     public float JudgeLineScreenRatio => _judgeLineScreenRatio;
     public float NoteCanvasScale => _noteCanvasScale;
+    public Transform ChartElementsParent => _chartElementsParent != null ? _chartElementsParent : transform;
 
     private void Awake()
     {
@@ -62,10 +66,15 @@ public class EditorBootstrap : MonoBehaviour
         SetupNoteCanvas();
     }
 
+    private Transform GetChartParent()
+    {
+        return _chartElementsParent != null ? _chartElementsParent : transform;
+    }
+
     private void SetupNoteCanvas()
     {
         var go = new GameObject("NoteCanvas");
-        go.transform.SetParent(transform);
+        go.transform.SetParent(GetChartParent());
 
         var rt = go.AddComponent<RectTransform>();
         rt.position = Vector3.zero;
@@ -105,7 +114,7 @@ public class EditorBootstrap : MonoBehaviour
     {
         var go = GameObject.CreatePrimitive(PrimitiveType.Quad);
         go.name = panelName;
-        go.transform.SetParent(transform);
+        go.transform.SetParent(GetChartParent());
 
         var meshCollider = go.GetComponent<MeshCollider>();
         if (meshCollider != null) Destroy(meshCollider);
@@ -127,7 +136,7 @@ public class EditorBootstrap : MonoBehaviour
     private void SetupJudgeLine()
     {
         var parentGo = new GameObject("JudgeLine");
-        parentGo.transform.SetParent(transform);
+        parentGo.transform.SetParent(GetChartParent());
         parentGo.transform.position = new Vector3(0f, 0f, -1f);
 
         float halfPanel = _laneCount * _laneWidth * 0.5f;
@@ -177,7 +186,7 @@ public class EditorBootstrap : MonoBehaviour
     {
         var go = GameObject.CreatePrimitive(PrimitiveType.Quad);
         go.name = "ColLine";
-        go.transform.SetParent(transform);
+        go.transform.SetParent(GetChartParent());
 
         var meshCollider = go.GetComponent<MeshCollider>();
         if (meshCollider != null) Destroy(meshCollider);

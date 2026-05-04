@@ -34,8 +34,3 @@ MonoBehaviour:
     constant: 4.2
     charter: Kachesis
     mapper: Kachesis
-  - type: 2
-    level: 1
-    constant: 0
-    charter: 
-    mapper: 

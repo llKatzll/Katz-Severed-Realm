@@ -19,11 +19,16 @@ public class EffectBootstrap : MonoBehaviour
     [SerializeField] private float _columnLineThickness = 0.03f;
     [SerializeField] private float _columnLineMarginScale = 8f;
 
+    [Header("Judge Line")]
+    [SerializeField] private Color _judgeLineColor = new Color(0.2f, 1f, 0.2f, 1f);
+    [SerializeField] private float _judgeLineThickness = 0.05f;
+
     [Header("Note Canvas")]
     [SerializeField] private float _noteCanvasScale = 0.01f;
 
     private Transform _effectPanel;
     private Canvas _noteCanvas;
+    private Transform _judgeLine;
     private readonly List<Transform> _columnLines = new List<Transform>();
 
     public Transform EffectPanel => _effectPanel;
@@ -39,7 +44,29 @@ public class EffectBootstrap : MonoBehaviour
     {
         SetupPanel();
         SetupColumnLines();
+        SetupJudgeLine();
         SetupNoteCanvas();
+    }
+
+    private void SetupJudgeLine()
+    {
+        var go = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        go.name = "EffectJudgeLine";
+        go.transform.SetParent(transform);
+
+        var meshCollider = go.GetComponent<MeshCollider>();
+        if (meshCollider != null) Destroy(meshCollider);
+
+        float width = _laneCount * _laneWidth;
+        go.transform.position = new Vector3(_panelCenterX, 0f, -1f);
+        go.transform.localScale = new Vector3(width, _judgeLineThickness, 1f);
+
+        var rend = go.GetComponent<MeshRenderer>();
+        var mat = new Material(Shader.Find("Sprites/Default"));
+        mat.color = _judgeLineColor;
+        rend.sharedMaterial = mat;
+
+        _judgeLine = go.transform;
     }
 
     private void SetupPanel()
@@ -134,6 +161,13 @@ public class EffectBootstrap : MonoBehaviour
             var p = t.position;
             p.y = cameraY;
             t.position = p;
+        }
+
+        if (_judgeLine != null && _editorBootstrap.JudgeLine != null)
+        {
+            var jp = _judgeLine.position;
+            jp.y = _editorBootstrap.JudgeLine.position.y;
+            _judgeLine.position = jp;
         }
     }
 
