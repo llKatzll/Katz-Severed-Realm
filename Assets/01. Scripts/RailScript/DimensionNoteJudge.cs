@@ -86,12 +86,110 @@ public class DimensionNoteJudge : MonoBehaviour
     private void Update()
     {
         CleanupDead();
+
+        if (AutoPlay.IsOn)
+        {
+            AutoPlayUpdate();
+            return;
+        }
+
         AutoMissTaps();
         AutoMissHolds();
         AutoFailActiveHolds();
 
         if (Input.GetKeyDown(DimensionKey)) OnKeyDown();
         if (Input.GetKeyUp(DimensionKey)) OnKeyUp();
+    }
+
+    private void AutoPlayUpdate()
+    {
+        double now = AudioSettings.dspTime;
+
+        for (int i = _tapNotes.Count - 1; i >= 0; i--)
+        {
+            Note n = _tapNotes[i];
+            if (n == null) { _tapNotes.RemoveAt(i); continue; }
+            if (now >= n.ExpectedHitDspTime)
+            {
+                _tapNotes.RemoveAt(i);
+                AutoJudgeTap(n);
+            }
+        }
+
+        for (int i = _holds.Count - 1; i >= 0; i--)
+        {
+            HoldNote h = _holds[i];
+            if (h == null || h.IsFailed) { _holds.RemoveAt(i); continue; }
+            if (now >= h.HeadDspTime)
+            {
+                _holds.RemoveAt(i);
+                AutoStartHold(h);
+            }
+        }
+
+        for (int i = _activeHolds.Count - 1; i >= 0; i--)
+        {
+            HoldNote h = _activeHolds[i];
+            if (h == null || h.IsFailed) { _activeHolds.RemoveAt(i); continue; }
+            if (now >= h.TailDspTime)
+            {
+                AutoFinishHold(h);
+                _activeHolds.RemoveAt(i);
+            }
+        }
+    }
+
+    private void AutoJudgeTap(Note target)
+    {
+        if (target == null) return;
+
+        JudgeType judge = JudgeType.Severance;
+        NoteSpawner.NoteType laneType = target.NoteType;
+        Transform hitRef = target.HitPointRef;
+
+        if (ComboUI.I != null) ComboUI.I.OnTapResult(judge.ToString(), false);
+        if (ScoreManager.I != null) ScoreManager.I.ReportJudge(judge);
+
+        SpawnJudgedFx(_tapHitFxPrefab, hitRef, laneType, judge, _tapHitFxDestroySec);
+        Destroy(target.gameObject);
+    }
+
+    private void AutoStartHold(HoldNote h)
+    {
+        if (h == null) return;
+
+        JudgeType judge = JudgeType.Severance;
+        NoteSpawner.NoteType laneType = h.NoteType;
+        Transform hitRef = h.HitPointRef;
+
+        if (ComboUI.I != null)
+        {
+            float bpm = 120f;
+            RhythmConductor rhy = FindObjectOfType<RhythmConductor>();
+            if (rhy != null) bpm = (float)rhy.Bpm;
+            ComboUI.I.OnHoldStart(judge.ToString(), false, bpm, DimensionKey);
+        }
+        if (ScoreManager.I != null) ScoreManager.I.ReportJudge(judge);
+
+        SpawnJudgedFx(_holdHeadFxPrefab, hitRef, laneType, judge, _holdHeadFxDestroySec);
+        h.StartHold();
+        _activeHolds.Add(h);
+    }
+
+    private void AutoFinishHold(HoldNote h)
+    {
+        if (h == null || h.IsFailed) return;
+
+        JudgeType judge = JudgeType.Severance;
+        NoteSpawner.NoteType laneType = h.NoteType;
+        Transform hitRef = h.HitPointRef;
+
+        SpawnJudgedFx(_holdTailFxPrefab, hitRef, laneType, judge, _holdTailFxDestroySec);
+
+        if (ComboUI.I != null) ComboUI.I.OnHoldEnd(judge.ToString(), false);
+        if (ScoreManager.I != null) ScoreManager.I.ReportJudge(judge);
+
+        h.SuccessAndDestroy();
     }
 
     private void OnKeyDown()

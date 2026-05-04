@@ -132,9 +132,15 @@ public class LaneJudge : MonoBehaviour
         PromoteNextHold();
 
         CleanupDeadTap();
-        AutoMissTapNoInput();
-
         CleanupDeadHold();
+
+        if (AutoPlay.IsOn)
+        {
+            AutoPlayUpdate();
+            return;
+        }
+
+        AutoMissTapNoInput();
         AutoMissHoldNoInput();
 
         AutoFailHoldIfTailIgnored();
@@ -142,6 +148,89 @@ public class LaneJudge : MonoBehaviour
         KeyCode key = ActiveKey;
         if (Input.GetKeyDown(key)) OnKeyDown();
         if (Input.GetKeyUp(key)) OnKeyUp();
+    }
+
+    private void AutoPlayUpdate()
+    {
+        double now = AudioSettings.dspTime;
+
+        for (int i = _tapNotes.Count - 1; i >= 0; i--)
+        {
+            Note n = _tapNotes[i];
+            if (n == null) { _tapNotes.RemoveAt(i); continue; }
+            if (now >= n.ExpectedHitDspTime)
+            {
+                _tapNotes.RemoveAt(i);
+                AutoJudgeTap(n);
+            }
+        }
+
+        if (_hold != null && !_hold.IsFailed)
+        {
+            if (!_hold.IsActive && now >= _hold.HeadDspTime)
+            {
+                AutoStartHold();
+            }
+            if (_hold != null && _hold.IsActive && now >= _hold.TailDspTime)
+            {
+                AutoFinishHold();
+            }
+        }
+    }
+
+    private void AutoJudgeTap(Note target)
+    {
+        if (target == null) return;
+
+        JudgeType judge = JudgeType.Severance;
+        NoteSpawner.NoteType laneType = target.NoteType;
+
+        if (ComboUI.I != null) ComboUI.I.OnTapResult(judge.ToString(), false);
+        if (ScoreManager.I != null) ScoreManager.I.ReportJudge(judge);
+
+        SpawnTapHitFx(judge, laneType);
+        Destroy(target.gameObject);
+    }
+
+    private void AutoStartHold()
+    {
+        if (_hold == null) return;
+
+        JudgeType judge = JudgeType.Severance;
+        NoteSpawner.NoteType laneType = _hold.NoteType;
+
+        SpawnHoldHeadFx(judge, laneType);
+
+        if (ComboUI.I != null)
+        {
+            float bpm = 120f;
+            RhythmConductor rhy = FindObjectOfType<RhythmConductor>();
+            if (rhy != null) bpm = (float)rhy.Bpm;
+            ComboUI.I.OnHoldStart(judge.ToString(), false, bpm, ActiveKey);
+        }
+        if (ScoreManager.I != null) ScoreManager.I.ReportJudge(judge);
+
+        _hold.StartHold();
+
+        Color c = GetJudgeColor(laneType, judge);
+        StartHoldLoopFx(c, laneType);
+    }
+
+    private void AutoFinishHold()
+    {
+        if (_hold == null) return;
+
+        JudgeType judge = JudgeType.Severance;
+        NoteSpawner.NoteType laneType = _hold.NoteType;
+
+        SpawnHoldTailFx(judge, laneType);
+
+        if (ComboUI.I != null) ComboUI.I.OnHoldEnd(judge.ToString(), false);
+        if (ScoreManager.I != null) ScoreManager.I.ReportJudge(judge);
+
+        StopHoldLoopFx();
+        _hold.SuccessAndDestroy();
+        _hold = null;
     }
 
     private void OnKeyDown()

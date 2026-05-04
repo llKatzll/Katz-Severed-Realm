@@ -19,6 +19,9 @@ public class EditorInput : MonoBehaviour
     [Header("Mode")]
     [SerializeField] private EditorPlaceMode _mode = EditorPlaceMode.Tap;
 
+    [Header("Mode Gate")]
+    [SerializeField] private GameObject _chartZone;
+
     private bool _holdPending;
     private float _holdStartBeat;
     private int _holdStartLane;
@@ -45,6 +48,7 @@ public class EditorInput : MonoBehaviour
 
     private void Update()
     {
+        if (_chartZone != null && !_chartZone.activeInHierarchy) return;
         if (IsPointerOverUI()) return;
 
         if (Input.GetMouseButtonDown(0)) HandleLeftClick();

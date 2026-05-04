@@ -1019,7 +1019,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 99970438}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 258880073}
+        m_TargetAssemblyTypeName: EffectSaveLoad, Assembly-CSharp
+        m_MethodName: ReloadCurrent
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &99970438
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2068,6 +2080,8 @@ GameObject:
   - component: {fileID: 258880068}
   - component: {fileID: 258880071}
   - component: {fileID: 258880070}
+  - component: {fileID: 258880072}
+  - component: {fileID: 258880073}
   m_Layer: 5
   m_Name: EffectChartZone
   m_TagString: Untagged
@@ -2136,6 +2150,8 @@ MonoBehaviour:
   _columnLineColor: {r: 0.6, g: 0.6, b: 0.6, a: 0.7}
   _columnLineThickness: 0.03
   _columnLineMarginScale: 8
+  _judgeLineColor: {r: 0.2, g: 1, b: 0.2, a: 1}
+  _judgeLineThickness: 0.05
   _noteCanvasScale: 0.01
 --- !u!114 &258880070
 MonoBehaviour:
@@ -2161,10 +2177,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e798ee4be156b2458ab9fd4cb3bd1af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EffectInput
-  _bootstrap: {fileID: 0}
-  _chart: {fileID: 0}
+  _bootstrap: {fileID: 258880069}
+  _chart: {fileID: 258880070}
   _listUI: {fileID: 1011368734}
   _timeline: {fileID: 0}
+--- !u!114 &258880072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 258880066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3509f1aba93b15847bc4148085a15ec7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EffectNoteVisuals
+  _chart: {fileID: 258880070}
+  _bootstrap: {fileID: 258880069}
+  _tapPrefab: {fileID: 5273741380778138508, guid: ca0ebabcf5df54e43bc9fc265ae39d60, type: 3}
+  _headPrefab: {fileID: 5769320851983259175, guid: a74daeeb9e6e2cb439329e01d7a30b55, type: 3}
+  _bodyPrefab: {fileID: 378344175968318487, guid: 8f7d732e46e4c5f4497611e1096463e0, type: 3}
+  _tailPrefab: {fileID: 3653371831085751326, guid: 8188885b796b78b47aa5dc73cb113fad, type: 3}
+  _effColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  _camColor: {r: 1, g: 0, b: 0, a: 1}
+  _railColor: {r: 0, g: 1, b: 0, a: 1}
+  _scrColor: {r: 0, g: 0, b: 1, a: 1}
+  _inSaturation: 0.5
+  _outSaturation: 1
+  _noteWidthRatio: 0.9
+  _bodyWidthRatio: 0.7
+  _noteZ: -0.6
+  _headTailZOffset: -0.01
+--- !u!114 &258880073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 258880066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 780632a006682274980804e49254b3d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EffectSaveLoad
+  _chart: {fileID: 258880070}
+  _loadSong: {fileID: 739525166}
 --- !u!1 &268981559
 GameObject:
   m_ObjectHideFlags: 0
@@ -2837,7 +2895,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 435907019}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 258880073}
+        m_TargetAssemblyTypeName: EffectSaveLoad, Assembly-CSharp
+        m_MethodName: ReloadCurrent
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &435907019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3691,6 +3761,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 605341152}
+  - component: {fileID: 605341154}
+  - component: {fileID: 605341153}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -3717,6 +3789,46 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0.000018013407}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
+--- !u!114 &605341153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 605341151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.ContentSizeFitter
+  m_HorizontalFit: 0
+  m_VerticalFit: 2
+--- !u!114 &605341154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 605341151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.VerticalLayoutGroup
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 1
+  m_Spacing: 4
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 0
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &631064789
 GameObject:
   m_ObjectHideFlags: 0
@@ -4241,6 +4353,7 @@ MonoBehaviour:
   _chart: {fileID: 0}
   _visuals: {fileID: 0}
   _mode: 0
+  _chartZone: {fileID: 448284842}
 --- !u!114 &739525165
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4269,6 +4382,7 @@ MonoBehaviour:
   _playButton: {fileID: 812258014}
   _rewindButton: {fileID: 876893215}
   _selectDiffButton: {fileID: 1239130214}
+  _selectDiffButtonEffect: {fileID: 292341899}
   _bsdDropdown: {fileID: 1960400838}
   _songNameText: {fileID: 76372630}
   _difficultyText: {fileID: 77321605}
@@ -4409,7 +4523,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 782997477}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 258880073}
+        m_TargetAssemblyTypeName: EffectSaveLoad, Assembly-CSharp
+        m_MethodName: ReloadCurrent
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &782997477
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7256,7 +7382,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1194182714}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 258880073}
+        m_TargetAssemblyTypeName: EffectSaveLoad, Assembly-CSharp
+        m_MethodName: ReloadCurrent
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1194182714
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7757,7 +7895,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1317217912}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 258880073}
+        m_TargetAssemblyTypeName: EffectSaveLoad, Assembly-CSharp
+        m_MethodName: ReloadCurrent
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1317217912
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8997,7 +9147,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1582747751}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 258880073}
+        m_TargetAssemblyTypeName: EffectSaveLoad, Assembly-CSharp
+        m_MethodName: Save
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1582747751
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9256,7 +9418,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1601526155}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 258880073}
+        m_TargetAssemblyTypeName: EffectSaveLoad, Assembly-CSharp
+        m_MethodName: ReloadCurrent
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1601526155
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10188,7 +10362,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1797921448}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 258880073}
+        m_TargetAssemblyTypeName: EffectSaveLoad, Assembly-CSharp
+        m_MethodName: OpenLoadDialog
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1797921448
 MonoBehaviour:
   m_ObjectHideFlags: 0

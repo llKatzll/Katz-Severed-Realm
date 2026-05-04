@@ -25,6 +25,7 @@ public class EditorUI : MonoBehaviour
     [SerializeField] private Button _playButton;
     [SerializeField] private Button _rewindButton;
     [SerializeField] private Button _selectDiffButton;
+    [SerializeField] private Button _selectDiffButtonEffect;
 
     [Header("BSD")]
     [SerializeField] private TMP_Dropdown _bsdDropdown;
@@ -130,6 +131,7 @@ public class EditorUI : MonoBehaviour
     private void BindSelectDiff()
     {
         if (_selectDiffButton != null) _selectDiffButton.onClick.AddListener(ToggleSelectDiff);
+        if (_selectDiffButtonEffect != null) _selectDiffButtonEffect.onClick.AddListener(ToggleSelectDiff);
         if (_selectDiffBlocker != null)
         {
             var btn = _selectDiffBlocker.GetComponent<Button>();
