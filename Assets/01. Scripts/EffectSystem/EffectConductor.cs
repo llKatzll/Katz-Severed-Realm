@@ -7,18 +7,23 @@ public class EffectConductor : MonoBehaviour
 {
     [SerializeField] private RhythmConductor _rhythm;
     [SerializeField] private bool _autoLoadOnStart = true;
-    [SerializeField] private string _animatorRootName = "Main Camera";
 
     private EffectData _data;
     private int _dispatchIdx;
     private bool _armed;
 
-    private PlayableGraph _camGraph;
-    private AnimationPlayableOutput _camOutput;
-    private AnimationClipPlayable _camClipPlayable;
-    private bool _camGraphValid;
-    private double _camStopDsp = -1.0;
-    private Animator _camAnimator;
+    private class GraphState
+    {
+        public Animator animator;
+        public PlayableGraph graph;
+        public AnimationPlayableOutput output;
+        public AnimationClipPlayable clip;
+        public double stopDsp;
+        public bool valid;
+    }
+
+    private readonly Dictionary<string, GraphState> _graphs = new Dictionary<string, GraphState>();
+    private readonly Dictionary<string, Animator> _animatorCache = new Dictionary<string, Animator>();
 
     private readonly List<RuntimeParticle> _activeParticles = new List<RuntimeParticle>();
 
@@ -65,16 +70,19 @@ public class EffectConductor : MonoBehaviour
         _data = data;
         _dispatchIdx = 0;
         _armed = true;
-
-        _camAnimator = FindCamAnimator();
     }
 
-    private Animator FindCamAnimator()
+    private Animator FindAnimator(string path)
     {
-        var go = GameObject.Find(_animatorRootName);
+        if (string.IsNullOrEmpty(path)) return null;
+        Animator cached;
+        if (_animatorCache.TryGetValue(path, out cached) && cached != null) return cached;
+
+        var go = GameObject.Find(path);
         if (go == null) return null;
         var anim = go.GetComponent<Animator>();
         if (anim == null) anim = go.AddComponent<Animator>();
+        _animatorCache[path] = anim;
         return anim;
     }
 
@@ -96,7 +104,7 @@ public class EffectConductor : MonoBehaviour
             _dispatchIdx++;
         }
 
-        UpdateCamGraphStop();
+        UpdateAllGraphStops();
         UpdateActiveParticles();
     }
 
@@ -109,12 +117,11 @@ public class EffectConductor : MonoBehaviour
         {
             case EffectCategory.Cam:
             case EffectCategory.Rail:
+            case EffectCategory.Scr:
                 DispatchAnimClip(trig, preset, secPerBeat);
                 break;
             case EffectCategory.Eff:
                 DispatchParticle(trig, preset, secPerBeat);
-                break;
-            case EffectCategory.Scr:
                 break;
         }
     }
@@ -122,12 +129,16 @@ public class EffectConductor : MonoBehaviour
     private void DispatchAnimClip(EffectTrigger trig, EffectPresetSO preset, double secPerBeat)
     {
         if (preset.animationClip == null) return;
-        if (_camAnimator == null) _camAnimator = FindCamAnimator();
-        if (_camAnimator == null) return;
+        if (string.IsNullOrEmpty(preset.targetAnimatorPath)) return;
+
+        Animator animator = FindAnimator(preset.targetAnimatorPath);
+        if (animator == null) return;
+
+        string key = preset.targetAnimatorPath;
 
         if (trig.kind == TriggerKind.Off)
         {
-            StopCamGraph();
+            StopGraph(key);
             return;
         }
 
@@ -149,49 +160,67 @@ public class EffectConductor : MonoBehaviour
             speed = 1f;
         }
 
-        BuildCamGraph(_camAnimator, preset.animationClip, speed);
-        _camStopDsp = AudioSettings.dspTime + durationSec;
+        BuildGraph(key, animator, preset.animationClip, speed);
+        var state = _graphs[key];
+        state.stopDsp = AudioSettings.dspTime + durationSec;
     }
 
-    private void BuildCamGraph(Animator animator, AnimationClip clip, float speed)
+    private void BuildGraph(string key, Animator animator, AnimationClip clip, float speed)
     {
-        if (_camGraphValid) DestroyCamGraph();
-
-        _camGraph = PlayableGraph.Create("EffectCamGraph");
-        _camOutput = AnimationPlayableOutput.Create(_camGraph, "AnimOut", animator);
-        _camClipPlayable = AnimationClipPlayable.Create(_camGraph, clip);
-        _camClipPlayable.SetSpeed(speed);
-        _camOutput.SetSourcePlayable(_camClipPlayable);
-        _camGraph.Play();
-        _camGraphValid = true;
-    }
-
-    private void StopCamGraph()
-    {
-        DestroyCamGraph();
-        _camStopDsp = -1.0;
-    }
-
-    private void DestroyCamGraph()
-    {
-        if (_camGraphValid && _camGraph.IsValid())
+        GraphState existing;
+        if (_graphs.TryGetValue(key, out existing) && existing.valid)
         {
-            _camGraph.Destroy();
+            DestroyGraph(existing);
         }
-        _camGraphValid = false;
+
+        var state = new GraphState();
+        state.animator = animator;
+        state.graph = PlayableGraph.Create("EffectGraph_" + key);
+        state.output = AnimationPlayableOutput.Create(state.graph, "AnimOut", animator);
+        state.clip = AnimationClipPlayable.Create(state.graph, clip);
+        state.clip.SetSpeed(speed);
+        state.output.SetSourcePlayable(state.clip);
+        state.graph.Play();
+        state.valid = true;
+        state.stopDsp = -1.0;
+
+        _graphs[key] = state;
     }
 
-    private void UpdateCamGraphStop()
+    private void StopGraph(string key)
     {
-        if (!_camGraphValid) return;
-        if (_camStopDsp < 0.0) return;
-        if (AudioSettings.dspTime >= _camStopDsp)
+        GraphState state;
+        if (!_graphs.TryGetValue(key, out state)) return;
+        DestroyGraph(state);
+        _graphs.Remove(key);
+    }
+
+    private void DestroyGraph(GraphState state)
+    {
+        if (state == null) return;
+        if (state.valid && state.graph.IsValid())
         {
-            if (_camClipPlayable.IsValid())
+            state.graph.Destroy();
+        }
+        state.valid = false;
+    }
+
+    private void UpdateAllGraphStops()
+    {
+        double now = AudioSettings.dspTime;
+        foreach (var kv in _graphs)
+        {
+            var state = kv.Value;
+            if (state == null || !state.valid) continue;
+            if (state.stopDsp < 0.0) continue;
+            if (now >= state.stopDsp)
             {
-                _camClipPlayable.SetSpeed(0);
+                if (state.clip.IsValid())
+                {
+                    state.clip.SetSpeed(0);
+                }
+                state.stopDsp = -1.0;
             }
-            _camStopDsp = -1.0;
         }
     }
 
@@ -199,8 +228,8 @@ public class EffectConductor : MonoBehaviour
     {
         if (preset.particlePrefab == null) return;
 
-        Vector3 pos = preset.spawnOffset;
-        var go = Instantiate(preset.particlePrefab, pos, Quaternion.identity);
+        var go = Instantiate(preset.particlePrefab);
+        go.transform.position += preset.spawnOffset;
 
         double durationSec;
         if (trig.kind == TriggerKind.Sustained && trig.inBeats > 0.0001)
@@ -232,7 +261,12 @@ public class EffectConductor : MonoBehaviour
 
     private void OnDestroy()
     {
-        DestroyCamGraph();
+        foreach (var kv in _graphs)
+        {
+            DestroyGraph(kv.Value);
+        }
+        _graphs.Clear();
+
         for (int i = 0; i < _activeParticles.Count; i++)
         {
             if (_activeParticles[i].go != null) Destroy(_activeParticles[i].go);
