@@ -1,6 +1,6 @@
 {
     "songName": "+ERABY+E CONNEC+10N",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "triggers": [
         {
             "beat": 3.0,
@@ -16,22 +16,6 @@
             "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 3.0,
-            "presetId": "In_LensOut",
-            "lane": 3,
-            "kind": 3,
-            "inBeats": 55.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 59.0,
-            "presetId": "OUT_LensOut",
-            "lane": 3,
-            "kind": 3,
-            "inBeats": 8.0,
             "outBeats": 0.0
         },
         {
@@ -59,337 +43,9 @@
             "outBeats": 0.0
         },
         {
-            "beat": 74.5,
-            "presetId": "B_lightboom",
-            "lane": 4,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 74.5,
-            "presetId": "cam_speedboom",
-            "lane": 5,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 74.75,
-            "presetId": "B_lightboom",
-            "lane": 4,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 74.75,
-            "presetId": "cam_speedboom",
-            "lane": 5,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 75.0,
-            "presetId": "cam_speedboom",
-            "lane": 5,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 75.0,
-            "presetId": "B_lightboom",
-            "lane": 4,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 75.5,
-            "presetId": "B_lightboom",
-            "lane": 4,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 75.5,
-            "presetId": "cam_speedboom",
-            "lane": 5,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 75.75,
-            "presetId": "cam_speedboom",
-            "lane": 5,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 75.75,
-            "presetId": "B_lightboom",
-            "lane": 4,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 76.0,
-            "presetId": "B_lightboom",
-            "lane": 4,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 76.0,
-            "presetId": "cam_speedboom",
-            "lane": 5,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 76.5,
-            "presetId": "B_lightboom",
-            "lane": 4,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 76.5,
-            "presetId": "cam_speedboom",
-            "lane": 5,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 77.0,
-            "presetId": "B_lightboom",
-            "lane": 4,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 77.0,
-            "presetId": "cam_speedboom",
-            "lane": 5,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 77.25,
-            "presetId": "cam_speedboom",
-            "lane": 5,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 77.25,
-            "presetId": "B_lightboom",
-            "lane": 4,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 77.5,
-            "presetId": "cam_speedboom",
-            "lane": 5,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 77.5,
-            "presetId": "B_lightboom",
-            "lane": 4,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 78.0,
-            "presetId": "cam_speedboom",
-            "lane": 5,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 78.0,
-            "presetId": "B_lightboom",
-            "lane": 4,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 78.5,
-            "presetId": "cam_speedboom",
-            "lane": 5,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 78.5,
-            "presetId": "B_lightboom",
-            "lane": 4,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 78.75,
-            "presetId": "B_lightboom",
-            "lane": 4,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 78.75,
-            "presetId": "cam_speedboom",
-            "lane": 5,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 79.0,
-            "presetId": "B_lightboom",
-            "lane": 4,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 79.0,
-            "presetId": "cam_speedboom",
-            "lane": 5,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 79.25,
-            "presetId": "B_lightboom",
-            "lane": 4,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 79.25,
-            "presetId": "cam_speedboom",
-            "lane": 5,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 80.0,
-            "presetId": "B_lightboom",
-            "lane": 4,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 80.0,
-            "presetId": "cam_speedboom",
-            "lane": 5,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 80.25,
-            "presetId": "cam_speedboom",
-            "lane": 5,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 80.25,
-            "presetId": "B_lightboom",
-            "lane": 4,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 80.5,
-            "presetId": "B_lightboom",
-            "lane": 4,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 80.5,
-            "presetId": "cam_speedboom",
-            "lane": 5,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 81.5,
-            "presetId": "B_lightboom",
-            "lane": 4,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 81.5,
-            "presetId": "cam_speedboom",
-            "lane": 5,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 82.0,
-            "presetId": "cam_speedboom",
-            "lane": 5,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 82.0,
-            "presetId": "B_lightboom",
-            "lane": 4,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
             "beat": 83.0,
             "presetId": "B_lightboom",
             "lane": 4,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 83.0,
-            "presetId": "cam_boom",
-            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -636,24 +292,16 @@
         },
         {
             "beat": 235.0,
-            "presetId": "cam_boom",
-            "lane": 5,
+            "presetId": "B_lightboom",
+            "lane": 3,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 235.0,
-            "presetId": "B_lightboom",
-            "lane": 3,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 236.0,
-            "presetId": "B_lightboom",
-            "lane": 3,
+            "presetId": "cam_boom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -662,6 +310,14 @@
             "beat": 236.0,
             "presetId": "cam_boom",
             "lane": 5,
+            "kind": 0,
+            "inBeats": 0.0,
+            "outBeats": 0.0
+        },
+        {
+            "beat": 236.0,
+            "presetId": "B_lightboom",
+            "lane": 3,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -796,24 +452,16 @@
         },
         {
             "beat": 245.0,
-            "presetId": "cam_boom",
-            "lane": 5,
+            "presetId": "B_lightboom",
+            "lane": 3,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 245.0,
-            "presetId": "B_lightboom",
-            "lane": 3,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 246.0,
-            "presetId": "B_lightboom",
-            "lane": 3,
+            "presetId": "cam_boom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -827,9 +475,9 @@
             "outBeats": 0.0
         },
         {
-            "beat": 247.0,
-            "presetId": "cam_boom",
-            "lane": 5,
+            "beat": 246.0,
+            "presetId": "B_lightboom",
+            "lane": 3,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -838,6 +486,14 @@
             "beat": 247.0,
             "presetId": "B_lightboom",
             "lane": 3,
+            "kind": 0,
+            "inBeats": 0.0,
+            "outBeats": 0.0
+        },
+        {
+            "beat": 247.0,
+            "presetId": "cam_boom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0

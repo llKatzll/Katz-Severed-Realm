@@ -72,6 +72,16 @@ public class VolumeFxProxy : MonoBehaviour
 
     [Header("Lens Flare (Screen Space)")]
     public float lensFlareIntensity = 0f;
+    public Color lensFlareTintColor = Color.white;
+    public int lensFlareSamples = 1;
+    public float lensFlareVignetteEffect = 1f;
+    public float lensFlareStartingPosition = 1.25f;
+    public float lensFlareScale = 1.5f;
+    public float lensFlareStreaksIntensity = 0f;
+    public float lensFlareStreaksLength = 0.5f;
+    public float lensFlareStreaksOrientation = 0f;
+    public float lensFlareStreaksThreshold = 0.25f;
+    public float lensFlareChromaIntensity = 0.5f;
 
     [Header("Lift Gamma Gain")]
     public Vector4 lift = new Vector4(1f, 1f, 1f, 0f);
@@ -254,6 +264,16 @@ public class VolumeFxProxy : MonoBehaviour
     {
         if (_lensFlare == null) return;
         _lensFlare.intensity.value = lensFlareIntensity;
+        _lensFlare.tintColor.value = lensFlareTintColor;
+        _lensFlare.samples.value = lensFlareSamples;
+        _lensFlare.vignetteEffect.value = lensFlareVignetteEffect;
+        _lensFlare.startingPosition.value = lensFlareStartingPosition;
+        _lensFlare.scale.value = lensFlareScale;
+        _lensFlare.streaksIntensity.value = lensFlareStreaksIntensity;
+        _lensFlare.streaksLength.value = lensFlareStreaksLength;
+        _lensFlare.streaksOrientation.value = lensFlareStreaksOrientation;
+        _lensFlare.streaksThreshold.value = lensFlareStreaksThreshold;
+        _lensFlare.chromaticAbberationIntensity.value = lensFlareChromaIntensity;
     }
 
     private void SyncLiftGammaGain()

@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 57ca7905e49f28f4fadfa77fd6583bc6, type: 3}
-  m_Name: T_Boom
+  m_Name: IN_LensOut
   m_EditorClassIdentifier: Assembly-CSharp::EffectPresetSO
-  presetId: cam_boom
-  displayName: T_Boom
-  category: 1
-  triggerType: 0
-  defaultDurationSec: 0.3
+  presetId: In_LensOut
+  displayName: IN_LensOut
+  category: 3
+  triggerType: 2
+  defaultDurationSec: 0.5
   particlePrefab: {fileID: 0}
   spawnOffset: {x: 0, y: 0, z: 0}
-  animationClip: {fileID: 7400000, guid: 14e7330249474114e93dd4b43d5785b9, type: 2}
-  targetAnimatorPath: Main Camera
+  animationClip: {fileID: 7400000, guid: 5c378ff189df0cd4592846216a666d55, type: 2}
+  targetAnimatorPath: PostProcessVolume
   scrType: 0
   scrIntensityFrom: 0
   scrIntensityTo: 1

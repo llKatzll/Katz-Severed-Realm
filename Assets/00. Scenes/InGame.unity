@@ -3907,6 +3907,16 @@ MonoBehaviour:
   filmGrainIntensity: 0
   filmGrainResponse: 0.8
   lensFlareIntensity: 0
+  lensFlareTintColor: {r: 1, g: 1, b: 1, a: 1}
+  lensFlareSamples: 1
+  lensFlareVignetteEffect: 1
+  lensFlareStartingPosition: 1.25
+  lensFlareScale: 1.5
+  lensFlareStreaksIntensity: 0
+  lensFlareStreaksLength: 0.5
+  lensFlareStreaksOrientation: 0
+  lensFlareStreaksThreshold: 0.25
+  lensFlareChromaIntensity: 0.5
   lift: {x: 1, y: 1, z: 1, w: 0}
   gamma: {x: 1, y: 1, z: 1, w: 0}
   gain: {x: 1, y: 1, z: 1, w: 0}
