@@ -38,6 +38,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _Opacity: 0
     - _OutLine_Scale: 1.03
     - _QueueControl: 0
     - _QueueOffset: 0

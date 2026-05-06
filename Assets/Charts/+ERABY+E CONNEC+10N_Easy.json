@@ -6,11 +6,53 @@
     "timingPoints": [],
     "notes": [
         {
+            "beat": 1.0,
+            "lane": 0,
+            "laneType": 1,
+            "noteType": 0,
+            "holdEndBeat": 0.0
+        },
+        {
+            "beat": 3.0,
+            "lane": 3,
+            "laneType": 1,
+            "noteType": 0,
+            "holdEndBeat": 0.0
+        },
+        {
             "beat": 3.125,
             "lane": 0,
             "laneType": 1,
             "noteType": 1,
             "holdEndBeat": 9.25
+        },
+        {
+            "beat": 12.0,
+            "lane": 3,
+            "laneType": 1,
+            "noteType": 0,
+            "holdEndBeat": 0.0
+        },
+        {
+            "beat": 18.0,
+            "lane": 3,
+            "laneType": 1,
+            "noteType": 1,
+            "holdEndBeat": 19.0
+        },
+        {
+            "beat": 19.0,
+            "lane": 1,
+            "laneType": 1,
+            "noteType": 0,
+            "holdEndBeat": 0.0
+        },
+        {
+            "beat": 26.0,
+            "lane": 1,
+            "laneType": 1,
+            "noteType": 1,
+            "holdEndBeat": 34.0
         },
         {
             "beat": 105.0,

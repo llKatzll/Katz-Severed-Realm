@@ -20,7 +20,7 @@ MonoBehaviour:
   particlePrefab: {fileID: 0}
   spawnOffset: {x: 0, y: 0, z: 0}
   animationClip: {fileID: 7400000, guid: 5c378ff189df0cd4592846216a666d55, type: 2}
-  targetAnimatorPath: PostProcessVolume
+  targetAnimatorPath: PostProcessVolume_Anim
   scrType: 0
   scrIntensityFrom: 0
   scrIntensityTo: 1
