@@ -12,6 +12,22 @@
         },
         {
             "beat": 3.0,
+            "presetId": "B_CircleLineBurst",
+            "lane": 2,
+            "kind": 0,
+            "inBeats": 0.0,
+            "outBeats": 0.0
+        },
+        {
+            "beat": 3.0,
+            "presetId": "B_Bright",
+            "lane": 1,
+            "kind": 0,
+            "inBeats": 0.0,
+            "outBeats": 0.0
+        },
+        {
+            "beat": 3.0,
             "presetId": "In_begin",
             "lane": 5,
             "kind": 3,
@@ -27,25 +43,17 @@
             "outBeats": 0.0
         },
         {
-            "beat": 3.0,
-            "presetId": "B_CircleLineBurst",
-            "lane": 2,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
             "beat": 59.0,
-            "presetId": "OUT_LensOut",
-            "lane": 3,
+            "presetId": "out_begin",
+            "lane": 5,
             "kind": 3,
             "inBeats": 8.0,
             "outBeats": 0.0
         },
         {
             "beat": 59.0,
-            "presetId": "out_begin",
-            "lane": 5,
+            "presetId": "OUT_LensOut",
+            "lane": 3,
             "kind": 3,
             "inBeats": 8.0,
             "outBeats": 0.0
@@ -62,6 +70,14 @@
             "beat": 67.0,
             "presetId": "B_lightboom",
             "lane": 4,
+            "kind": 0,
+            "inBeats": 0.0,
+            "outBeats": 0.0
+        },
+        {
+            "beat": 67.0,
+            "presetId": "B_Bright",
+            "lane": 1,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -124,16 +140,16 @@
         },
         {
             "beat": 75.5,
-            "presetId": "cam_speedboom",
-            "lane": 5,
+            "presetId": "B_lightboom",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 75.5,
-            "presetId": "B_lightboom",
-            "lane": 4,
+            "presetId": "cam_speedboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -156,24 +172,16 @@
         },
         {
             "beat": 76.0,
-            "presetId": "B_lightboom",
-            "lane": 4,
+            "presetId": "cam_speedboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 76.0,
-            "presetId": "cam_speedboom",
-            "lane": 5,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 76.5,
-            "presetId": "cam_speedboom",
-            "lane": 5,
+            "presetId": "B_lightboom",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -187,9 +195,9 @@
             "outBeats": 0.0
         },
         {
-            "beat": 77.0,
-            "presetId": "B_lightboom",
-            "lane": 4,
+            "beat": 76.5,
+            "presetId": "cam_speedboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -198,6 +206,14 @@
             "beat": 77.0,
             "presetId": "cam_speedboom",
             "lane": 5,
+            "kind": 0,
+            "inBeats": 0.0,
+            "outBeats": 0.0
+        },
+        {
+            "beat": 77.0,
+            "presetId": "B_lightboom",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -276,24 +292,16 @@
         },
         {
             "beat": 78.75,
-            "presetId": "cam_speedboom",
-            "lane": 5,
+            "presetId": "B_lightboom",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 78.75,
-            "presetId": "B_lightboom",
-            "lane": 4,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 79.0,
-            "presetId": "B_lightboom",
-            "lane": 4,
+            "presetId": "cam_speedboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -302,6 +310,14 @@
             "beat": 79.0,
             "presetId": "cam_speedboom",
             "lane": 5,
+            "kind": 0,
+            "inBeats": 0.0,
+            "outBeats": 0.0
+        },
+        {
+            "beat": 79.0,
+            "presetId": "B_lightboom",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -324,22 +340,14 @@
         },
         {
             "beat": 79.5,
-            "presetId": "B_lightboom",
-            "lane": 4,
+            "presetId": "cam_speedboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 79.5,
-            "presetId": "cam_speedboom",
-            "lane": 5,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 80.0,
             "presetId": "B_lightboom",
             "lane": 4,
             "kind": 0,
@@ -350,6 +358,14 @@
             "beat": 80.0,
             "presetId": "cam_speedboom",
             "lane": 5,
+            "kind": 0,
+            "inBeats": 0.0,
+            "outBeats": 0.0
+        },
+        {
+            "beat": 80.0,
+            "presetId": "B_lightboom",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -404,22 +420,14 @@
         },
         {
             "beat": 81.0,
-            "presetId": "cam_speedboom",
-            "lane": 5,
+            "presetId": "B_lightboom",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 81.0,
-            "presetId": "B_lightboom",
-            "lane": 4,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 81.5,
             "presetId": "cam_speedboom",
             "lane": 5,
             "kind": 0,
@@ -435,7 +443,7 @@
             "outBeats": 0.0
         },
         {
-            "beat": 82.0,
+            "beat": 81.5,
             "presetId": "cam_speedboom",
             "lane": 5,
             "kind": 0,
@@ -446,6 +454,30 @@
             "beat": 82.0,
             "presetId": "B_lightboom",
             "lane": 4,
+            "kind": 0,
+            "inBeats": 0.0,
+            "outBeats": 0.0
+        },
+        {
+            "beat": 82.0,
+            "presetId": "cam_speedboom",
+            "lane": 5,
+            "kind": 0,
+            "inBeats": 0.0,
+            "outBeats": 0.0
+        },
+        {
+            "beat": 83.0,
+            "presetId": "B_CircleLineBurst",
+            "lane": 3,
+            "kind": 0,
+            "inBeats": 0.0,
+            "outBeats": 0.0
+        },
+        {
+            "beat": 83.0,
+            "presetId": "B_Bright",
+            "lane": 2,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -462,14 +494,6 @@
             "beat": 83.0,
             "presetId": "B_lightboom",
             "lane": 4,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 83.0,
-            "presetId": "B_CircleLineBurst",
-            "lane": 3,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -564,16 +588,16 @@
         },
         {
             "beat": 92.0,
-            "presetId": "B_lightboom",
-            "lane": 4,
+            "presetId": "cam_speedboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 92.0,
-            "presetId": "cam_speedboom",
-            "lane": 5,
+            "presetId": "B_lightboom",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -644,16 +668,16 @@
         },
         {
             "beat": 94.0,
-            "presetId": "cam_speedboom",
-            "lane": 5,
+            "presetId": "B_lightboom",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 94.0,
-            "presetId": "B_lightboom",
-            "lane": 4,
+            "presetId": "cam_speedboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -708,24 +732,16 @@
         },
         {
             "beat": 95.25,
-            "presetId": "B_lightboom",
-            "lane": 4,
+            "presetId": "cam_speedboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 95.25,
-            "presetId": "cam_speedboom",
-            "lane": 5,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 95.5,
-            "presetId": "cam_speedboom",
-            "lane": 5,
+            "presetId": "B_lightboom",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -739,9 +755,9 @@
             "outBeats": 0.0
         },
         {
-            "beat": 95.75,
-            "presetId": "B_lightboom",
-            "lane": 4,
+            "beat": 95.5,
+            "presetId": "cam_speedboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -750,6 +766,14 @@
             "beat": 95.75,
             "presetId": "cam_speedboom",
             "lane": 5,
+            "kind": 0,
+            "inBeats": 0.0,
+            "outBeats": 0.0
+        },
+        {
+            "beat": 95.75,
+            "presetId": "B_lightboom",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -796,16 +820,16 @@
         },
         {
             "beat": 96.5,
-            "presetId": "B_lightboom",
-            "lane": 4,
+            "presetId": "cam_speedboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 96.5,
-            "presetId": "cam_speedboom",
-            "lane": 5,
+            "presetId": "B_lightboom",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -838,6 +862,14 @@
             "beat": 97.0,
             "presetId": "cam_speedboom",
             "lane": 5,
+            "kind": 0,
+            "inBeats": 0.0,
+            "outBeats": 0.0
+        },
+        {
+            "beat": 99.0,
+            "presetId": "B_Bright",
+            "lane": 2,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -948,16 +980,16 @@
         },
         {
             "beat": 108.0,
-            "presetId": "cam_speedboom",
-            "lane": 5,
+            "presetId": "B_lightboom",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 108.0,
-            "presetId": "B_lightboom",
-            "lane": 4,
+            "presetId": "cam_speedboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -1012,22 +1044,14 @@
         },
         {
             "beat": 109.5,
-            "presetId": "B_lightboom",
-            "lane": 4,
+            "presetId": "cam_speedboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 109.5,
-            "presetId": "cam_speedboom",
-            "lane": 5,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 110.0,
             "presetId": "B_lightboom",
             "lane": 4,
             "kind": 0,
@@ -1043,7 +1067,7 @@
             "outBeats": 0.0
         },
         {
-            "beat": 110.5,
+            "beat": 110.0,
             "presetId": "B_lightboom",
             "lane": 4,
             "kind": 0,
@@ -1054,6 +1078,14 @@
             "beat": 110.5,
             "presetId": "cam_speedboom",
             "lane": 5,
+            "kind": 0,
+            "inBeats": 0.0,
+            "outBeats": 0.0
+        },
+        {
+            "beat": 110.5,
+            "presetId": "B_lightboom",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -1172,16 +1204,16 @@
         },
         {
             "beat": 112.75,
-            "presetId": "cam_speedboom",
-            "lane": 5,
+            "presetId": "B_lightboom",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 112.75,
-            "presetId": "B_lightboom",
-            "lane": 4,
+            "presetId": "cam_speedboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -1228,6 +1260,22 @@
         },
         {
             "beat": 114.0,
+            "presetId": "B_lightboom",
+            "lane": 4,
+            "kind": 0,
+            "inBeats": 0.0,
+            "outBeats": 0.0
+        },
+        {
+            "beat": 115.0,
+            "presetId": "B_Bright",
+            "lane": 2,
+            "kind": 0,
+            "inBeats": 0.0,
+            "outBeats": 0.0
+        },
+        {
+            "beat": 115.0,
             "presetId": "B_lightboom",
             "lane": 4,
             "kind": 0,
@@ -1238,14 +1286,6 @@
             "beat": 115.0,
             "presetId": "B_CircleLineBurst",
             "lane": 3,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 115.0,
-            "presetId": "B_lightboom",
-            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -1268,16 +1308,16 @@
         },
         {
             "beat": 122.5,
-            "presetId": "B_lightboom",
-            "lane": 4,
+            "presetId": "cam_speedboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 122.5,
-            "presetId": "cam_speedboom",
-            "lane": 5,
+            "presetId": "B_lightboom",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -1300,24 +1340,16 @@
         },
         {
             "beat": 123.0,
-            "presetId": "B_lightboom",
-            "lane": 4,
+            "presetId": "cam_speedboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 123.0,
-            "presetId": "cam_speedboom",
-            "lane": 5,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 123.5,
-            "presetId": "cam_speedboom",
-            "lane": 5,
+            "presetId": "B_lightboom",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -1331,9 +1363,9 @@
             "outBeats": 0.0
         },
         {
-            "beat": 123.75,
-            "presetId": "B_lightboom",
-            "lane": 4,
+            "beat": 123.5,
+            "presetId": "cam_speedboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -1342,6 +1374,14 @@
             "beat": 123.75,
             "presetId": "cam_speedboom",
             "lane": 5,
+            "kind": 0,
+            "inBeats": 0.0,
+            "outBeats": 0.0
+        },
+        {
+            "beat": 123.75,
+            "presetId": "B_lightboom",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -1364,22 +1404,14 @@
         },
         {
             "beat": 124.5,
-            "presetId": "B_lightboom",
-            "lane": 4,
+            "presetId": "cam_speedboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 124.5,
-            "presetId": "cam_speedboom",
-            "lane": 5,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 125.0,
             "presetId": "B_lightboom",
             "lane": 4,
             "kind": 0,
@@ -1395,9 +1427,9 @@
             "outBeats": 0.0
         },
         {
-            "beat": 125.25,
-            "presetId": "cam_speedboom",
-            "lane": 5,
+            "beat": 125.0,
+            "presetId": "B_lightboom",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -1411,7 +1443,7 @@
             "outBeats": 0.0
         },
         {
-            "beat": 125.5,
+            "beat": 125.25,
             "presetId": "cam_speedboom",
             "lane": 5,
             "kind": 0,
@@ -1422,6 +1454,14 @@
             "beat": 125.5,
             "presetId": "B_lightboom",
             "lane": 4,
+            "kind": 0,
+            "inBeats": 0.0,
+            "outBeats": 0.0
+        },
+        {
+            "beat": 125.5,
+            "presetId": "cam_speedboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -1476,16 +1516,16 @@
         },
         {
             "beat": 127.0,
-            "presetId": "B_lightboom",
-            "lane": 4,
+            "presetId": "cam_speedboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 127.0,
-            "presetId": "cam_speedboom",
-            "lane": 5,
+            "presetId": "B_lightboom",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -1524,24 +1564,16 @@
         },
         {
             "beat": 128.0,
-            "presetId": "cam_speedboom",
-            "lane": 5,
+            "presetId": "B_lightboom",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 128.0,
-            "presetId": "B_lightboom",
-            "lane": 4,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 128.5,
-            "presetId": "B_lightboom",
-            "lane": 4,
+            "presetId": "cam_speedboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -1550,6 +1582,14 @@
             "beat": 128.5,
             "presetId": "cam_speedboom",
             "lane": 5,
+            "kind": 0,
+            "inBeats": 0.0,
+            "outBeats": 0.0
+        },
+        {
+            "beat": 128.5,
+            "presetId": "B_lightboom",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -1604,16 +1644,16 @@
         },
         {
             "beat": 130.0,
-            "presetId": "cam_speedboom",
-            "lane": 5,
+            "presetId": "B_lightboom",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 130.0,
-            "presetId": "B_lightboom",
-            "lane": 4,
+            "presetId": "cam_speedboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -1636,16 +1676,16 @@
         },
         {
             "beat": 130.75,
-            "presetId": "B_lightboom",
-            "lane": 4,
+            "presetId": "cam_speedboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 130.75,
-            "presetId": "cam_speedboom",
-            "lane": 5,
+            "presetId": "B_lightboom",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -1684,24 +1724,16 @@
         },
         {
             "beat": 131.75,
-            "presetId": "B_lightboom",
-            "lane": 4,
+            "presetId": "cam_speedboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 131.75,
-            "presetId": "cam_speedboom",
-            "lane": 5,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 132.0,
-            "presetId": "cam_speedboom",
-            "lane": 5,
+            "presetId": "B_lightboom",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -1710,6 +1742,14 @@
             "beat": 132.0,
             "presetId": "B_lightboom",
             "lane": 4,
+            "kind": 0,
+            "inBeats": 0.0,
+            "outBeats": 0.0
+        },
+        {
+            "beat": 132.0,
+            "presetId": "cam_speedboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -1748,24 +1788,16 @@
         },
         {
             "beat": 133.25,
-            "presetId": "B_lightboom",
-            "lane": 4,
+            "presetId": "cam_speedboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 133.25,
-            "presetId": "cam_speedboom",
-            "lane": 5,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 133.5,
-            "presetId": "cam_speedboom",
-            "lane": 5,
+            "presetId": "B_lightboom",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -1774,6 +1806,14 @@
             "beat": 133.5,
             "presetId": "B_lightboom",
             "lane": 4,
+            "kind": 0,
+            "inBeats": 0.0,
+            "outBeats": 0.0
+        },
+        {
+            "beat": 133.5,
+            "presetId": "cam_speedboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -1900,16 +1940,16 @@
         },
         {
             "beat": 135.5,
-            "presetId": "cam_speedboom",
-            "lane": 5,
+            "presetId": "B_lightboom",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 135.5,
-            "presetId": "B_lightboom",
-            "lane": 4,
+            "presetId": "cam_speedboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -1964,16 +2004,16 @@
         },
         {
             "beat": 136.25,
-            "presetId": "cam_speedboom",
-            "lane": 5,
+            "presetId": "B_lightboom",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 136.25,
-            "presetId": "B_lightboom",
-            "lane": 4,
+            "presetId": "cam_speedboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -2037,14 +2077,6 @@
         {
             "beat": 137.0,
             "presetId": "cam_speedboom",
-            "lane": 5,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 139.0,
-            "presetId": "B_CircleLineBurst",
             "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
@@ -2062,6 +2094,22 @@
             "beat": 139.0,
             "presetId": "B_GSpinRight",
             "lane": 3,
+            "kind": 0,
+            "inBeats": 0.0,
+            "outBeats": 0.0
+        },
+        {
+            "beat": 139.0,
+            "presetId": "B_CircleLineBurst",
+            "lane": 5,
+            "kind": 0,
+            "inBeats": 0.0,
+            "outBeats": 0.0
+        },
+        {
+            "beat": 139.0,
+            "presetId": "B_Bright",
+            "lane": 2,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -2118,6 +2166,14 @@
             "beat": 146.0,
             "presetId": "B_USpinRight4",
             "lane": 0,
+            "kind": 0,
+            "inBeats": 0.0,
+            "outBeats": 0.0
+        },
+        {
+            "beat": 154.5,
+            "presetId": "B_Bright",
+            "lane": 3,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -2204,8 +2260,8 @@
         },
         {
             "beat": 171.0,
-            "presetId": "B_lightboom",
-            "lane": 5,
+            "presetId": "B_Bright",
+            "lane": 3,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -2219,9 +2275,9 @@
             "outBeats": 0.0
         },
         {
-            "beat": 175.0,
-            "presetId": "B_CircleLineBurst",
-            "lane": 4,
+            "beat": 171.0,
+            "presetId": "B_lightboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -2230,6 +2286,14 @@
             "beat": 175.0,
             "presetId": "B_lightboom",
             "lane": 5,
+            "kind": 0,
+            "inBeats": 0.0,
+            "outBeats": 0.0
+        },
+        {
+            "beat": 175.0,
+            "presetId": "B_CircleLineBurst",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -2252,16 +2316,16 @@
         },
         {
             "beat": 178.25,
-            "presetId": "B_CircleLineBurst",
-            "lane": 4,
+            "presetId": "B_lightboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 178.25,
-            "presetId": "B_lightboom",
-            "lane": 5,
+            "presetId": "B_CircleLineBurst",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -2284,24 +2348,16 @@
         },
         {
             "beat": 183.0,
-            "presetId": "B_CircleLineBurst",
-            "lane": 4,
+            "presetId": "B_lightboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 183.0,
-            "presetId": "B_lightboom",
-            "lane": 5,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 184.5,
-            "presetId": "B_lightboom",
-            "lane": 5,
+            "presetId": "B_CircleLineBurst",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -2315,7 +2371,7 @@
             "outBeats": 0.0
         },
         {
-            "beat": 187.0,
+            "beat": 184.5,
             "presetId": "B_lightboom",
             "lane": 5,
             "kind": 0,
@@ -2331,7 +2387,7 @@
             "outBeats": 0.0
         },
         {
-            "beat": 191.0,
+            "beat": 187.0,
             "presetId": "B_lightboom",
             "lane": 5,
             "kind": 0,
@@ -2342,6 +2398,14 @@
             "beat": 191.0,
             "presetId": "B_CircleLineBurst",
             "lane": 4,
+            "kind": 0,
+            "inBeats": 0.0,
+            "outBeats": 0.0
+        },
+        {
+            "beat": 191.0,
+            "presetId": "B_lightboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -2380,24 +2444,16 @@
         },
         {
             "beat": 195.0,
-            "presetId": "B_lightboom",
-            "lane": 5,
+            "presetId": "B_CircleLineBurst",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 195.0,
-            "presetId": "B_CircleLineBurst",
-            "lane": 4,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 195.5,
-            "presetId": "B_CircleLineBurst",
-            "lane": 4,
+            "presetId": "B_lightboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -2406,6 +2462,14 @@
             "beat": 195.5,
             "presetId": "B_lightboom",
             "lane": 5,
+            "kind": 0,
+            "inBeats": 0.0,
+            "outBeats": 0.0
+        },
+        {
+            "beat": 195.5,
+            "presetId": "B_CircleLineBurst",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -2428,22 +2492,14 @@
         },
         {
             "beat": 198.5,
-            "presetId": "B_CircleLineBurst",
-            "lane": 4,
+            "presetId": "B_lightboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 198.5,
-            "presetId": "B_lightboom",
-            "lane": 5,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 199.5,
             "presetId": "B_CircleLineBurst",
             "lane": 4,
             "kind": 0,
@@ -2459,9 +2515,9 @@
             "outBeats": 0.0
         },
         {
-            "beat": 200.5,
-            "presetId": "B_lightboom",
-            "lane": 5,
+            "beat": 199.5,
+            "presetId": "B_CircleLineBurst",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -2475,9 +2531,9 @@
             "outBeats": 0.0
         },
         {
-            "beat": 201.5,
-            "presetId": "B_CircleLineBurst",
-            "lane": 4,
+            "beat": 200.5,
+            "presetId": "B_lightboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -2486,6 +2542,14 @@
             "beat": 201.5,
             "presetId": "B_lightboom",
             "lane": 5,
+            "kind": 0,
+            "inBeats": 0.0,
+            "outBeats": 0.0
+        },
+        {
+            "beat": 201.5,
+            "presetId": "B_CircleLineBurst",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -2508,16 +2572,16 @@
         },
         {
             "beat": 202.5,
-            "presetId": "B_CircleLineBurst",
-            "lane": 4,
+            "presetId": "B_lightboom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 202.5,
-            "presetId": "B_lightboom",
-            "lane": 5,
+            "presetId": "B_CircleLineBurst",
+            "lane": 4,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -2580,16 +2644,16 @@
         },
         {
             "beat": 235.0,
-            "presetId": "B_CircleLineBurst",
-            "lane": 2,
+            "presetId": "cam_boom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 235.0,
-            "presetId": "cam_boom",
-            "lane": 5,
+            "presetId": "B_CircleLineBurst",
+            "lane": 2,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -2628,16 +2692,16 @@
         },
         {
             "beat": 238.0,
-            "presetId": "B_lightboom",
-            "lane": 3,
+            "presetId": "cam_boom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 238.0,
-            "presetId": "cam_boom",
-            "lane": 5,
+            "presetId": "B_lightboom",
+            "lane": 3,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -2660,16 +2724,16 @@
         },
         {
             "beat": 240.0,
-            "presetId": "cam_boom",
-            "lane": 5,
+            "presetId": "B_lightboom",
+            "lane": 3,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 240.0,
-            "presetId": "B_lightboom",
-            "lane": 3,
+            "presetId": "cam_boom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -2716,22 +2780,14 @@
         },
         {
             "beat": 243.0,
-            "presetId": "B_lightboom",
-            "lane": 3,
+            "presetId": "B_CircleLineBurst",
+            "lane": 2,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 243.0,
-            "presetId": "B_CircleLineBurst",
-            "lane": 2,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 244.0,
             "presetId": "B_lightboom",
             "lane": 3,
             "kind": 0,
@@ -2742,6 +2798,14 @@
             "beat": 244.0,
             "presetId": "cam_boom",
             "lane": 5,
+            "kind": 0,
+            "inBeats": 0.0,
+            "outBeats": 0.0
+        },
+        {
+            "beat": 244.0,
+            "presetId": "B_lightboom",
+            "lane": 3,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -2780,6 +2844,14 @@
         },
         {
             "beat": 247.0,
+            "presetId": "B_lightboom",
+            "lane": 3,
+            "kind": 0,
+            "inBeats": 0.0,
+            "outBeats": 0.0
+        },
+        {
+            "beat": 247.0,
             "presetId": "cam_boom",
             "lane": 5,
             "kind": 0,
@@ -2787,9 +2859,9 @@
             "outBeats": 0.0
         },
         {
-            "beat": 247.0,
-            "presetId": "B_lightboom",
-            "lane": 3,
+            "beat": 251.0,
+            "presetId": "cam_boom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -2798,14 +2870,6 @@
             "beat": 251.0,
             "presetId": "B_CircleLineBurst",
             "lane": 2,
-            "kind": 0,
-            "inBeats": 0.0,
-            "outBeats": 0.0
-        },
-        {
-            "beat": 251.0,
-            "presetId": "cam_boom",
-            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
@@ -2916,16 +2980,16 @@
         },
         {
             "beat": 267.0,
-            "presetId": "cam_boom",
-            "lane": 5,
+            "presetId": "B_CircleLineBurst",
+            "lane": 2,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
         },
         {
             "beat": 267.0,
-            "presetId": "B_CircleLineBurst",
-            "lane": 2,
+            "presetId": "cam_boom",
+            "lane": 5,
             "kind": 0,
             "inBeats": 0.0,
             "outBeats": 0.0
