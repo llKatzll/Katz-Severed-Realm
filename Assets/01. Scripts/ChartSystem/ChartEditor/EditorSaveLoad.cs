@@ -7,15 +7,29 @@ public class EditorSaveLoad : MonoBehaviour
 {
     [SerializeField] private EditorChart _chart;
     [SerializeField] private EditorLoadSong _loadSong;
+    [SerializeField] private EffectSaveLoad _effectSaveLoad;
+    [SerializeField] private GameObject _effectModeRoot;
 
     private void Awake()
     {
         if (_chart == null) _chart = GetComponent<EditorChart>();
         if (_loadSong == null) _loadSong = GetComponent<EditorLoadSong>();
+        if (_effectSaveLoad == null) _effectSaveLoad = FindObjectOfType<EffectSaveLoad>();
+    }
+
+    private bool IsEffectMode()
+    {
+        return _effectModeRoot != null && _effectModeRoot.activeInHierarchy;
     }
 
     public bool Save()
     {
+        if (IsEffectMode())
+        {
+            if (_effectSaveLoad != null) _effectSaveLoad.Save();
+            return true;
+        }
+
         if (_chart == null) return false;
         var data = _chart.Chart;
         if (data == null) return false;
@@ -57,6 +71,12 @@ public class EditorSaveLoad : MonoBehaviour
 
     public void OpenLoadDialog()
     {
+        if (IsEffectMode())
+        {
+            if (_effectSaveLoad != null) _effectSaveLoad.OpenLoadDialog();
+            return;
+        }
+
 #if UNITY_EDITOR
         string startDir = ChartUtility.GetChartDirectory();
         string path = EditorUtility.OpenFilePanel("Select Chart JSON", startDir, "json");

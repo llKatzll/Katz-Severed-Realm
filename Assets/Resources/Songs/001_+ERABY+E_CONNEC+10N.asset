@@ -35,7 +35,7 @@ MonoBehaviour:
     charter: Kachesis
     mapper: Kachesis
   - type: 4
-    level: 67
-    constant: 67
+    level: 14
+    constant: 14.6
     charter: ilelv
     mapper: Kachesis
