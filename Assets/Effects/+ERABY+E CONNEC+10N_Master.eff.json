@@ -3,6 +3,12 @@
     "difficulty": "Master",
     "triggers": [
         {
+            "beat": 0.0,
+            "presetId": "IN_Mirroring",
+            "lane": 5,
+            "kind": 3,
+            "inBeats": 3.0,
+            "outBeats": 0.0
         }
     ]
 }

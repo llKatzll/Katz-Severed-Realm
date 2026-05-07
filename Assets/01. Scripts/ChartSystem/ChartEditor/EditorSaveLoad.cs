@@ -8,6 +8,7 @@ public class EditorSaveLoad : MonoBehaviour
     [SerializeField] private EditorChart _chart;
     [SerializeField] private EditorLoadSong _loadSong;
     [SerializeField] private EffectSaveLoad _effectSaveLoad;
+    [SerializeField] private EditorUI _editorUI;
     [SerializeField] private GameObject _effectModeRoot;
 
     private void Awake()
@@ -15,6 +16,7 @@ public class EditorSaveLoad : MonoBehaviour
         if (_chart == null) _chart = GetComponent<EditorChart>();
         if (_loadSong == null) _loadSong = GetComponent<EditorLoadSong>();
         if (_effectSaveLoad == null) _effectSaveLoad = FindObjectOfType<EffectSaveLoad>();
+        if (_editorUI == null) _editorUI = GetComponent<EditorUI>();
     }
 
     private bool IsEffectMode()
@@ -22,22 +24,22 @@ public class EditorSaveLoad : MonoBehaviour
         return _effectModeRoot != null && _effectModeRoot.activeInHierarchy;
     }
 
-    public bool Save()
+    public void Save()
     {
         if (IsEffectMode())
         {
             if (_effectSaveLoad != null) _effectSaveLoad.Save();
-            return true;
+            return;
         }
 
-        if (_chart == null) return false;
+        if (_chart == null) return;
         var data = _chart.Chart;
-        if (data == null) return false;
+        if (data == null) return;
 
         if (string.IsNullOrEmpty(data.songName) || string.IsNullOrEmpty(data.difficulty))
         {
             Debug.LogWarning("[EditorSaveLoad] songName or difficulty is empty");
-            return false;
+            return;
         }
 
         string path = ChartUtility.GetChartPath(data.songName, data.difficulty);
@@ -45,7 +47,6 @@ public class EditorSaveLoad : MonoBehaviour
         Debug.Log("[EditorSaveLoad] Save " + (ok ? "OK" : "FAIL") + ": " + path);
 
         if (ok) RegisterDifficultyToSongData();
-        return ok;
     }
 
     private void RegisterDifficultyToSongData()
@@ -103,6 +104,7 @@ public class EditorSaveLoad : MonoBehaviour
         }
 
         if (_chart != null) _chart.LoadChart(data);
+        if (_editorUI != null) _editorUI.RefreshDisplay();
         Debug.Log("[EditorSaveLoad] Loaded: " + path);
 #else
         if (_loadSong != null)

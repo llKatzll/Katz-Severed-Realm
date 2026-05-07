@@ -4376,8 +4376,8 @@ MonoBehaviour:
   _dnButton: {fileID: 268981561}
   _dlnButton: {fileID: 191069260}
   _loadSongButton: {fileID: 856317035}
-  _saveButton: {fileID: 1582747750}
-  _loadButton: {fileID: 1797921447}
+  _saveButton: {fileID: 0}
+  _loadButton: {fileID: 0}
   _exitButton: {fileID: 1568547596}
   _playButton: {fileID: 812258014}
   _rewindButton: {fileID: 876893215}
@@ -4427,6 +4427,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EditorSaveLoad
   _chart: {fileID: 0}
   _loadSong: {fileID: 0}
+  _effectSaveLoad: {fileID: 0}
+  _effectModeRoot: {fileID: 1011368729}
 --- !u!114 &739525168
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9148,8 +9150,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 258880073}
-        m_TargetAssemblyTypeName: EffectSaveLoad, Assembly-CSharp
+      - m_Target: {fileID: 739525167}
+        m_TargetAssemblyTypeName: EditorSaveLoad, Assembly-CSharp
         m_MethodName: Save
         m_Mode: 1
         m_Arguments:
@@ -10363,8 +10365,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 258880073}
-        m_TargetAssemblyTypeName: EffectSaveLoad, Assembly-CSharp
+      - m_Target: {fileID: 739525167}
+        m_TargetAssemblyTypeName: EditorSaveLoad, Assembly-CSharp
         m_MethodName: OpenLoadDialog
         m_Mode: 1
         m_Arguments:

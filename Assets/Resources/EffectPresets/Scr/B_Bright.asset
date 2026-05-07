@@ -16,11 +16,11 @@ MonoBehaviour:
   displayName: B_Bright
   category: 3
   triggerType: 0
-  defaultDurationSec: 0.15
+  defaultDurationSec: 0.1
   particlePrefab: {fileID: 0}
   spawnOffset: {x: 0, y: 0, z: 0}
   animationClip: {fileID: 7400000, guid: a8db19c3ca8de854eaacec8175b23ca4, type: 2}
-  targetAnimatorPath: SceneSkyBox
+  targetAnimatorPath: PostProcessVolume_Anim
   scrType: 0
   scrIntensityFrom: 0
   scrIntensityTo: 1

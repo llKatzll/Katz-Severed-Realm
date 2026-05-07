@@ -235,6 +235,12 @@ public class EditorUI : MonoBehaviour
         UpdateDifficultyText();
     }
 
+    public void RefreshDisplay()
+    {
+        UpdateSongName();
+        UpdateDifficultyText();
+    }
+
     private void UpdateDifficultyText()
     {
         if (_difficultyText == null) return;

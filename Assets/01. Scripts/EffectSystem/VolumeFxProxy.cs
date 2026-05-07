@@ -151,6 +151,7 @@ public class VolumeFxProxy : MonoBehaviour
     private void LateUpdate()
     {
         if (_volume == null) return;
+        if (_bloom == null || _lensFlare == null) FetchComponents();
         _volume.weight = volumeWeight;
 
         SyncBloom();

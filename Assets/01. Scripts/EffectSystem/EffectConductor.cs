@@ -17,9 +17,17 @@ public class EffectConductor : MonoBehaviour
         public Animator animator;
         public PlayableGraph graph;
         public AnimationPlayableOutput output;
+        public AnimationLayerMixerPlayable mixer;
+        public List<ActiveClip> active = new List<ActiveClip>();
+    }
+
+    private class ActiveClip
+    {
         public AnimationClipPlayable clip;
+        public int port;
+        public string presetId;
         public double stopDsp;
-        public bool valid;
+        public bool stopped;
     }
 
     private readonly Dictionary<string, GraphState> _graphs = new Dictionary<string, GraphState>();
@@ -104,7 +112,7 @@ public class EffectConductor : MonoBehaviour
             _dispatchIdx++;
         }
 
-        UpdateAllGraphStops();
+        UpdateAllClipStops();
         UpdateActiveParticles();
     }
 
@@ -138,7 +146,7 @@ public class EffectConductor : MonoBehaviour
 
         if (trig.kind == TriggerKind.Off)
         {
-            StopGraph(key);
+            StopActiveByPresetId(key, preset.presetId);
             return;
         }
 
@@ -160,66 +168,78 @@ public class EffectConductor : MonoBehaviour
             speed = 1f;
         }
 
-        BuildGraph(key, animator, preset.animationClip, speed);
-        var state = _graphs[key];
-        state.stopDsp = AudioSettings.dspTime + durationSec;
+        var state = GetOrBuildGraph(key, animator);
+        AddClipToMixer(state, preset.animationClip, speed, preset.presetId, durationSec);
     }
 
-    private void BuildGraph(string key, Animator animator, AnimationClip clip, float speed)
+    private GraphState GetOrBuildGraph(string key, Animator animator)
     {
         GraphState existing;
-        if (_graphs.TryGetValue(key, out existing) && existing.valid)
-        {
-            DestroyGraph(existing);
-        }
+        if (_graphs.TryGetValue(key, out existing) && existing != null && existing.graph.IsValid())
+            return existing;
 
         var state = new GraphState();
         state.animator = animator;
         state.graph = PlayableGraph.Create("EffectGraph_" + key);
         state.output = AnimationPlayableOutput.Create(state.graph, "AnimOut", animator);
-        state.clip = AnimationClipPlayable.Create(state.graph, clip);
-        state.clip.SetSpeed(speed);
-        state.output.SetSourcePlayable(state.clip);
+        state.mixer = AnimationLayerMixerPlayable.Create(state.graph, 0);
+        state.output.SetSourcePlayable(state.mixer);
         state.graph.Play();
-        state.valid = true;
-        state.stopDsp = -1.0;
-
         _graphs[key] = state;
+        return state;
     }
 
-    private void StopGraph(string key)
+    private void AddClipToMixer(GraphState state, AnimationClip clip, float speed, string presetId, double durationSec)
+    {
+        var clipPlayable = AnimationClipPlayable.Create(state.graph, clip);
+        clipPlayable.SetSpeed(speed);
+
+        int port = state.mixer.AddInput(clipPlayable, 0, 1f);
+
+        var ac = new ActiveClip
+        {
+            clip = clipPlayable,
+            port = port,
+            presetId = presetId,
+            stopDsp = AudioSettings.dspTime + durationSec,
+            stopped = false
+        };
+        state.active.Add(ac);
+    }
+
+    private void StopActiveByPresetId(string key, string presetId)
     {
         GraphState state;
-        if (!_graphs.TryGetValue(key, out state)) return;
-        DestroyGraph(state);
-        _graphs.Remove(key);
-    }
+        if (!_graphs.TryGetValue(key, out state) || state == null) return;
 
-    private void DestroyGraph(GraphState state)
-    {
-        if (state == null) return;
-        if (state.valid && state.graph.IsValid())
+        for (int i = state.active.Count - 1; i >= 0; i--)
         {
-            state.graph.Destroy();
+            var ac = state.active[i];
+            if (ac.presetId != presetId) continue;
+
+            if (ac.port >= 0 && state.mixer.IsValid())
+                state.mixer.DisconnectInput(ac.port);
+            if (ac.clip.IsValid()) ac.clip.Destroy();
+            state.active.RemoveAt(i);
         }
-        state.valid = false;
     }
 
-    private void UpdateAllGraphStops()
+    private void UpdateAllClipStops()
     {
         double now = AudioSettings.dspTime;
         foreach (var kv in _graphs)
         {
             var state = kv.Value;
-            if (state == null || !state.valid) continue;
-            if (state.stopDsp < 0.0) continue;
-            if (now >= state.stopDsp)
+            if (state == null) continue;
+            for (int i = 0; i < state.active.Count; i++)
             {
-                if (state.clip.IsValid())
+                var ac = state.active[i];
+                if (ac.stopped) continue;
+                if (now >= ac.stopDsp)
                 {
-                    state.clip.SetSpeed(0);
+                    if (ac.clip.IsValid()) ac.clip.SetSpeed(0);
+                    ac.stopped = true;
                 }
-                state.stopDsp = -1.0;
             }
         }
     }
@@ -263,7 +283,13 @@ public class EffectConductor : MonoBehaviour
     {
         foreach (var kv in _graphs)
         {
-            DestroyGraph(kv.Value);
+            var state = kv.Value;
+            if (state == null) continue;
+            for (int i = 0; i < state.active.Count; i++)
+            {
+                if (state.active[i].clip.IsValid()) state.active[i].clip.Destroy();
+            }
+            if (state.graph.IsValid()) state.graph.Destroy();
         }
         _graphs.Clear();
 

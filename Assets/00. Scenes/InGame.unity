@@ -2033,7 +2033,7 @@ Animator:
   m_GameObject: {fileID: 330585543}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 67bff543844005649a46eba35e964898, type: 2}
+  m_Controller: {fileID: 0}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -3919,7 +3919,7 @@ Animator:
   m_GameObject: {fileID: 832575517}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: b5891fc5c3cd5e046b362ad56f845112, type: 2}
+  m_Controller: {fileID: 0}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -3944,7 +3944,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VolumeFxProxy
   _volume: {fileID: 832575518}
-  bloomThreshold: 1
+  bloomThreshold: 0.5
   bloomIntensity: 0.25
   bloomScatter: 0.5
   bloomTint: {r: 1, g: 1, b: 1, a: 1}
@@ -3955,7 +3955,7 @@ MonoBehaviour:
   hueShift: 0
   saturation: 0
   whiteTemperature: 0
-  whiteTint: 3.24
+  whiteTint: 0
   splitShadows: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   splitHighlights: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   splitBalance: 0
@@ -3970,7 +3970,7 @@ MonoBehaviour:
   vignetteCenterX: 0.5
   vignetteCenterY: 0.5
   vignetteIntensity: 0
-  vignetteSmoothness: 1
+  vignetteSmoothness: 0.2
   paniniDistance: 0
   paniniCropToFit: 1
   dofGaussianStart: 10
@@ -3988,8 +3988,8 @@ MonoBehaviour:
   lensFlareVignetteEffect: 1
   lensFlareStartingPosition: 1.25
   lensFlareScale: 1.5
-  lensFlareStreaksIntensity: 0
-  lensFlareStreaksLength: 0.5
+  lensFlareStreaksIntensity: 0.1
+  lensFlareStreaksLength: 0
   lensFlareStreaksOrientation: 0
   lensFlareStreaksThreshold: 0.25
   lensFlareChromaIntensity: 0.5
