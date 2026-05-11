@@ -4428,6 +4428,7 @@ MonoBehaviour:
   _chart: {fileID: 0}
   _loadSong: {fileID: 0}
   _effectSaveLoad: {fileID: 0}
+  _editorUI: {fileID: 0}
   _effectModeRoot: {fileID: 1011368729}
 --- !u!114 &739525168
 MonoBehaviour:

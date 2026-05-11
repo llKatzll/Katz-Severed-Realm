@@ -18,6 +18,9 @@ public class SongSelectManager : MonoBehaviour
     [SerializeField] private SongData _currentSong;
     [SerializeField] private DifficultyType _currentDifficulty;
 
+    [Header("Exit")]
+    [SerializeField] private string _mainMenuSceneName = "MainMenu";
+
     private SongBar _currentSelectedBar;
 
     private void Awake()
@@ -44,6 +47,11 @@ public class SongSelectManager : MonoBehaviour
         {
             _difficultySelector.OnDifficultySelected -= OnDifficultyChanged;
         }
+    }
+
+    public void ExitToMainMenu()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(_mainMenuSceneName);
     }
 
     public void OnSongBarSelected(SongBar bar)

@@ -231,16 +231,58 @@ public class EffectConductor : MonoBehaviour
         {
             var state = kv.Value;
             if (state == null) continue;
-            for (int i = 0; i < state.active.Count; i++)
+
+            bool cleanupHappened = false;
+            for (int i = state.active.Count - 1; i >= 0; i--)
             {
+                if (i >= state.active.Count) continue;
                 var ac = state.active[i];
                 if (ac.stopped) continue;
-                if (now >= ac.stopDsp)
+                if (now < ac.stopDsp) continue;
+
+                bool isOut = ac.presetId != null && ac.presetId.StartsWith("OUT_", System.StringComparison.OrdinalIgnoreCase);
+
+                if (isOut)
                 {
-                    if (ac.clip.IsValid()) ac.clip.SetSpeed(0);
+                    CleanupPairedClips(state, ac.presetId);
+                    cleanupHappened = true;
+                    break;
+                }
+                else
+                {
+                    if (ac.clip.IsValid())
+                    {
+                        var clipAsset = ac.clip.GetAnimationClip();
+                        if (clipAsset != null) ac.clip.SetTime(clipAsset.length);
+                        ac.clip.SetSpeed(0);
+                    }
                     ac.stopped = true;
                 }
             }
+            if (cleanupHappened) continue;
+        }
+    }
+
+    private void CleanupPairedClips(GraphState state, string outPresetId)
+    {
+        string suffix = outPresetId.Length > 4 ? outPresetId.Substring(4) : "";
+
+        for (int i = state.active.Count - 1; i >= 0; i--)
+        {
+            var ac = state.active[i];
+            if (ac.presetId == null) continue;
+
+            bool isPairedIn = ac.presetId.StartsWith("IN_", System.StringComparison.OrdinalIgnoreCase) &&
+                              ac.presetId.Length > 3 &&
+                              ac.presetId.Substring(3).Equals(suffix, System.StringComparison.OrdinalIgnoreCase);
+            bool isSelf = ac.presetId.Equals(outPresetId, System.StringComparison.OrdinalIgnoreCase);
+
+            if (!isPairedIn && !isSelf) continue;
+
+            if (ac.port >= 0 && state.mixer.IsValid())
+                state.mixer.DisconnectInput(ac.port);
+            if (ac.clip.IsValid()) ac.clip.Destroy();
+            state.active.RemoveAt(i);
         }
     }
 
