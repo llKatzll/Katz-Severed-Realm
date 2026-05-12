@@ -58,8 +58,8 @@ public class LaneJudge : MonoBehaviour
     private static readonly int IdEmissionColor = Shader.PropertyToID("_EmissionColor");
     private static readonly int IdColorBlend = Shader.PropertyToID("_ColorBlend");
 
-    private static MaterialPropertyBlock _mpb;
-    private static readonly List<ParticleSystemVertexStream> _streams = new List<ParticleSystemVertexStream>(16);
+    private MaterialPropertyBlock _mpb;
+    private readonly List<ParticleSystemVertexStream> _streams = new List<ParticleSystemVertexStream>(16);
 
 
     private KeyCode ActiveKey

@@ -4138,6 +4138,7 @@ MonoBehaviour:
   _transitionWaitY: 1100
   _exitTransitionSec: 5
   _postLoadingPauseSec: 0.1
+  _effectWarmup: {fileID: 0}
   _songRevealGroup: {fileID: 1202969814}
   _revealSongName: {fileID: 222877517}
   _revealArtistName: {fileID: 1563069716}
@@ -8888,6 +8889,60 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1488290273}
   m_LocalEulerAnglesHint: {x: -20, y: 0, z: -10}
+--- !u!1 &2086672198
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2086672200}
+  - component: {fileID: 2086672199}
+  m_Layer: 0
+  m_Name: EffectWarmUpLoader
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2086672199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2086672198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f6d9bede4c3934458f9023eda5c86ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EffectWarmup
+  _autoIncludeEffPresets: 1
+  _additionalPrefabs:
+  - {fileID: 8163141537363357767, guid: a28b98217eb767846839462972610979, type: 3}
+  - {fileID: 8163141537363357767, guid: 47e7700bbfea603418096236c0e2bb40, type: 3}
+  - {fileID: 8163141537363357767, guid: d8e9aae6f5a0e5340a82e4687a67a042, type: 3}
+  - {fileID: 8017308452861690929, guid: 3233726abf1301748b4300c466199b2b, type: 3}
+  - {fileID: 1953410223531933535, guid: 99249b3bd6770cc4e9a0cd8abf9b9d2f, type: 3}
+  - {fileID: 8430663150762934430, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
+  _warmupPosition: {x: 0, y: -100, z: 0}
+  _waitSec: 2
+--- !u!4 &2086672200
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2086672198}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2107445981
 GameObject:
   m_ObjectHideFlags: 0
@@ -9102,3 +9157,4 @@ SceneRoots:
   - {fileID: 832575519}
   - {fileID: 437879104}
   - {fileID: 758665378}
+  - {fileID: 2086672200}

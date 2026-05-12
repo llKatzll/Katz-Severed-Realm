@@ -20,6 +20,9 @@ public class InGameManager : MonoBehaviour
     [SerializeField] private float _exitTransitionSec = 5f;
     [SerializeField] private float _postLoadingPauseSec = 0.1f;
 
+    [Header("Effect Warmup")]
+    [SerializeField] private EffectWarmup _effectWarmup;
+
     [Header("Song Reveal")]
     [SerializeField] private CanvasGroup _songRevealGroup;
     [SerializeField] private TMP_Text _revealSongName;
@@ -266,6 +269,11 @@ public class InGameManager : MonoBehaviour
                 elapsed += Time.deltaTime;
                 yield return null;
             }
+        }
+
+        if (_effectWarmup != null)
+        {
+            yield return StartCoroutine(_effectWarmup.WarmupAll());
         }
     }
 

@@ -42,13 +42,13 @@ public class DimensionNoteJudge : MonoBehaviour
     private readonly List<HoldNote> _holds = new List<HoldNote>(8);
     private readonly List<HoldNote> _activeHolds = new List<HoldNote>(8);
 
-    private static MaterialPropertyBlock _mpb;
+    private MaterialPropertyBlock _mpb;
     private static readonly int IdColor = Shader.PropertyToID("_Color");
     private static readonly int IdBaseColor = Shader.PropertyToID("_BaseColor");
     private static readonly int IdTintColor = Shader.PropertyToID("_TintColor");
     private static readonly int IdEmissionColor = Shader.PropertyToID("_EmissionColor");
     private static readonly int IdColorBlend = Shader.PropertyToID("_ColorBlend");
-    private static readonly List<ParticleSystemVertexStream> _streams = new List<ParticleSystemVertexStream>(16);
+    private readonly List<ParticleSystemVertexStream> _streams = new List<ParticleSystemVertexStream>(16);
 
     private const double GROUP_TOLERANCE_MS = 2.0;
 
