@@ -41,6 +41,7 @@ public class DimensionNoteJudge : MonoBehaviour
     private readonly List<Note> _tapNotes = new List<Note>(32);
     private readonly List<HoldNote> _holds = new List<HoldNote>(8);
     private readonly List<HoldNote> _activeHolds = new List<HoldNote>(8);
+    private RhythmConductor _rhythm;
 
     private MaterialPropertyBlock _mpb;
     private static readonly int IdColor = Shader.PropertyToID("_Color");
@@ -69,6 +70,7 @@ public class DimensionNoteJudge : MonoBehaviour
             return;
         }
         I = this;
+        _rhythm = FindObjectOfType<RhythmConductor>();
     }
 
     public void RegisterTap(Note n)
@@ -165,8 +167,7 @@ public class DimensionNoteJudge : MonoBehaviour
         if (ComboUI.I != null)
         {
             float bpm = 120f;
-            RhythmConductor rhy = FindObjectOfType<RhythmConductor>();
-            if (rhy != null) bpm = (float)rhy.Bpm;
+            if (_rhythm != null) bpm = (float)_rhythm.Bpm;
             ComboUI.I.OnHoldStart(judge.ToString(), false, bpm, DimensionKey);
         }
         if (ScoreManager.I != null) ScoreManager.I.ReportJudge(judge);
@@ -315,8 +316,7 @@ public class DimensionNoteJudge : MonoBehaviour
             if (ComboUI.I != null)
             {
                 float bpm = 120f;
-                RhythmConductor rhy = FindObjectOfType<RhythmConductor>();
-                if (rhy != null) bpm = (float)rhy.Bpm;
+                if (_rhythm != null) bpm = (float)_rhythm.Bpm;
 
                 bool breaks = (judge == JudgeType.Ruin || judge == JudgeType.Miss);
                 ComboUI.I.OnHoldStart(judge.ToString(), breaks, bpm, DimensionKey);

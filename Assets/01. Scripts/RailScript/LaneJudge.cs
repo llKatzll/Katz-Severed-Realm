@@ -51,6 +51,7 @@ public class LaneJudge : MonoBehaviour
     private readonly List<Note> _tapNotes = new List<Note>(64);
     private HoldNote _hold;
     private readonly List<HoldNote> _holdQueue = new List<HoldNote>(8);
+    private RhythmConductor _rhythm;
 
     private static readonly int IdColor = Shader.PropertyToID("_Color");
     private static readonly int IdBaseColor = Shader.PropertyToID("_BaseColor");
@@ -80,6 +81,11 @@ public class LaneJudge : MonoBehaviour
     {
         _keyBindConfig = config;
         _laneIndex = laneIndex;
+    }
+
+    private void Awake()
+    {
+        _rhythm = FindObjectOfType<RhythmConductor>();
     }
 
     public void RegisterTap(Note n)
@@ -204,8 +210,7 @@ public class LaneJudge : MonoBehaviour
         if (ComboUI.I != null)
         {
             float bpm = 120f;
-            RhythmConductor rhy = FindObjectOfType<RhythmConductor>();
-            if (rhy != null) bpm = (float)rhy.Bpm;
+            if (_rhythm != null) bpm = (float)_rhythm.Bpm;
             ComboUI.I.OnHoldStart(judge.ToString(), false, bpm, ActiveKey);
         }
         if (ScoreManager.I != null) ScoreManager.I.ReportJudge(judge);
@@ -317,8 +322,7 @@ public class LaneJudge : MonoBehaviour
         if (ComboUI.I != null)
         {
             float bpm = 120f;
-            RhythmConductor rhy = FindObjectOfType<RhythmConductor>(); //ITS WORKING BRO STOP WARNING ABOUT THIS
-            if (rhy != null) bpm = (float)rhy.Bpm;
+            if (_rhythm != null) bpm = (float)_rhythm.Bpm;
 
             bool breaks = (judge == JudgeType.Ruin || judge == JudgeType.Miss);
             ComboUI.I.OnHoldStart(judge.ToString(), breaks, bpm, ActiveKey);
