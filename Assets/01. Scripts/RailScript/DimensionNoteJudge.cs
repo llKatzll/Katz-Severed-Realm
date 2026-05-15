@@ -383,12 +383,20 @@ public class DimensionNoteJudge : MonoBehaviour
         Vector3 pos = hitRef != null ? hitRef.position : transform.position;
         Quaternion rot = hitRef != null ? hitRef.rotation : Quaternion.identity;
 
-        GameObject fx = Instantiate(prefab, pos, rot);
+        GameObject fx;
+        if (FxPoolManager.I != null)
+        {
+            fx = FxPoolManager.I.Spawn(prefab, pos, rot, life);
+        }
+        else
+        {
+            fx = Instantiate(prefab, pos, rot);
+            if (life > 0f) Destroy(fx, life);
+        }
+        if (fx == null) return;
 
         Color c = GetJudgeColor(laneType, judge);
         ApplyFxColor(fx, c);
-
-        if (life > 0f) Destroy(fx, life);
     }
 
     private Color GetJudgeColor(NoteSpawner.NoteType laneType, JudgeType judge)
@@ -587,6 +595,13 @@ public class DimensionNoteJudge : MonoBehaviour
     private void SpawnEmptyHit(Vector3 pos)
     {
         if (_emptyHitPrefab == null) return;
+
+        if (FxPoolManager.I != null)
+        {
+            FxPoolManager.I.Spawn(_emptyHitPrefab, pos, Quaternion.identity, _emptyDestroySec);
+            return;
+        }
+
         GameObject fx = Instantiate(_emptyHitPrefab, pos, Quaternion.identity);
         if (_emptyDestroySec > 0f) Destroy(fx, _emptyDestroySec);
     }

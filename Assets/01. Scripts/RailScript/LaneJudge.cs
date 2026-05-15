@@ -620,49 +620,55 @@ public class LaneJudge : MonoBehaviour
     }
 
 
+    private GameObject SpawnPooled(GameObject prefab, Vector3 pos, Quaternion rot, float life)
+    {
+        if (prefab == null) return null;
+
+        if (FxPoolManager.I != null)
+            return FxPoolManager.I.Spawn(prefab, pos, rot, life);
+
+        GameObject fx = Instantiate(prefab, pos, rot);
+        if (life > 0f) Destroy(fx, life);
+        return fx;
+    }
+
     private void SpawnTapHitFx(JudgeType judge, NoteSpawner.NoteType laneType)
     {
         if (judge == JudgeType.Miss) return;
 
         GameObject prefab = _tapHitFxPrefab != null ? _tapHitFxPrefab : (_palette != null ? _palette.hitFxPrefab : null);
-
         if (prefab == null) return;
 
-        GameObject fx = Instantiate(prefab, transform.position, transform.rotation);
+        float life = _tapHitFxDestroySec > 0f ? _tapHitFxDestroySec : (_palette != null ? _palette.fxDestroySec : 0.3f);
+        GameObject fx = SpawnPooled(prefab, transform.position, transform.rotation, life);
+        if (fx == null) return;
 
         Color c = GetJudgeColor(laneType, judge);
         ApplyFxColor(fx, c);
-
-        float life = _tapHitFxDestroySec > 0f ? _tapHitFxDestroySec : (_palette != null ? _palette.fxDestroySec : 0.3f);
-        if (life > 0f) Destroy(fx, life);
     }
 
     private void SpawnHoldHeadFx(JudgeType judge, NoteSpawner.NoteType laneType)
     {
         if (judge == JudgeType.Miss) return;
-
         if (_holdHeadFxPrefab == null) return;
 
-        GameObject fx = Instantiate(_holdHeadFxPrefab, transform.position, transform.rotation);
+        GameObject fx = SpawnPooled(_holdHeadFxPrefab, transform.position, transform.rotation, _holdHeadFxDestroySec);
+        if (fx == null) return;
 
         Color c = GetJudgeColor(laneType, judge);
         ApplyFxColor(fx, c);
-
-        if (_holdHeadFxDestroySec > 0f) Destroy(fx, _holdHeadFxDestroySec);
     }
 
     private void SpawnHoldTailFx(JudgeType judge, NoteSpawner.NoteType laneType)
     {
         if (judge == JudgeType.Miss) return;
-
         if (_holdTailFxPrefab == null) return;
 
-        GameObject fx = Instantiate(_holdTailFxPrefab, transform.position, transform.rotation);
+        GameObject fx = SpawnPooled(_holdTailFxPrefab, transform.position, transform.rotation, _holdTailFxDestroySec);
+        if (fx == null) return;
 
         Color c = GetJudgeColor(laneType, judge);
         ApplyFxColor(fx, c);
-
-        if (_holdTailFxDestroySec > 0f) Destroy(fx, _holdTailFxDestroySec);
     }
 
     private void StartHoldLoopFx(Color c, NoteSpawner.NoteType laneType)
@@ -675,7 +681,9 @@ public class LaneJudge : MonoBehaviour
 
         if (prefab == null) return;
 
-        _holdLoopFx = Instantiate(prefab, transform.position, transform.rotation);
+        _holdLoopFx = SpawnPooled(prefab, transform.position, transform.rotation, 0f);
+        if (_holdLoopFx == null) return;
+
         ApplyFxColor(_holdLoopFx, c);
     }
 
@@ -683,8 +691,15 @@ public class LaneJudge : MonoBehaviour
     {
         if (_holdLoopFx == null) return;
 
-        if (_holdLoopFxStopDestroySec > 0f) Destroy(_holdLoopFx, _holdLoopFxStopDestroySec);
-        else Destroy(_holdLoopFx);
+        if (FxPoolManager.I != null)
+        {
+            FxPoolManager.I.ReturnDelayed(_holdLoopFx, _holdLoopFxStopDestroySec);
+        }
+        else
+        {
+            if (_holdLoopFxStopDestroySec > 0f) Destroy(_holdLoopFx, _holdLoopFxStopDestroySec);
+            else Destroy(_holdLoopFx);
+        }
 
         _holdLoopFx = null;
     }
@@ -693,15 +708,14 @@ public class LaneJudge : MonoBehaviour
     {
         if (_emptyHitPrefab == null) return;
 
-        GameObject fx = Instantiate(_emptyHitPrefab, transform.position, transform.rotation);
+        GameObject fx = SpawnPooled(_emptyHitPrefab, transform.position, transform.rotation, _emptyDestroySec);
+        if (fx == null) return;
 
         if (RuntimeColorPalette.I != null)
         {
             Color c = RuntimeColorPalette.I.GetRailColor(_laneType);
             ApplyFxColor(fx, c);
         }
-
-        if (_emptyDestroySec > 0f) Destroy(fx, _emptyDestroySec);
     }
 
     private Note PickEarliestTap()
