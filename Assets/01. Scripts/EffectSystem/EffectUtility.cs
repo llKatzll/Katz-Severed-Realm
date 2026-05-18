@@ -53,11 +53,7 @@ public static class EffectUtility
 
     public static string GetEffectDirectory()
     {
-#if UNITY_EDITOR
-        return Path.Combine(Application.dataPath, "Effects");
-#else
-        return Path.Combine(Application.persistentDataPath, "Effects");
-#endif
+        return Path.Combine(Application.streamingAssetsPath, "Effects");
     }
 
     public static string GetEffectPath(string songName, string difficulty)

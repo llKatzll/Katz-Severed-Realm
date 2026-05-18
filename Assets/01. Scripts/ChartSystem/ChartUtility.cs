@@ -53,11 +53,7 @@ public static class ChartUtility
 
     public static string GetChartDirectory()
     {
-#if UNITY_EDITOR
-        return Path.Combine(Application.dataPath, "Charts");
-#else
-        return Path.Combine(Application.persistentDataPath, "Charts");
-#endif
+        return Path.Combine(Application.streamingAssetsPath, "Charts");
     }
 
     public static string GetChartPath(string songName, string difficulty)
