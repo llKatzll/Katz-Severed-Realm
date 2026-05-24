@@ -92,15 +92,12 @@ public class EffectListUI : MonoBehaviour
         OnPresetSelected?.Invoke(preset);
     }
 
-    private Color GetCategoryColor(EffectCategory cat)
+    private Color GetCategoryColor(EffectCategory cat) => cat switch
     {
-        switch (cat)
-        {
-            case EffectCategory.Eff: return _effColor;
-            case EffectCategory.Cam: return _camColor;
-            case EffectCategory.Rail: return _railColor;
-            case EffectCategory.Scr: return _scrColor;
-            default: return Color.white;
-        }
-    }
+        EffectCategory.Eff => _effColor,
+        EffectCategory.Cam => _camColor,
+        EffectCategory.Rail => _railColor,
+        EffectCategory.Scr => _scrColor,
+        _ => Color.white,
+    };
 }
