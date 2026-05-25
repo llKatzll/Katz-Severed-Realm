@@ -39,10 +39,15 @@ public class EffectListUI : MonoBehaviour
 
     private void BindCategoryButtons()
     {
-        if (_effButton != null) _effButton.onClick.AddListener(() => ShowCategory(EffectCategory.Eff));
-        if (_camButton != null) _camButton.onClick.AddListener(() => ShowCategory(EffectCategory.Cam));
-        if (_railButton != null) _railButton.onClick.AddListener(() => ShowCategory(EffectCategory.Rail));
-        if (_scrButton != null) _scrButton.onClick.AddListener(() => ShowCategory(EffectCategory.Scr));
+        BindCategoryButton(_effButton, EffectCategory.Eff);
+        BindCategoryButton(_camButton, EffectCategory.Cam);
+        BindCategoryButton(_railButton, EffectCategory.Rail);
+        BindCategoryButton(_scrButton, EffectCategory.Scr);
+    }
+
+    private void BindCategoryButton(Button button, EffectCategory cat)
+    {
+        if (button != null) button.onClick.AddListener(() => ShowCategory(cat));
     }
 
     public void ShowCategory(EffectCategory cat)
