@@ -26,53 +26,44 @@ public static class RankUtility
         return "L";
     }
 
-    public static Color GetRankColor(string rank)
+    public static Color GetRankColor(string rank) => rank switch
     {
-        switch (rank)
-        {
-            case "SV": return new Color(1f, 0.84f, 0f);
-            case "SSS": return new Color(1f, 0.9f, 0.5f);
-            case "SS": return new Color(1f, 1f, 0.6f);
-            case "S": return new Color(1f, 0.5f, 0.5f);
-            case "A+": return new Color(1f, 0.3f, 0.3f);
-            case "A": return new Color(1f, 0.4f, 0.2f);
-            case "B": return new Color(0.2f, 0.6f, 1f);
-            case "C": return new Color(0.5f, 0.5f, 0.5f);
-            case "L": return new Color(0.3f, 0.3f, 0.3f);
-            default: return Color.white;
-        }
-    }
+        "SV" => new Color(1f, 0.84f, 0f),
+        "SSS" => new Color(1f, 0.9f, 0.5f),
+        "SS" => new Color(1f, 1f, 0.6f),
+        "S" => new Color(1f, 0.5f, 0.5f),
+        "A+" => new Color(1f, 0.3f, 0.3f),
+        "A" => new Color(1f, 0.4f, 0.2f),
+        "B" => new Color(0.2f, 0.6f, 1f),
+        "C" => new Color(0.5f, 0.5f, 0.5f),
+        "L" => new Color(0.3f, 0.3f, 0.3f),
+        _ => Color.white,
+    };
 }
 
 public static class DifficultyUtility
 {
-    public static Color GetDifficultyColor(DifficultyType type)
+    public static Color GetDifficultyColor(DifficultyType type) => type switch
     {
-        switch (type)
-        {
-            case DifficultyType.Easy: return new Color(0.2f, 0.9f, 0.3f);
-            case DifficultyType.Medium: return new Color(1f, 0.9f, 0.2f);
-            case DifficultyType.Hard: return new Color(1f, 0.5f, 0.1f);
-            case DifficultyType.Insane: return new Color(1f, 0.2f, 0.2f);
-            case DifficultyType.Master: return new Color(0.7f, 0.3f, 1f);
-            case DifficultyType.Del: return Color.white;
-            default: return Color.white;
-        }
-    }
+        DifficultyType.Easy => new Color(0.2f, 0.9f, 0.3f),
+        DifficultyType.Medium => new Color(1f, 0.9f, 0.2f),
+        DifficultyType.Hard => new Color(1f, 0.5f, 0.1f),
+        DifficultyType.Insane => new Color(1f, 0.2f, 0.2f),
+        DifficultyType.Master => new Color(0.7f, 0.3f, 1f),
+        DifficultyType.Del => Color.white,
+        _ => Color.white,
+    };
 
-    public static string GetDifficultyName(DifficultyType type)
+    public static string GetDifficultyName(DifficultyType type) => type switch
     {
-        switch (type)
-        {
-            case DifficultyType.Easy: return "EASY";
-            case DifficultyType.Medium: return "MEDIUM";
-            case DifficultyType.Hard: return "HARD";
-            case DifficultyType.Insane: return "INSANE";
-            case DifficultyType.Master: return "MASTER";
-            case DifficultyType.Del: return "DEL";
-            default: return "WHEREISIT";
-        }
-    }
+        DifficultyType.Easy => "EASY",
+        DifficultyType.Medium => "MEDIUM",
+        DifficultyType.Hard => "HARD",
+        DifficultyType.Insane => "INSANE",
+        DifficultyType.Master => "MASTER",
+        DifficultyType.Del => "DEL",
+        _ => "WHEREISIT",
+    };
 
     public static string FormatLevel(int level, float constant)
     {
