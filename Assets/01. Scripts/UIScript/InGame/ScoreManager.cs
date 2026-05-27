@@ -95,18 +95,15 @@ public class ScoreManager : MonoBehaviour
         return basePerNote * weight + sevBonus;
     }
 
-    private double GetAccuracyWeight(JudgeType judge)
+    private double GetAccuracyWeight(JudgeType judge) => judge switch
     {
-        switch (judge)
-        {
-            case JudgeType.Severance: return 1.0;
-            case JudgeType.Clean:     return 1.0;
-            case JudgeType.Trace:     return 200.0 / 300.0;
-            case JudgeType.Fracture:  return 100.0 / 300.0;
-            case JudgeType.Ruin:      return 50.0 / 300.0;
-            default:                  return 0.0;
-        }
-    }
+        JudgeType.Severance => 1.0,
+        JudgeType.Clean     => 1.0,
+        JudgeType.Trace     => 200.0 / 300.0,
+        JudgeType.Fracture  => 100.0 / 300.0,
+        JudgeType.Ruin      => 50.0 / 300.0,
+        _                   => 0.0,
+    };
 
     private void RefreshUI()
     {
