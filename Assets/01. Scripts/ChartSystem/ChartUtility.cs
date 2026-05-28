@@ -3,10 +3,7 @@ using System.IO;
 
 public static class ChartUtility
 {
-    public static string ToJson(ChartData data)
-    {
-        return JsonUtility.ToJson(data, true);
-    }
+    public static string ToJson(ChartData data) => JsonUtility.ToJson(data, true);
 
     public static ChartData FromJson(string json)
     {
@@ -52,12 +49,8 @@ public static class ChartUtility
     }
 
     public static string GetChartDirectory()
-    {
-        return Path.Combine(Application.streamingAssetsPath, "Charts");
-    }
+        => Path.Combine(Application.streamingAssetsPath, "Charts");
 
     public static string GetChartPath(string songName, string difficulty)
-    {
-        return Path.Combine(GetChartDirectory(), songName + "_" + difficulty + ".json");
-    }
+        => Path.Combine(GetChartDirectory(), songName + "_" + difficulty + ".json");
 }

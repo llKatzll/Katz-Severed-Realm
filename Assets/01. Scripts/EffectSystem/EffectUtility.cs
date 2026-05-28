@@ -3,10 +3,7 @@ using UnityEngine;
 
 public static class EffectUtility
 {
-    public static string ToJson(EffectData data)
-    {
-        return JsonUtility.ToJson(data, true);
-    }
+    public static string ToJson(EffectData data) => JsonUtility.ToJson(data, true);
 
     public static EffectData FromJson(string json)
     {
@@ -52,12 +49,8 @@ public static class EffectUtility
     }
 
     public static string GetEffectDirectory()
-    {
-        return Path.Combine(Application.streamingAssetsPath, "Effects");
-    }
+        => Path.Combine(Application.streamingAssetsPath, "Effects");
 
     public static string GetEffectPath(string songName, string difficulty)
-    {
-        return Path.Combine(GetEffectDirectory(), songName + "_" + difficulty + ".eff.json");
-    }
+        => Path.Combine(GetEffectDirectory(), songName + "_" + difficulty + ".eff.json");
 }
