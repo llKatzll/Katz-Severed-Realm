@@ -6,10 +6,7 @@ public static class ChartUtility
     public static string ToJson(ChartData data) => JsonUtility.ToJson(data, true);
 
     public static ChartData FromJson(string json)
-    {
-        if (string.IsNullOrEmpty(json)) return null;
-        return JsonUtility.FromJson<ChartData>(json);
-    }
+        => string.IsNullOrEmpty(json) ? null : JsonUtility.FromJson<ChartData>(json);
 
     public static bool SaveToFile(ChartData data, string filePath)
     {

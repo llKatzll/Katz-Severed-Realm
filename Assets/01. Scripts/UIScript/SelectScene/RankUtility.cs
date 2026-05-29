@@ -66,9 +66,5 @@ public static class DifficultyUtility
     };
 
     public static string FormatLevel(int level, float constant)
-    {
-        if (constant > level)
-            return level + "+";
-        return level.ToString();
-    }
+        => constant > level ? level + "+" : level.ToString();
 }

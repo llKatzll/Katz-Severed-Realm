@@ -6,10 +6,7 @@ public static class EffectUtility
     public static string ToJson(EffectData data) => JsonUtility.ToJson(data, true);
 
     public static EffectData FromJson(string json)
-    {
-        if (string.IsNullOrEmpty(json)) return null;
-        return JsonUtility.FromJson<EffectData>(json);
-    }
+        => string.IsNullOrEmpty(json) ? null : JsonUtility.FromJson<EffectData>(json);
 
     public static bool SaveToFile(EffectData data, string filePath)
     {
