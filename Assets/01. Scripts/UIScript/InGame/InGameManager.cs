@@ -307,26 +307,17 @@ public class InGameManager : MonoBehaviour
 
     private void HideRevealTexts()
     {
-        if (_revealSongName != null)
-        {
-            _revealSongName.gameObject.SetActive(false);
-            SetTMPAlpha(_revealSongName, 0f);
-        }
-        if (_revealArtistName != null)
-        {
-            _revealArtistName.gameObject.SetActive(false);
-            SetTMPAlpha(_revealArtistName, 0f);
-        }
-        if (_readyText != null)
-        {
-            _readyText.gameObject.SetActive(false);
-            SetTMPAlpha(_readyText, 0f);
-        }
-        if (_goText != null)
-        {
-            _goText.gameObject.SetActive(false);
-            SetTMPAlpha(_goText, 0f);
-        }
+        HideTMP(_revealSongName);
+        HideTMP(_revealArtistName);
+        HideTMP(_readyText);
+        HideTMP(_goText);
+    }
+
+    private void HideTMP(TMP_Text text)
+    {
+        if (text == null) return;
+        text.gameObject.SetActive(false);
+        SetTMPAlpha(text, 0f);
     }
 
     private IEnumerator FadeCanvasGroup(CanvasGroup cg, float from, float to, float duration)

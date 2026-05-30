@@ -24,14 +24,7 @@ public class ScoreManager : MonoBehaviour
     public int MaxCombo => _maxCombo;
     public int TotalNoteCount => _totalNoteCount;
 
-    public float Accuracy
-    {
-        get
-        {
-            if (_judgedCount <= 0) return 0f;
-            return (float)(_accuracySum / _judgedCount) * 100f;
-        }
-    }
+    public float Accuracy => _judgedCount <= 0 ? 0f : (float)(_accuracySum / _judgedCount) * 100f;
 
     public string Rank => RankUtility.GetRank(Score, _totalNoteCount);
 
@@ -46,10 +39,7 @@ public class ScoreManager : MonoBehaviour
         Reset();
     }
 
-    public void SetTotalNoteCount(int count)
-    {
-        _totalNoteCount = Mathf.Max(0, count);
-    }
+    public void SetTotalNoteCount(int count) => _totalNoteCount = Mathf.Max(0, count);
 
     public void Reset()
     {
