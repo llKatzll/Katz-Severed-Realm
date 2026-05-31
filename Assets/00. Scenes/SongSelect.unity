@@ -6333,7 +6333,7 @@ GameObject:
   - component: {fileID: 1624874617}
   - component: {fileID: 1624874619}
   m_Layer: 0
-  m_Name: PreviewPlayer
+  m_Name: MusicPlayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6348,7 +6348,7 @@ AudioSource:
   m_GameObject: {fileID: 1624874616}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -4573004377482245694, guid: 6e0822fb7337e1344a837212812c8258, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
