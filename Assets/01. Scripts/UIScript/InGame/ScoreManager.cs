@@ -69,6 +69,7 @@ public class ScoreManager : MonoBehaviour
         {
             _combo++;
             if (_combo > _maxCombo) _maxCombo = _combo;
+            HitSoundManager.I?.PlayHit();
         }
 
         RefreshUI();
