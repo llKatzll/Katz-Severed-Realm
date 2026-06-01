@@ -6,7 +6,7 @@ public static class SettingsConfig
 
     public const float DefaultVolume = 1f;
     public const float DefaultOffsetSec = 0f;
-    public const float DefaultNoteSpeed = 6f;
+    public const float DefaultNoteSpeed = 5f;
     public const int DefaultFpsCap = 144;
 
     public static readonly KeyCode[] DefaultGroundKeys =

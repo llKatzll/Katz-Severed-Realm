@@ -37,6 +37,11 @@ public class SettingsPanel : MonoBehaviour
     [SerializeField] private Button _keyBindButton;
     [SerializeField] private GameObject _keyBindPanel;
 
+    [Header("Modal Behavior")]
+    [SerializeField] private bool _freezeTimeWhileOpen = false;
+
+    private float _prevTimeScale = 1f;
+
     private static readonly int[] FpsOptions = { 60, 120, 144, 0 };
 
     private void Awake()
@@ -48,12 +53,21 @@ public class SettingsPanel : MonoBehaviour
     {
         RefreshFromConfig();
         BindUI();
+        if (_freezeTimeWhileOpen)
+        {
+            _prevTimeScale = Time.timeScale;
+            Time.timeScale = 0f;
+        }
     }
 
     private void OnDisable()
     {
         UnbindUI();
         SettingsConfig.Save();
+        if (_freezeTimeWhileOpen)
+        {
+            Time.timeScale = _prevTimeScale;
+        }
     }
 
     private void InitFpsDropdown()
@@ -70,10 +84,10 @@ public class SettingsPanel : MonoBehaviour
 
     private void RefreshFromConfig()
     {
-        SetSlider(_masterSlider, SettingsConfig.MasterVolume);
-        SetSlider(_musicSlider, SettingsConfig.MusicVolume);
-        SetSlider(_sfxSlider, SettingsConfig.SfxVolume);
-        SetSlider(_hitSlider, SettingsConfig.HitVolume);
+        SetSlider(_masterSlider, SettingsConfig.MasterVolume * 100f);
+        SetSlider(_musicSlider, SettingsConfig.MusicVolume * 100f);
+        SetSlider(_sfxSlider, SettingsConfig.SfxVolume * 100f);
+        SetSlider(_hitSlider, SettingsConfig.HitVolume * 100f);
 
         SetSlider(_audioOffsetSlider, SettingsConfig.AudioOffsetSec * 1000f);
         SetSlider(_inputOffsetSlider, SettingsConfig.InputOffsetSec * 1000f);
@@ -143,10 +157,10 @@ public class SettingsPanel : MonoBehaviour
         if (_keyBindButton != null) _keyBindButton.onClick.RemoveListener(OnKeyBindClicked);
     }
 
-    private void OnMasterChanged(float v) { SettingsConfig.MasterVolume = v; UpdateAudioLabels(); }
-    private void OnMusicChanged(float v) { SettingsConfig.MusicVolume = v; UpdateAudioLabels(); }
-    private void OnSfxChanged(float v) { SettingsConfig.SfxVolume = v; UpdateAudioLabels(); }
-    private void OnHitChanged(float v) { SettingsConfig.HitVolume = v; UpdateAudioLabels(); }
+    private void OnMasterChanged(float v) { SettingsConfig.MasterVolume = v / 100f; UpdateAudioLabels(); }
+    private void OnMusicChanged(float v) { SettingsConfig.MusicVolume = v / 100f; UpdateAudioLabels(); }
+    private void OnSfxChanged(float v) { SettingsConfig.SfxVolume = v / 100f; UpdateAudioLabels(); }
+    private void OnHitChanged(float v) { SettingsConfig.HitVolume = v / 100f; UpdateAudioLabels(); }
 
     private void OnAudioOffsetChanged(float v) { SettingsConfig.AudioOffsetSec = v / 1000f; UpdateOffsetLabels(); }
     private void OnInputOffsetChanged(float v) { SettingsConfig.InputOffsetSec = v / 1000f; UpdateOffsetLabels(); }

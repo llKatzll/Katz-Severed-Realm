@@ -111,6 +111,8 @@ public class Scrolling : MonoBehaviour
 
     private void HandleInput()
     {
+        if (Time.timeScale == 0f) return;
+
         float scroll = Input.mouseScrollDelta.y;
 
         if (Input.GetKeyDown(KeyCode.W))
