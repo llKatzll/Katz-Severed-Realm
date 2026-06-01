@@ -40,6 +40,11 @@ public class ChartNoteSpawner : MonoBehaviour
     private RhythmConductor Conductor => _noteSpawner != null ? _noteSpawner.Conductor : null;
     public bool IsChartLoaded => _active;
 
+    private void Awake()
+    {
+        _noteSpeed = SettingsConfig.NoteSpeed;
+    }
+
     private void Start()
     {
         if (GameManager.I == null) return;

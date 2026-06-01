@@ -62,6 +62,8 @@ public class DimensionNoteJudge : MonoBehaviour
         }
     }
 
+    private float EffectiveOffsetMs => _userOffsetMs + SettingsConfig.InputOffsetSec * 1000f;
+
     private void Awake()
     {
         if (I != null && I != this)
@@ -229,7 +231,7 @@ public class DimensionNoteJudge : MonoBehaviour
         {
             Note n = _tapNotes[i];
             if (n == null) continue;
-            double rawMs = (now - n.ExpectedHitDspTime) * 1000.0 + _userOffsetMs;
+            double rawMs = (now - n.ExpectedHitDspTime) * 1000.0 + EffectiveOffsetMs;
             if (rawMs < -_ruinMs) continue;
             if (n.ExpectedHitDspTime < earliestHit)
                 earliestHit = n.ExpectedHitDspTime;
@@ -245,7 +247,7 @@ public class DimensionNoteJudge : MonoBehaviour
             double diffFromEarliest = Math.Abs(n.ExpectedHitDspTime - earliestHit) * 1000.0;
             if (diffFromEarliest > GROUP_TOLERANCE_MS) continue;
 
-            double rawMs = (now - n.ExpectedHitDspTime) * 1000.0 + _userOffsetMs;
+            double rawMs = (now - n.ExpectedHitDspTime) * 1000.0 + EffectiveOffsetMs;
             if (rawMs < -_ruinMs) continue;
 
             JudgeType judge = JudgeFromRawMs(rawMs);
@@ -281,7 +283,7 @@ public class DimensionNoteJudge : MonoBehaviour
         {
             HoldNote h = _holds[i];
             if (h == null || h.IsFailed) continue;
-            double rawMs = (now - h.HeadDspTime) * 1000.0 + _userOffsetMs;
+            double rawMs = (now - h.HeadDspTime) * 1000.0 + EffectiveOffsetMs;
             if (rawMs < -_ruinMs) continue;
             if (h.HeadDspTime < earliestHead)
                 earliestHead = h.HeadDspTime;
@@ -297,7 +299,7 @@ public class DimensionNoteJudge : MonoBehaviour
             double diffFromEarliest = Math.Abs(h.HeadDspTime - earliestHead) * 1000.0;
             if (diffFromEarliest > GROUP_TOLERANCE_MS) continue;
 
-            double rawMs = (now - h.HeadDspTime) * 1000.0 + _userOffsetMs;
+            double rawMs = (now - h.HeadDspTime) * 1000.0 + EffectiveOffsetMs;
             if (rawMs < -_ruinMs) continue;
 
             JudgeType judge = JudgeFromRawMs(rawMs);
@@ -341,7 +343,7 @@ public class DimensionNoteJudge : MonoBehaviour
         NoteSpawner.NoteType laneType = h.NoteType;
         Transform hitRef = h.HitPointRef;
 
-        double rawMs = (AudioSettings.dspTime - h.TailDspTime) * 1000.0 + _userOffsetMs;
+        double rawMs = (AudioSettings.dspTime - h.TailDspTime) * 1000.0 + EffectiveOffsetMs;
         double tailWindow = _ruinMs + _holdTailBonusMs;
 
         if (rawMs < -tailWindow)
@@ -503,7 +505,7 @@ public class DimensionNoteJudge : MonoBehaviour
             Note n = _tapNotes[i];
             if (n == null) { _tapNotes.RemoveAt(i); continue; }
 
-            double rawMs = (now - n.ExpectedHitDspTime) * 1000.0 + _userOffsetMs;
+            double rawMs = (now - n.ExpectedHitDspTime) * 1000.0 + EffectiveOffsetMs;
             if (rawMs > _ruinMs)
             {
                 _tapNotes.RemoveAt(i);
@@ -521,7 +523,7 @@ public class DimensionNoteJudge : MonoBehaviour
             HoldNote h = _holds[i];
             if (h == null || h.IsFailed) { _holds.RemoveAt(i); continue; }
 
-            double rawMs = (now - h.HeadDspTime) * 1000.0 + _userOffsetMs;
+            double rawMs = (now - h.HeadDspTime) * 1000.0 + EffectiveOffsetMs;
             if (rawMs > _ruinMs)
             {
                 _holds.RemoveAt(i);
@@ -542,7 +544,7 @@ public class DimensionNoteJudge : MonoBehaviour
             HoldNote h = _activeHolds[i];
             if (h == null || h.IsFailed) { _activeHolds.RemoveAt(i); continue; }
 
-            double rawMs = (now - h.TailDspTime) * 1000.0 + _userOffsetMs;
+            double rawMs = (now - h.TailDspTime) * 1000.0 + EffectiveOffsetMs;
             if (rawMs > _ruinMs + _holdTailBonusMs)
             {
                 h.Fail(_palette, h.NoteType);

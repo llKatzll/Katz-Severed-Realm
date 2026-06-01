@@ -75,6 +75,8 @@ public class LaneJudge : MonoBehaviour
         }
     }
 
+    private float EffectiveOffsetMs => _userOffsetMs + SettingsConfig.InputOffsetSec * 1000f;
+
     public void SetLaneType(NoteSpawner.NoteType t) => _laneType = t;
 
     public void SetKeyBindConfig(KeyBindConfig config, int laneIndex)
@@ -296,7 +298,7 @@ public class LaneJudge : MonoBehaviour
 
         NoteSpawner.NoteType laneType = _hold.NoteType;
 
-        double rawMs = (AudioSettings.dspTime - _hold.HeadDspTime) * 1000.0 + _userOffsetMs;
+        double rawMs = (AudioSettings.dspTime - _hold.HeadDspTime) * 1000.0 + EffectiveOffsetMs;
 
         if (rawMs < -_ruinMs)
         {
@@ -345,7 +347,7 @@ public class LaneJudge : MonoBehaviour
         NoteSpawner.NoteType laneType = _hold.NoteType;
 
         double nowDsp = AudioSettings.dspTime;
-        double rawMs = (nowDsp - _hold.TailDspTime) * 1000.0 + _userOffsetMs;
+        double rawMs = (nowDsp - _hold.TailDspTime) * 1000.0 + EffectiveOffsetMs;
 
         double tailWindow = _ruinMs + _holdTailBonusMs;
 
@@ -397,7 +399,7 @@ public class LaneJudge : MonoBehaviour
         if (_hold.IsActive) return;
 
         double now = AudioSettings.dspTime;
-        double rawHeadMs = (now - _hold.HeadDspTime) * 1000.0 + _userOffsetMs;
+        double rawHeadMs = (now - _hold.HeadDspTime) * 1000.0 + EffectiveOffsetMs;
 
         if (rawHeadMs > _ruinMs)
         {
@@ -422,7 +424,7 @@ public class LaneJudge : MonoBehaviour
         if (!Input.GetKey(ActiveKey)) return;
 
         double now = AudioSettings.dspTime;
-        double rawTailMs = (now - _hold.TailDspTime) * 1000.0 + _userOffsetMs;
+        double rawTailMs = (now - _hold.TailDspTime) * 1000.0 + EffectiveOffsetMs;
 
         double tailWindow = _ruinMs + _holdTailBonusMs;
 
@@ -464,7 +466,7 @@ public class LaneJudge : MonoBehaviour
             return false;
         }
 
-        double rawMs = (AudioSettings.dspTime - target.ExpectedHitDspTime) * 1000.0 + _userOffsetMs;
+        double rawMs = (AudioSettings.dspTime - target.ExpectedHitDspTime) * 1000.0 + EffectiveOffsetMs;
 
         if (rawMs < -_ruinMs)
         {
@@ -756,7 +758,7 @@ public class LaneJudge : MonoBehaviour
             Note n = _tapNotes[i];
             if (n == null) { _tapNotes.RemoveAt(i); continue; }
 
-            double rawMs = (now - n.ExpectedHitDspTime) * 1000.0 + _userOffsetMs;
+            double rawMs = (now - n.ExpectedHitDspTime) * 1000.0 + EffectiveOffsetMs;
             if (rawMs > _ruinMs)
             {
                 _tapNotes.RemoveAt(i);
