@@ -193,6 +193,15 @@ public static class SettingsConfig
     private static void Init()
     {
         LoadAll();
+        OnChanged -= AutoSave;
+        OnChanged += AutoSave;
+        Application.quitting -= Save;
+        Application.quitting += Save;
+    }
+
+    private static void AutoSave(Category cat)
+    {
+        PlayerPrefs.Save();
     }
 
     public static void LoadAll()
