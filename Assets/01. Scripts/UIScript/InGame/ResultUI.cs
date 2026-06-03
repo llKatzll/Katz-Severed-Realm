@@ -21,6 +21,9 @@ public class ResultUI : MonoBehaviour
     [Header("Exit")]
     [SerializeField] private Button _exitButton;
 
+    [Header("Paused Mark")]
+    [SerializeField] private GameObject _pausedMark;
+
     public void Populate()
     {
         SongData song = GameManager.I != null ? GameManager.I.SelectedSong : null;
@@ -45,12 +48,20 @@ public class ResultUI : MonoBehaviour
             totalNotes = ScoreManager.I.TotalNoteCount;
         }
 
-        string rank = RankUtility.GetRank(score, totalNotes);
+        bool usedPause = ScoreManager.I != null && ScoreManager.I.UsedPause;
 
-        if (song != null)
+        if (usedPause)
+            score = 0;
+
+        string rank = usedPause ? "L" : RankUtility.GetRank(score, totalNotes);
+
+        if (song != null && !usedPause)
         {
             ScoreRecord.SaveIfBetter(song.songName, diff, score, accuracy, totalNotes);
         }
+
+        if (_pausedMark != null)
+            _pausedMark.SetActive(usedPause);
 
         if (_rankText != null)
         {
