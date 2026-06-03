@@ -94,10 +94,21 @@ public class EffectConductor : MonoBehaviour
         return anim;
     }
 
+    private bool _wasPlaying = true;
+
     private void Update()
     {
-        if (!_armed || _data == null || _rhythm == null) return;
-        if (!_rhythm.IsPlaying) return;
+        if (_rhythm == null) return;
+
+        bool isPlaying = _rhythm.IsPlaying;
+        if (isPlaying != _wasPlaying)
+        {
+            _wasPlaying = isPlaying;
+            UpdateGraphsPlayState(isPlaying);
+        }
+
+        if (!_armed || _data == null) return;
+        if (!isPlaying) return;
 
         double songTime = _rhythm.SongTime;
         double secPerBeat = _rhythm.SecPerBeat;
@@ -114,6 +125,30 @@ public class EffectConductor : MonoBehaviour
 
         UpdateAllClipStops();
         UpdateActiveParticles();
+    }
+
+    private void UpdateGraphsPlayState(bool play)
+    {
+        foreach (var kv in _graphs)
+        {
+            var state = kv.Value;
+            if (state == null || !state.graph.IsValid()) continue;
+            if (play) state.graph.Play();
+            else state.graph.Stop();
+        }
+
+        for (int i = 0; i < _activeParticles.Count; i++)
+        {
+            var p = _activeParticles[i];
+            if (p.go == null) continue;
+            var pss = p.go.GetComponentsInChildren<ParticleSystem>(true);
+            for (int j = 0; j < pss.Length; j++)
+            {
+                if (pss[j] == null) continue;
+                if (play) pss[j].Play(false);
+                else pss[j].Pause(false);
+            }
+        }
     }
 
     private void DispatchTrigger(EffectTrigger trig, double secPerBeat)
@@ -201,7 +236,7 @@ public class EffectConductor : MonoBehaviour
             clip = clipPlayable,
             port = port,
             presetId = presetId,
-            stopDsp = AudioSettings.dspTime + durationSec,
+            stopDsp = RhythmConductor.Now + durationSec,
             stopped = false
         };
         state.active.Add(ac);
@@ -226,7 +261,7 @@ public class EffectConductor : MonoBehaviour
 
     private void UpdateAllClipStops()
     {
-        double now = AudioSettings.dspTime;
+        double now = RhythmConductor.Now;
         foreach (var kv in _graphs)
         {
             var state = kv.Value;
@@ -302,13 +337,13 @@ public class EffectConductor : MonoBehaviour
         _activeParticles.Add(new RuntimeParticle
         {
             go = go,
-            stopDsp = AudioSettings.dspTime + durationSec
+            stopDsp = RhythmConductor.Now + durationSec
         });
     }
 
     private void UpdateActiveParticles()
     {
-        double now = AudioSettings.dspTime;
+        double now = RhythmConductor.Now;
         for (int i = _activeParticles.Count - 1; i >= 0; i--)
         {
             var p = _activeParticles[i];

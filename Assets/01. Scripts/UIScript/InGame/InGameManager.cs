@@ -224,12 +224,17 @@ public class InGameManager : MonoBehaviour
 
     public void OnExitButtonClicked()
     {
-        if (_exiting) return;
-        _exiting = true;
-        StartCoroutine(ExitSequence());
+        ExitToScene(_songSelectScene, false);
     }
 
-    private IEnumerator ExitSequence()
+    public void ExitToScene(string sceneName, bool fast = false)
+    {
+        if (_exiting) return;
+        _exiting = true;
+        StartCoroutine(ExitSequence(sceneName, fast));
+    }
+
+    private IEnumerator ExitSequence(string sceneName, bool fast)
     {
         if (_transitionRect != null)
         {
@@ -238,9 +243,9 @@ public class InGameManager : MonoBehaviour
             yield return StartCoroutine(SlideTransition(_transitionWaitY, _transitionShowY, _transitionSlideTime));
         }
 
-        yield return new WaitForSeconds(_exitTransitionSec);
+        if (!fast) yield return new WaitForSecondsRealtime(_exitTransitionSec);
 
-        SceneManager.LoadScene(_songSelectScene);
+        SceneManager.LoadScene(sceneName);
     }
 
     private IEnumerator WaitForLoading()

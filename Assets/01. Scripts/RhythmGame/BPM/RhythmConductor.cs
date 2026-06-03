@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class RhythmConductor : MonoBehaviour
 {
+    public static RhythmConductor I { get; private set; }
+
     [SerializeField] private double _bpm = 120.0;
     [SerializeField] private AudioSource _audio;
     [SerializeField] private double _audioOffset;
@@ -9,6 +11,8 @@ public class RhythmConductor : MonoBehaviour
 
     private double _startDspTime;
     private double _pausedSongTime;
+    private double _totalPauseOffset;
+    private double _pauseStartRealDsp;
     private bool _started;
     private bool _paused;
 
@@ -21,6 +25,17 @@ public class RhythmConductor : MonoBehaviour
     public bool IsPlaying => _started && !_paused;
     public AudioSource Audio => _audio;
 
+    public double EffectiveDspTime
+    {
+        get
+        {
+            if (_paused) return _pauseStartRealDsp - _totalPauseOffset;
+            return AudioSettings.dspTime - _totalPauseOffset;
+        }
+    }
+
+    public static double Now => I != null ? I.EffectiveDspTime : AudioSettings.dspTime;
+
     public double SongTime
     {
         get
@@ -30,6 +45,12 @@ public class RhythmConductor : MonoBehaviour
             double t = AudioSettings.dspTime - _startDspTime;
             return t > 0.0 ? t : 0.0;
         }
+    }
+
+    private void Awake()
+    {
+        if (I != null && I != this) return;
+        I = this;
     }
 
     private void Start()
@@ -70,6 +91,7 @@ public class RhythmConductor : MonoBehaviour
     {
         if (!_started || _paused) return;
 
+        _pauseStartRealDsp = AudioSettings.dspTime;
         _pausedSongTime = AudioSettings.dspTime - _startDspTime;
         _paused = true;
 
@@ -80,6 +102,8 @@ public class RhythmConductor : MonoBehaviour
     {
         if (!_started || !_paused) return;
 
+        double pauseDuration = AudioSettings.dspTime - _pauseStartRealDsp;
+        _totalPauseOffset += pauseDuration;
         _startDspTime = AudioSettings.dspTime - _pausedSongTime;
         _paused = false;
 
@@ -126,9 +150,9 @@ public class RhythmConductor : MonoBehaviour
 
     public double DspTimeAtBeat(double beat)
     {
-        if (!_started) return AudioSettings.dspTime;
+        if (!_started) return EffectiveDspTime;
         if (beat < 0.0) beat = 0.0;
-        return _startDspTime + _audioOffset + (beat * SecPerBeat);
+        return _startDspTime - _totalPauseOffset + _audioOffset + (beat * SecPerBeat);
     }
 
     private void OnValidate()

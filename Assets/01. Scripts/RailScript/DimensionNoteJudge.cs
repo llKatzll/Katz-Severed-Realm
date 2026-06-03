@@ -107,7 +107,7 @@ public class DimensionNoteJudge : MonoBehaviour
 
     private void AutoPlayUpdate()
     {
-        double now = AudioSettings.dspTime;
+        double now = RhythmConductor.Now;
 
         for (int i = _tapNotes.Count - 1; i >= 0; i--)
         {
@@ -224,7 +224,7 @@ public class DimensionNoteJudge : MonoBehaviour
     private bool JudgeAllTapsInWindow()
     {
         bool any = false;
-        double now = AudioSettings.dspTime;
+        double now = RhythmConductor.Now;
 
         double earliestHit = double.MaxValue;
         for (int i = 0; i < _tapNotes.Count; i++)
@@ -276,7 +276,7 @@ public class DimensionNoteJudge : MonoBehaviour
     private bool StartAllHoldsInWindow()
     {
         bool any = false;
-        double now = AudioSettings.dspTime;
+        double now = RhythmConductor.Now;
 
         double earliestHead = double.MaxValue;
         for (int i = 0; i < _holds.Count; i++)
@@ -343,7 +343,7 @@ public class DimensionNoteJudge : MonoBehaviour
         NoteSpawner.NoteType laneType = h.NoteType;
         Transform hitRef = h.HitPointRef;
 
-        double rawMs = (AudioSettings.dspTime - h.TailDspTime) * 1000.0 + EffectiveOffsetMs;
+        double rawMs = (RhythmConductor.Now - h.TailDspTime) * 1000.0 + EffectiveOffsetMs;
         double tailWindow = _ruinMs + _holdTailBonusMs;
 
         if (rawMs < -tailWindow)
@@ -499,7 +499,7 @@ public class DimensionNoteJudge : MonoBehaviour
 
     private void AutoMissTaps()
     {
-        double now = AudioSettings.dspTime;
+        double now = RhythmConductor.Now;
         for (int i = _tapNotes.Count - 1; i >= 0; i--)
         {
             Note n = _tapNotes[i];
@@ -517,7 +517,7 @@ public class DimensionNoteJudge : MonoBehaviour
 
     private void AutoMissHolds()
     {
-        double now = AudioSettings.dspTime;
+        double now = RhythmConductor.Now;
         for (int i = _holds.Count - 1; i >= 0; i--)
         {
             HoldNote h = _holds[i];
@@ -538,7 +538,7 @@ public class DimensionNoteJudge : MonoBehaviour
     {
         if (!Input.GetKey(DimensionKey)) return;
 
-        double now = AudioSettings.dspTime;
+        double now = RhythmConductor.Now;
         for (int i = _activeHolds.Count - 1; i >= 0; i--)
         {
             HoldNote h = _activeHolds[i];

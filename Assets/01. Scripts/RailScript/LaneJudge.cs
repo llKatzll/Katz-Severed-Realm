@@ -160,7 +160,7 @@ public class LaneJudge : MonoBehaviour
 
     private void AutoPlayUpdate()
     {
-        double now = AudioSettings.dspTime;
+        double now = RhythmConductor.Now;
 
         for (int i = _tapNotes.Count - 1; i >= 0; i--)
         {
@@ -298,7 +298,7 @@ public class LaneJudge : MonoBehaviour
 
         NoteSpawner.NoteType laneType = _hold.NoteType;
 
-        double rawMs = (AudioSettings.dspTime - _hold.HeadDspTime) * 1000.0 + EffectiveOffsetMs;
+        double rawMs = (RhythmConductor.Now - _hold.HeadDspTime) * 1000.0 + EffectiveOffsetMs;
 
         if (rawMs < -_ruinMs)
         {
@@ -346,7 +346,7 @@ public class LaneJudge : MonoBehaviour
 
         NoteSpawner.NoteType laneType = _hold.NoteType;
 
-        double nowDsp = AudioSettings.dspTime;
+        double nowDsp = RhythmConductor.Now;
         double rawMs = (nowDsp - _hold.TailDspTime) * 1000.0 + EffectiveOffsetMs;
 
         double tailWindow = _ruinMs + _holdTailBonusMs;
@@ -398,7 +398,7 @@ public class LaneJudge : MonoBehaviour
         if (_hold.IsFailed) return;
         if (_hold.IsActive) return;
 
-        double now = AudioSettings.dspTime;
+        double now = RhythmConductor.Now;
         double rawHeadMs = (now - _hold.HeadDspTime) * 1000.0 + EffectiveOffsetMs;
 
         if (rawHeadMs > _ruinMs)
@@ -423,7 +423,7 @@ public class LaneJudge : MonoBehaviour
 
         if (!Input.GetKey(ActiveKey)) return;
 
-        double now = AudioSettings.dspTime;
+        double now = RhythmConductor.Now;
         double rawTailMs = (now - _hold.TailDspTime) * 1000.0 + EffectiveOffsetMs;
 
         double tailWindow = _ruinMs + _holdTailBonusMs;
@@ -466,7 +466,7 @@ public class LaneJudge : MonoBehaviour
             return false;
         }
 
-        double rawMs = (AudioSettings.dspTime - target.ExpectedHitDspTime) * 1000.0 + EffectiveOffsetMs;
+        double rawMs = (RhythmConductor.Now - target.ExpectedHitDspTime) * 1000.0 + EffectiveOffsetMs;
 
         if (rawMs < -_ruinMs)
         {
@@ -751,7 +751,7 @@ public class LaneJudge : MonoBehaviour
 
     private void AutoMissTapNoInput()
     {
-        double now = AudioSettings.dspTime;
+        double now = RhythmConductor.Now;
 
         for (int i = _tapNotes.Count - 1; i >= 0; i--)
         {

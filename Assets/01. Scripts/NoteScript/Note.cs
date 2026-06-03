@@ -89,7 +89,7 @@ public class Note : MonoBehaviour
             _postTime = 0f;
         }
 
-        _spawnDspTime = AudioSettings.dspTime;
+        _spawnDspTime = RhythmConductor.Now;
         ExpectedHitDspTime = _spawnDspTime + _travelTime;
 
         Vector3 local0 = _spawnLocal;
@@ -172,7 +172,7 @@ public class Note : MonoBehaviour
 
         UpdateLocalPositions();
 
-        float elapsed = (float)(AudioSettings.dspTime - _spawnDspTime);
+        float elapsed = (float)(RhythmConductor.Now - _spawnDspTime);
         if (elapsed < 0f) elapsed = 0f;
 
         Vector3 localPos;

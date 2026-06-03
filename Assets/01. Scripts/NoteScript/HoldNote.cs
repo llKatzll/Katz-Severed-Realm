@@ -132,7 +132,7 @@ public class HoldNote : Note
         if (IsFailed) return;
         IsActive = true;
 
-        _holdStartDspTime = AudioSettings.dspTime;
+        _holdStartDspTime = RhythmConductor.Now;
         _savedBodyLen = -1f;
 
         SyncDspTimes();
@@ -161,7 +161,7 @@ public class HoldNote : Note
 
         if (IsActive && _totalHoldDuration > 0)
         {
-            double elapsed = AudioSettings.dspTime - _holdStartDspTime;
+            double elapsed = RhythmConductor.Now - _holdStartDspTime;
             float ratio = Mathf.Clamp01((float)(elapsed / _totalHoldDuration));
             _savedBodyLen = _holdLen * (1f - ratio);
         }
@@ -251,7 +251,7 @@ public class HoldNote : Note
     {
         if (_space == null) return;
 
-        float headElapsed = (float)(AudioSettings.dspTime - _spawnDspTime);
+        float headElapsed = (float)(RhythmConductor.Now - _spawnDspTime);
         if (headElapsed < 0f) headElapsed = 0f;
 
         Vector3 headLocal = EvaluateHeadLocalUnclamped(headElapsed);
@@ -329,7 +329,7 @@ public class HoldNote : Note
 
         if (IsActive && !IsFailed)
         {
-            double now = AudioSettings.dspTime;
+            double now = RhythmConductor.Now;
             double elapsed = now - HeadDspTime;
             double totalDuration = TailDspTime - HeadDspTime;
 

@@ -23,6 +23,10 @@ public class ScoreManager : MonoBehaviour
     public int Score => (int)Math.Round(_score);
     public int MaxCombo => _maxCombo;
     public int TotalNoteCount => _totalNoteCount;
+    public bool UsedPause { get; private set; }
+
+    public void MarkPaused() => UsedPause = true;
+    public void ClearPaused() => UsedPause = false;
 
     public float Accuracy => _judgedCount <= 0 ? 0f : (float)(_accuracySum / _judgedCount) * 100f;
 
@@ -48,6 +52,7 @@ public class ScoreManager : MonoBehaviour
         _maxCombo = 0;
         _judgedCount = 0;
         _accuracySum = 0.0;
+        UsedPause = false;
         RefreshUI();
     }
 
