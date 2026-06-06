@@ -113,5 +113,5 @@ GitHub Issues에 남겨주시면 확인하겠습니다.
 ---
 
 <p align="center">
-  <sub>Thank you for playing. Severance awaits.</sub>
+  <sub>Thank you for playing. KSR awaits.</sub>
 </p>
