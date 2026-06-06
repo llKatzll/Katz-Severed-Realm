@@ -1,7 +1,7 @@
 # KSR
 
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0A0A0A&customColorList=00f3ff,7b2cbf,ff00aa&height=280&section=header&text=SEVERANCE&fontSize=80&fontAlignY=35&desc=3D%20Rhythm%20%7C%20Cinematic%20Music%20Experience&descAlignY=58&fontColor=ffffff" width="100%" alt="Severance"/>
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0A0A0A&customColorList=00f3ff,7b2cbf,ff00aa&height=280&section=header&text=K.S.R&fontSize=80&fontAlignY=35&desc=3D%20Rhythm%20%7C%20Cinematic%20Music%20Experience&descAlignY=58&fontColor=ffffff" width="100%" alt="Severance"/>
 </p>
 
 <p align="center">
