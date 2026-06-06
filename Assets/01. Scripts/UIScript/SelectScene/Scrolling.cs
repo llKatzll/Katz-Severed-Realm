@@ -266,4 +266,9 @@ public class Scrolling : MonoBehaviour
 
     private void OnBarDeselected(SongBar bar)
     {
-        if (SongSelectM
+        if (SongSelectManager.I != null)
+        {
+            SongSelectManager.I.OnSongBarDeselected(bar);
+        }
+    }
+}
