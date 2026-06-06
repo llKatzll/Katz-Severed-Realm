@@ -34,6 +34,7 @@ public class Scrolling : MonoBehaviour
     private float[] _basePosX;
     private float[] _basePosY;
     private float[] _currentOffsetX;
+    private RectTransform[] _barRects;
     private int _currentSelectedIndex = -1;
 
     private float _holdTimer = 0f;
@@ -59,6 +60,7 @@ public class Scrolling : MonoBehaviour
             _basePosY = new float[count];
             _currentOffsetX = new float[count];
             _currentSongPerBar = new int[count];
+            _barRects = new RectTransform[count];
 
             for (int i = 0; i < count; i++)
             {
@@ -67,6 +69,7 @@ public class Scrolling : MonoBehaviour
                 if (_songBars[i] != null)
                 {
                     var rt = _songBars[i].GetComponent<RectTransform>();
+                    _barRects[i] = rt;
                     _basePosX[i] = rt.anchoredPosition.x;
                     _basePosY[i] = rt.anchoredPosition.y;
                     _currentOffsetX[i] = 0f;
@@ -182,7 +185,9 @@ public class Scrolling : MonoBehaviour
         {
             if (_songBars[i] == null) continue;
 
-            var rt = _songBars[i].GetComponent<RectTransform>();
+            var rt = _barRects[i];
+            if (rt == null) continue;
+
             float totalAngle = AngleUtils.Normalize(_targetRotationZ + rt.localEulerAngles.z);
             int slotOffset = Mathf.RoundToInt(totalAngle / _rotationPerSlot);
             int songIdx = WrapSongIndex(_centerSongIndex + slotOffset);
@@ -207,7 +212,7 @@ public class Scrolling : MonoBehaviour
         {
             if (_songBars[i] == null) continue;
 
-            var rt = _songBars[i].GetComponent<RectTransform>();
+            var rt = _barRects[i];
             if (rt == null) continue;
 
             float barLocalZ = rt.localEulerAngles.z;
@@ -261,10 +266,4 @@ public class Scrolling : MonoBehaviour
 
     private void OnBarDeselected(SongBar bar)
     {
-        if (SongSelectManager.I != null)
-        {
-            SongSelectManager.I.OnSongBarDeselected(bar);
-        }
-    }
-
-}
+        if (SongSelectM
