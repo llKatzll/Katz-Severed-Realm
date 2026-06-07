@@ -72,7 +72,7 @@ public class DimensionNoteJudge : MonoBehaviour
             return;
         }
         I = this;
-        _rhythm = FindObjectOfType<RhythmConductor>();
+        _rhythm = FindAnyObjectByType<RhythmConductor>();
     }
 
     public void RegisterTap(Note n)

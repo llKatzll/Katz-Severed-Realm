@@ -52,7 +52,6 @@ public class InGameManager : MonoBehaviour
     private float _songDuration;
     private bool _songStarted;
     private bool _songFinished;
-    private bool _resultShown;
     private bool _exiting;
 
     private void Awake()
@@ -218,7 +217,6 @@ public class InGameManager : MonoBehaviour
 
             _resultGroup.gameObject.SetActive(true);
             yield return StartCoroutine(FadeCanvasGroup(_resultGroup, 0f, 1f, _resultFadeInSec));
-            _resultShown = true;
         }
     }
 
@@ -264,7 +262,7 @@ public class InGameManager : MonoBehaviour
             }
         }
 
-        ChartNoteSpawner spawner = FindObjectOfType<ChartNoteSpawner>();
+        ChartNoteSpawner spawner = FindAnyObjectByType<ChartNoteSpawner>();
         if (spawner != null)
         {
             float waitTimeout = 5f;

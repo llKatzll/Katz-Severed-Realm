@@ -4,15 +4,6 @@ using UnityEngine.UI;
 
 public class IntroScene : MonoBehaviour
 {
-    private enum Phase
-    {
-        None,
-        StartDelay,
-        Sign,
-        Alert,
-        Done
-    }
-
     [Header("Root")]
     [SerializeField] private GameObject _canvasRoot;
 
@@ -53,7 +44,6 @@ public class IntroScene : MonoBehaviour
 
     private Coroutine _co;
     private bool _skipRequested;
-    private Phase _phase = Phase.None;
 
     public bool IsDone { get; private set; }
 
@@ -105,13 +95,10 @@ public class IntroScene : MonoBehaviour
     {
         _skipRequested = false;
 
-        _phase = Phase.StartDelay;
         if (_startDelay > 0f)
             yield return WaitNoSkip(_startDelay);
 
         if (_canvasRoot != null) _canvasRoot.SetActive(true);
-
-        _phase = Phase.Sign;
 
         if (_alertImage != null) _alertImage.gameObject.SetActive(false);
         if (_nameGraphic != null) _nameGraphic.gameObject.SetActive(true);
@@ -145,8 +132,6 @@ public class IntroScene : MonoBehaviour
 
         _skipRequested = false;
 
-        _phase = Phase.Alert;
-
         if (_alertImage != null) _alertImage.gameObject.SetActive(true);
         SetMaskAlpha(1f);
 
@@ -163,7 +148,6 @@ public class IntroScene : MonoBehaviour
         if (_nextSceneObject != null)
             _nextSceneObject.SetActive(true);
 
-        _phase = Phase.Done;
         IsDone = true;
     }
 

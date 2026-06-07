@@ -87,7 +87,7 @@ public class LaneJudge : MonoBehaviour
 
     private void Awake()
     {
-        _rhythm = FindObjectOfType<RhythmConductor>();
+        _rhythm = FindAnyObjectByType<RhythmConductor>();
     }
 
     public void RegisterTap(Note n)

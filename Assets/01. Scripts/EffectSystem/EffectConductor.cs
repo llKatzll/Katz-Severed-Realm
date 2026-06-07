@@ -43,7 +43,7 @@ public class EffectConductor : MonoBehaviour
 
     private void Awake()
     {
-        if (_rhythm == null) _rhythm = FindObjectOfType<RhythmConductor>();
+        if (_rhythm == null) _rhythm = FindAnyObjectByType<RhythmConductor>();
     }
 
     private void Start()

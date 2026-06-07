@@ -15,7 +15,7 @@ public class EditorSaveLoad : MonoBehaviour
     {
         if (_chart == null) _chart = GetComponent<EditorChart>();
         if (_loadSong == null) _loadSong = GetComponent<EditorLoadSong>();
-        if (_effectSaveLoad == null) _effectSaveLoad = FindObjectOfType<EffectSaveLoad>();
+        if (_effectSaveLoad == null) _effectSaveLoad = FindAnyObjectByType<EffectSaveLoad>();
         if (_editorUI == null) _editorUI = GetComponent<EditorUI>();
     }
 

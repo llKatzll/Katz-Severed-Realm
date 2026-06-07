@@ -45,7 +45,7 @@ public class PauseController : MonoBehaviour
 
     private void Start()
     {
-        if (_conductor == null) _conductor = FindObjectOfType<RhythmConductor>();
+        if (_conductor == null) _conductor = FindAnyObjectByType<RhythmConductor>();
 
         if (_pauseMenuPanel != null) _pauseMenuPanel.SetActive(false);
         if (_countdownGroup != null) _countdownGroup.SetActive(false);

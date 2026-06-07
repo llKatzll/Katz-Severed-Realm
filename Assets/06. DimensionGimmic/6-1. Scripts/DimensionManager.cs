@@ -19,7 +19,7 @@ public class DimensionManager : MonoBehaviour
     [Header("Switch Settings")]
     [SerializeField] private SwitchMode _switchMode = SwitchMode.Hold;
     [SerializeField] private KeyCode _switchKey = KeyCode.Space;
-    //[SerializeField] private KeyCode _switchKey1 = KeyCode.Space; Áßº¹ÀÌ¸é ¼³Á¤ÇÏÁö ¸øÇÏ°Ô²û
+    //[SerializeField] private KeyCode _switchKey1 = KeyCode.Space; ï¿½ßºï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï°Ô²ï¿½
 
     //Lifetime set later.
     [Header("Indicator Settings")]
@@ -75,7 +75,6 @@ public class DimensionManager : MonoBehaviour
     private GameObject _separationBgEffectInstance;
     private GameObject _corridorBgEffectInstance;
 
-    private bool _indicatorActive;
     private DimensionType _indicatedDimension;
 
     private bool _isCorridorActive;
@@ -256,7 +255,6 @@ public class DimensionManager : MonoBehaviour
 
     public void TriggerIndicator(DimensionType upcomingDimension)
     {
-        _indicatorActive = true;
         _indicatedDimension = upcomingDimension;
 
         if (_enableDebugLog)
@@ -295,7 +293,6 @@ public class DimensionManager : MonoBehaviour
     private void EndCorridor()
     {
         _isCorridorActive = false;
-        _indicatorActive = false;
 
         if (_switchMode == SwitchMode.Hold)
         {
