@@ -325,8 +325,19 @@ public class EffectConductor : MonoBehaviour
     {
         if (preset.particlePrefab == null) return;
 
-        var go = Instantiate(preset.particlePrefab);
-        go.transform.position += preset.spawnOffset;
+        Vector3 pos = preset.particlePrefab.transform.position + preset.spawnOffset;
+        Quaternion rot = preset.particlePrefab.transform.rotation;
+
+        GameObject go;
+        if (FxPoolManager.I != null)
+        {
+            go = FxPoolManager.I.Spawn(preset.particlePrefab, pos, rot, 0f);
+            if (go == null) return;
+        }
+        else
+        {
+            go = Instantiate(preset.particlePrefab, pos, rot);
+        }
 
         double durationSec;
         if (trig.kind == TriggerKind.Sustained && trig.inBeats > 0.0001)
@@ -341,6 +352,13 @@ public class EffectConductor : MonoBehaviour
         });
     }
 
+    private void ReleaseParticle(GameObject go)
+    {
+        if (go == null) return;
+        if (FxPoolManager.I != null) FxPoolManager.I.Return(go);
+        else Destroy(go);
+    }
+
     private void UpdateActiveParticles()
     {
         double now = RhythmConductor.Now;
@@ -350,7 +368,7 @@ public class EffectConductor : MonoBehaviour
             if (p.go == null) { _activeParticles.RemoveAt(i); continue; }
             if (now >= p.stopDsp)
             {
-                Destroy(p.go);
+                ReleaseParticle(p.go);
                 _activeParticles.RemoveAt(i);
             }
         }
@@ -372,7 +390,7 @@ public class EffectConductor : MonoBehaviour
 
         for (int i = 0; i < _activeParticles.Count; i++)
         {
-            if (_activeParticles[i].go != null) Destroy(_activeParticles[i].go);
+            if (_activeParticles[i].go != null) ReleaseParticle(_activeParticles[i].go);
         }
         _activeParticles.Clear();
     }

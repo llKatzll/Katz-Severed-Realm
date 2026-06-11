@@ -8,6 +8,7 @@ public class EffectWarmup : MonoBehaviour
     [SerializeField] private GameObject[] _additionalPrefabs;
     [SerializeField] private Vector3 _warmupPosition = new Vector3(0f, -100f, 0f);
     [SerializeField] private float _waitSec = 1f;
+    [SerializeField] private int _poolPrewarmCount = 4;
 
     public IEnumerator WarmupAll()
     {
@@ -33,6 +34,15 @@ public class EffectWarmup : MonoBehaviour
         }
 
         if (prefabs.Count == 0) yield break;
+
+        if (FxPoolManager.I != null && _poolPrewarmCount > 0)
+        {
+            for (int i = 0; i < prefabs.Count; i++)
+            {
+                FxPoolManager.I.Prewarm(prefabs[i], _poolPrewarmCount);
+            }
+            yield return null;
+        }
 
         List<GameObject> spawned = new List<GameObject>(prefabs.Count);
         for (int i = 0; i < prefabs.Count; i++)
