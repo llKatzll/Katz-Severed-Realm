@@ -37,6 +37,9 @@ public class CalibrationPanel : MonoBehaviour
     [SerializeField] private string _idleMessage = "Press SPACE or START to begin";
     [SerializeField] private string _doneMessage = "Press APPLY to save, or ESC to discard";
 
+    [Header("Display")]
+    [SerializeField] private float _displayBiasMs = 100f;
+
     [Header("Music Duck")]
     [SerializeField] private float _musicFadeOutSec = 0.3f;
     [SerializeField] private float _musicFadeInSec = 0.6f;
@@ -166,7 +169,7 @@ public class CalibrationPanel : MonoBehaviour
                     _inputCaptured = true;
                     _samples[_setIndex] = (float)diffMs;
                     _sampleValid[_setIndex] = true;
-                    SetTryText(_setIndex, FormatMs((float)diffMs));
+                    SetTryText(_setIndex, FormatMs((float)diffMs - _displayBiasMs));
                 }
             }
         }
@@ -210,7 +213,7 @@ public class CalibrationPanel : MonoBehaviour
         {
             _resultMs = sum / count;
             if (_averageText != null)
-                _averageText.text = FormatMs(_resultMs);
+                _averageText.text = FormatMs(_resultMs - _displayBiasMs);
         }
         else
         {
@@ -244,7 +247,7 @@ public class CalibrationPanel : MonoBehaviour
     {
         if (_state != State.Done || !_hasResult) return;
 
-        SettingsConfig.AudioOffsetSec = _resultMs / 1000f;
+        SettingsConfig.AudioOffsetSec = (_resultMs - _displayBiasMs) / 1000f;
         SettingsConfig.Save();
         Close();
     }
