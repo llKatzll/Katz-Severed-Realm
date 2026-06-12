@@ -25,6 +25,16 @@ public class CalibrationPanel : MonoBehaviour
     [Header("Keys")]
     [SerializeField] private KeyBindConfig _keyBindConfig;
 
+    [Header("Stage Objects")]
+    [SerializeField] private GameObject _spinObject;
+    [SerializeField] private float _spinSpeedDeg = 90f;
+    [SerializeField] private GameObject _resultGroup;
+    [SerializeField] private TMP_Text _startDoneText;
+
+    [Header("Messages")]
+    [SerializeField] private string _idleMessage = "Press SPACE or START to begin";
+    [SerializeField] private string _doneMessage = "Press APPLY to save, or ESC to discard";
+
     [Header("Timing")]
     [SerializeField] private double _tickIntervalSec = 0.5;
     [SerializeField] private double _leadInSec = 1.0;
@@ -62,6 +72,7 @@ public class CalibrationPanel : MonoBehaviour
         Time.timeScale = 0f;
         _state = State.Idle;
         ResetUI();
+        ApplyStateVisuals();
     }
 
     private void OnDisable()
@@ -102,6 +113,7 @@ public class CalibrationPanel : MonoBehaviour
         ResetUI();
         _setIndex = 0;
         _state = State.Running;
+        ApplyStateVisuals();
         BeginSet(AudioSettings.dspTime + _leadInSec);
     }
 
@@ -120,6 +132,9 @@ public class CalibrationPanel : MonoBehaviour
 
     private void UpdateRunning()
     {
+        if (_spinObject != null)
+            _spinObject.transform.Rotate(0f, 0f, _spinSpeedDeg * Time.unscaledDeltaTime);
+
         double now = AudioSettings.dspTime;
 
         if (_scheduledTicks < TICKS_PER_SET &&
@@ -184,7 +199,7 @@ public class CalibrationPanel : MonoBehaviour
         {
             _resultMs = sum / count;
             if (_averageText != null)
-                _averageText.text = "Your offset: " + FormatMs(_resultMs);
+                _averageText.text = FormatMs(_resultMs);
         }
         else
         {
@@ -193,6 +208,25 @@ public class CalibrationPanel : MonoBehaviour
         }
 
         if (_applyButton != null) _applyButton.interactable = _hasResult;
+        ApplyStateVisuals();
+    }
+
+    private void ApplyStateVisuals()
+    {
+        bool idle = _state == State.Idle;
+        bool running = _state == State.Running;
+        bool done = _state == State.Done;
+
+        if (_startButton != null) _startButton.gameObject.SetActive(idle);
+        if (_applyButton != null) _applyButton.gameObject.SetActive(done);
+        if (_spinObject != null) _spinObject.SetActive(running);
+        if (_resultGroup != null) _resultGroup.SetActive(done);
+
+        if (_startDoneText != null)
+        {
+            _startDoneText.gameObject.SetActive(!running);
+            _startDoneText.text = done ? _doneMessage : _idleMessage;
+        }
     }
 
     private void Apply()
@@ -249,7 +283,7 @@ public class CalibrationPanel : MonoBehaviour
     private void ResetUI()
     {
         for (int i = 0; i < _tryTexts.Length; i++)
-            SetTryText(i, "");
+            SetTryText(i, "0ms");
 
         if (_averageText != null) _averageText.text = "";
         if (_applyButton != null) _applyButton.interactable = false;
@@ -267,7 +301,7 @@ public class CalibrationPanel : MonoBehaviour
     private static string FormatMs(float ms)
     {
         int r = Mathf.RoundToInt(ms);
-        return (r >= 0 ? "+" : "") + r + " ms";
+        return (r >= 0 ? "+" : "") + r + "ms";
     }
 
     private void EnsureSources()
