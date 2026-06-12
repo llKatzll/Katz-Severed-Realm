@@ -53,6 +53,7 @@ public class SettingsPanel : MonoBehaviour
     {
         RefreshFromConfig();
         BindUI();
+        SettingsConfig.OnChanged += OnConfigChanged;
         if (_freezeTimeWhileOpen)
         {
             _prevTimeScale = Time.timeScale;
@@ -62,6 +63,7 @@ public class SettingsPanel : MonoBehaviour
 
     private void OnDisable()
     {
+        SettingsConfig.OnChanged -= OnConfigChanged;
         UnbindUI();
         SettingsConfig.Save();
         if (_freezeTimeWhileOpen)
@@ -166,6 +168,14 @@ public class SettingsPanel : MonoBehaviour
     private void OnInputOffsetChanged(float v) { SettingsConfig.InputOffsetSec = v / 1000f; UpdateOffsetLabels(); }
 
     private void OnNoteSpeedChanged(float v) { SettingsConfig.NoteSpeed = v; UpdateNoteSpeedLabel(); }
+
+    private void OnConfigChanged(SettingsConfig.Category cat)
+    {
+        if (cat != SettingsConfig.Category.Offset) return;
+        SetSlider(_audioOffsetSlider, SettingsConfig.AudioOffsetSec * 1000f);
+        SetSlider(_inputOffsetSlider, SettingsConfig.InputOffsetSec * 1000f);
+        UpdateOffsetLabels();
+    }
 
     private void OnFpsChanged(int idx)
     {

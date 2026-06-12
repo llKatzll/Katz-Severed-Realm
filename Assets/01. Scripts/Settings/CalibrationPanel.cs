@@ -1,4 +1,6 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.UI;
 using TMPro;
 
@@ -35,11 +37,18 @@ public class CalibrationPanel : MonoBehaviour
     [SerializeField] private string _idleMessage = "Press SPACE or START to begin";
     [SerializeField] private string _doneMessage = "Press APPLY to save, or ESC to discard";
 
+    [Header("Music Duck")]
+    [SerializeField] private float _musicFadeOutSec = 0.3f;
+    [SerializeField] private float _musicFadeInSec = 0.6f;
+
+    private static GameObject _fadeRunnerGo;
+
     [Header("Timing")]
     [SerializeField] private double _tickIntervalSec = 0.5;
     [SerializeField] private double _leadInSec = 1.0;
     [SerializeField] private double _setRestSec = 1.0;
-    [SerializeField] private double _inputWindowSec = 0.25;
+    [SerializeField] private double _earlyWindowSec = 0.25;
+    [SerializeField] private double _lateWindowSec = 0.45;
 
     private const int TICKS_PER_SET = 4;
     private const int TOTAL_SETS = 5;
@@ -73,6 +82,7 @@ public class CalibrationPanel : MonoBehaviour
         _state = State.Idle;
         ResetUI();
         ApplyStateVisuals();
+        StartMusicFade(0f, _musicFadeOutSec);
     }
 
     private void OnDisable()
@@ -80,6 +90,7 @@ public class CalibrationPanel : MonoBehaviour
         Time.timeScale = _prevTimeScale;
         StopTicks();
         _state = State.Idle;
+        StartMusicFade(SettingsConfig.MusicVolume, _musicFadeInSec);
     }
 
     private void Update()
@@ -150,7 +161,7 @@ public class CalibrationPanel : MonoBehaviour
             if (key != KeyCode.None)
             {
                 double diffMs = (now - _targetDsp) * 1000.0;
-                if (System.Math.Abs(diffMs) <= _inputWindowSec * 1000.0)
+                if (diffMs >= -_earlyWindowSec * 1000.0 && diffMs <= _lateWindowSec * 1000.0)
                 {
                     _inputCaptured = true;
                     _samples[_setIndex] = (float)diffMs;
@@ -160,7 +171,7 @@ public class CalibrationPanel : MonoBehaviour
             }
         }
 
-        if (now > _targetDsp + _inputWindowSec)
+        if (now > _targetDsp + _lateWindowSec)
             FinalizeTry();
     }
 
@@ -233,7 +244,7 @@ public class CalibrationPanel : MonoBehaviour
     {
         if (_state != State.Done || !_hasResult) return;
 
-        SettingsConfig.InputOffsetSec = -_resultMs / 1000f;
+        SettingsConfig.AudioOffsetSec = _resultMs / 1000f;
         SettingsConfig.Save();
         Close();
     }
@@ -306,6 +317,13 @@ public class CalibrationPanel : MonoBehaviour
 
     private void EnsureSources()
     {
+        if (_tickSourceA != null && _tickSourceA == _tickSourceB)
+        {
+            Debug.LogWarning("[CalibrationPanel] Tick sources must be two different AudioSources. Creating dedicated sources.");
+            _tickSourceA = null;
+            _tickSourceB = null;
+        }
+
         if (_tickSourceA == null) _tickSourceA = CreateSource("TickSourceA");
         if (_tickSourceB == null) _tickSourceB = CreateSource("TickSourceB");
 
@@ -324,5 +342,53 @@ public class CalibrationPanel : MonoBehaviour
         var src = go.AddComponent<AudioSource>();
         src.playOnAwake = false;
         return src;
+    }
+
+    private void StartMusicFade(float targetLinear, float duration)
+    {
+        var mixer = AudioMixerBinder.Mixer;
+        if (mixer == null) return;
+
+        if (_fadeRunnerGo != null) Destroy(_fadeRunnerGo);
+
+        _fadeRunnerGo = new GameObject("CalibMusicFade");
+        var runner = _fadeRunnerGo.AddComponent<MusicFadeRunner>();
+        runner.Run(mixer, targetLinear, duration);
+    }
+
+    private class MusicFadeRunner : MonoBehaviour
+    {
+        private const string PARAM = "MusicVolume";
+        private const float MIN_DB = -80f;
+
+        public void Run(AudioMixer mixer, float targetLinear, float duration)
+        {
+            StartCoroutine(CoFade(mixer, targetLinear, duration));
+        }
+
+        private IEnumerator CoFade(AudioMixer mixer, float targetLinear, float duration)
+        {
+            float currentDb;
+            if (!mixer.GetFloat(PARAM, out currentDb)) currentDb = 0f;
+            float fromLinear = currentDb <= MIN_DB + 0.01f ? 0f : Mathf.Pow(10f, currentDb / 20f);
+
+            float t = 0f;
+            while (t < duration)
+            {
+                t += Time.unscaledDeltaTime;
+                float k = duration > 0f ? Mathf.Clamp01(t / duration) : 1f;
+                SetLinear(mixer, Mathf.Lerp(fromLinear, targetLinear, k));
+                yield return null;
+            }
+
+            SetLinear(mixer, targetLinear);
+            Destroy(gameObject);
+        }
+
+        private static void SetLinear(AudioMixer mixer, float v)
+        {
+            float db = v <= 0.0001f ? MIN_DB : Mathf.Log10(v) * 20f;
+            mixer.SetFloat(PARAM, db);
+        }
     }
 }
