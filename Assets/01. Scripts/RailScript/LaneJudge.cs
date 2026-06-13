@@ -142,6 +142,8 @@ public class LaneJudge : MonoBehaviour
         CleanupDeadTap();
         CleanupDeadHold();
 
+        if (_rhythm != null && !_rhythm.IsPlaying) return;
+
         if (AutoPlay.IsOn)
         {
             AutoPlayUpdate();

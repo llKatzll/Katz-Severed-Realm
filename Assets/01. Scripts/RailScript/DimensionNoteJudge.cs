@@ -91,6 +91,8 @@ public class DimensionNoteJudge : MonoBehaviour
     {
         CleanupDead();
 
+        if (_rhythm != null && !_rhythm.IsPlaying) return;
+
         if (AutoPlay.IsOn)
         {
             AutoPlayUpdate();
