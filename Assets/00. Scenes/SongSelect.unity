@@ -2757,11 +2757,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 690434632}
   m_CullTransparentMesh: 1
---- !u!1 &731806907 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3564483040664112938, guid: 34e7ab019f22a334ab2157a8671fe17e, type: 3}
-  m_PrefabInstance: {fileID: 787701562}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &738391319
 GameObject:
   m_ObjectHideFlags: 0
@@ -3325,14 +3320,6 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 1373820526429492065, guid: 34e7ab019f22a334ab2157a8671fe17e, type: 3}
-      propertyPath: m_MaxValue
-      value: 400
-      objectReference: {fileID: 0}
-    - target: {fileID: 1373820526429492065, guid: 34e7ab019f22a334ab2157a8671fe17e, type: 3}
-      propertyPath: m_MinValue
-      value: -400
-      objectReference: {fileID: 0}
     - target: {fileID: 1693997516159535894, guid: 34e7ab019f22a334ab2157a8671fe17e, type: 3}
       propertyPath: m_AnchorMax.x
       value: 1
@@ -3421,14 +3408,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3376993407478166647, guid: 34e7ab019f22a334ab2157a8671fe17e, type: 3}
-      propertyPath: m_MaxValue
-      value: 400
-      objectReference: {fileID: 0}
-    - target: {fileID: 3376993407478166647, guid: 34e7ab019f22a334ab2157a8671fe17e, type: 3}
-      propertyPath: m_MinValue
-      value: -400
-      objectReference: {fileID: 0}
     - target: {fileID: 3464849405551657388, guid: 34e7ab019f22a334ab2157a8671fe17e, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0.5
@@ -3449,6 +3428,10 @@ PrefabInstance:
       propertyPath: m_AnchorMin.x
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5032199577614922562, guid: 34e7ab019f22a334ab2157a8671fe17e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5264349938132095704, guid: 34e7ab019f22a334ab2157a8671fe17e, type: 3}
       propertyPath: m_AnchorMax.x
       value: 1
@@ -3459,10 +3442,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5264349938132095704, guid: 34e7ab019f22a334ab2157a8671fe17e, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5296595246017890155, guid: 34e7ab019f22a334ab2157a8671fe17e, type: 3}
-      propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5607955232021151730, guid: 34e7ab019f22a334ab2157a8671fe17e, type: 3}
@@ -3512,26 +3491,6 @@ PrefabInstance:
     - target: {fileID: 7958430350232453672, guid: 34e7ab019f22a334ab2157a8671fe17e, type: 3}
       propertyPath: m_AnchorMin.x
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8456409414044524692, guid: 34e7ab019f22a334ab2157a8671fe17e, type: 3}
-      propertyPath: _tickClip
-      value: 
-      objectReference: {fileID: 8300000, guid: 274ea587c3cf03e439919c2abe3629aa, type: 3}
-    - target: {fileID: 8456409414044524692, guid: 34e7ab019f22a334ab2157a8671fe17e, type: 3}
-      propertyPath: _spinObject
-      value: 
-      objectReference: {fileID: 731806907}
-    - target: {fileID: 8456409414044524692, guid: 34e7ab019f22a334ab2157a8671fe17e, type: 3}
-      propertyPath: _tickSourceA
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 8456409414044524692, guid: 34e7ab019f22a334ab2157a8671fe17e, type: 3}
-      propertyPath: _tickSourceB
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 8456409414044524692, guid: 34e7ab019f22a334ab2157a8671fe17e, type: 3}
-      propertyPath: _spinSpeedDeg
-      value: 130
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

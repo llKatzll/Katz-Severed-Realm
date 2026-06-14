@@ -4,7 +4,7 @@ using UnityEngine.Audio;
 using UnityEngine.UI;
 using TMPro;
 
-public class CalibrationPanel : MonoBehaviour
+public class CalibrationPanel : MonoBehaviour, IModalPanel
 {
     private enum State { Idle, Running, Done }
 
@@ -23,9 +23,6 @@ public class CalibrationPanel : MonoBehaviour
     [SerializeField] private AudioClip _tickClip;
     [SerializeField] private AudioSource _tickSourceA;
     [SerializeField] private AudioSource _tickSourceB;
-
-    [Header("Keys")]
-    [SerializeField] private KeyBindConfig _keyBindConfig;
 
     [Header("Stage Objects")]
     [SerializeField] private GameObject _spinObject;
@@ -80,6 +77,7 @@ public class CalibrationPanel : MonoBehaviour
 
     private void OnEnable()
     {
+        ModalStack.Push(this);
         _prevTimeScale = Time.timeScale;
         Time.timeScale = 0f;
         _state = State.Idle;
@@ -90,20 +88,20 @@ public class CalibrationPanel : MonoBehaviour
 
     private void OnDisable()
     {
+        ModalStack.Remove(this);
         Time.timeScale = _prevTimeScale;
         StopTicks();
         _state = State.Idle;
         StartMusicFade(SettingsConfig.MusicVolume, _musicFadeInSec);
     }
 
+    public void OnEscape()
+    {
+        Close();
+    }
+
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Close();
-            return;
-        }
-
         switch (_state)
         {
             case State.Idle:
@@ -275,20 +273,14 @@ public class CalibrationPanel : MonoBehaviour
     {
         for (int i = 0; i < SettingsConfig.LaneCount; i++)
         {
-            KeyCode g = _keyBindConfig != null
-                ? _keyBindConfig.GetKey(ChartLaneType.Ground, i)
-                : SettingsConfig.GetGroundKey(i);
+            KeyCode g = SettingsConfig.GetGroundKey(i);
             if (g != KeyCode.None && Input.GetKeyDown(g)) return g;
 
-            KeyCode u = _keyBindConfig != null
-                ? _keyBindConfig.GetKey(ChartLaneType.Upper, i)
-                : SettingsConfig.GetUpperKey(i);
+            KeyCode u = SettingsConfig.GetUpperKey(i);
             if (u != KeyCode.None && Input.GetKeyDown(u)) return u;
         }
 
-        KeyCode d = _keyBindConfig != null
-            ? _keyBindConfig.DimensionKey
-            : SettingsConfig.DimensionKey;
+        KeyCode d = SettingsConfig.DimensionKey;
         if (d != KeyCode.None && Input.GetKeyDown(d)) return d;
 
         return KeyCode.None;

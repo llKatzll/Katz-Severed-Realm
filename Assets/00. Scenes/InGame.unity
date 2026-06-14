@@ -8696,6 +8696,7 @@ MonoBehaviour:
   _keyBindButton: {fileID: 0}
   _keyBindPanel: {fileID: 0}
   _freezeTimeWhileOpen: 0
+  _registerToModalStack: 1
 --- !u!1 &1130633021
 GameObject:
   m_ObjectHideFlags: 0
@@ -14468,6 +14469,7 @@ MonoBehaviour:
   - {fileID: 8430663150762934430, guid: 5a9687d21fbc3224ba240ff379f61f69, type: 3}
   _warmupPosition: {x: 0, y: -100, z: 0}
   _waitSec: 2
+  _poolPrewarmCount: 4
 --- !u!4 &2086672200
 Transform:
   m_ObjectHideFlags: 0

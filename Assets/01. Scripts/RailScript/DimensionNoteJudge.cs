@@ -6,10 +6,6 @@ public class DimensionNoteJudge : MonoBehaviour
 {
     public static DimensionNoteJudge I { get; private set; }
 
-    [Header("Key")]
-    [SerializeField] private KeyBindConfig _keyBindConfig;
-    [SerializeField] private KeyCode _fallbackKey = KeyCode.Space;
-
     [Header("Timing (ms)")]
     [SerializeField] private float _userOffsetMs = 0f;
     [SerializeField] private float _severanceMs = 35f;
@@ -53,14 +49,7 @@ public class DimensionNoteJudge : MonoBehaviour
 
     private const double GROUP_TOLERANCE_MS = 2.0;
 
-    private KeyCode DimensionKey
-    {
-        get
-        {
-            if (_keyBindConfig != null) return _keyBindConfig.DimensionKey;
-            return _fallbackKey;
-        }
-    }
+    private KeyCode DimensionKey => SettingsConfig.DimensionKey;
 
     private float EffectiveOffsetMs => _userOffsetMs + SettingsConfig.InputOffsetSec * 1000f;
 

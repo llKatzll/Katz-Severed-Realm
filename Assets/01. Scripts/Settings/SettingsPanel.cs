@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class SettingsPanel : MonoBehaviour
+public class SettingsPanel : MonoBehaviour, IModalPanel
 {
     [Header("Audio Sliders")]
     [SerializeField] private Slider _masterSlider;
@@ -39,6 +39,7 @@ public class SettingsPanel : MonoBehaviour
 
     [Header("Modal Behavior")]
     [SerializeField] private bool _freezeTimeWhileOpen = false;
+    [SerializeField] private bool _registerToModalStack = true;
 
     private float _prevTimeScale = 1f;
 
@@ -54,6 +55,7 @@ public class SettingsPanel : MonoBehaviour
         RefreshFromConfig();
         BindUI();
         SettingsConfig.OnChanged += OnConfigChanged;
+        if (_registerToModalStack) ModalStack.Push(this);
         if (_freezeTimeWhileOpen)
         {
             _prevTimeScale = Time.timeScale;
@@ -66,10 +68,16 @@ public class SettingsPanel : MonoBehaviour
         SettingsConfig.OnChanged -= OnConfigChanged;
         UnbindUI();
         SettingsConfig.Save();
+        if (_registerToModalStack) ModalStack.Remove(this);
         if (_freezeTimeWhileOpen)
         {
             Time.timeScale = _prevTimeScale;
         }
+    }
+
+    public void OnEscape()
+    {
+        gameObject.SetActive(false);
     }
 
     private void InitFpsDropdown()

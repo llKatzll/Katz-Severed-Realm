@@ -4,14 +4,11 @@ using UnityEngine;
 
 public class LaneJudge : MonoBehaviour
 {
-    [Header("Lane (fallback only)")]
+    [Header("Lane")]
     [SerializeField] private NoteSpawner.NoteType _laneType = NoteSpawner.NoteType.Ground;
-
-    [Header("Key Bind Config")]
-    [SerializeField] private KeyBindConfig _keyBindConfig;
     [SerializeField] private int _laneIndex;
 
-    [Header("Input (fallback if KeyBindConfig is null)")]
+    [Header("Default Key (identifies lane slot)")]
     [SerializeField] private KeyCode _key = KeyCode.A;
 
     [Header("Timing (ms)")]
@@ -52,6 +49,7 @@ public class LaneJudge : MonoBehaviour
     private HoldNote _hold;
     private readonly List<HoldNote> _holdQueue = new List<HoldNote>(8);
     private RhythmConductor _rhythm;
+    private int _slotIndex;
 
     private static readonly int IdColor = Shader.PropertyToID("_Color");
     private static readonly int IdBaseColor = Shader.PropertyToID("_BaseColor");
@@ -63,31 +61,32 @@ public class LaneJudge : MonoBehaviour
     private readonly List<ParticleSystemVertexStream> _streams = new List<ParticleSystemVertexStream>(16);
 
 
-    private KeyCode ActiveKey
-    {
-        get
-        {
-            if (_keyBindConfig == null) return _key;
-            ChartLaneType chartLane = _laneType == NoteSpawner.NoteType.Ground
-                ? ChartLaneType.Ground : ChartLaneType.Upper;
-            KeyCode bound = _keyBindConfig.GetKey(chartLane, _laneIndex);
-            return bound != KeyCode.None ? bound : _key;
-        }
-    }
+    private KeyCode ActiveKey => _laneType == NoteSpawner.NoteType.Ground
+        ? SettingsConfig.GetGroundKey(_slotIndex)
+        : SettingsConfig.GetUpperKey(_slotIndex);
 
     private float EffectiveOffsetMs => _userOffsetMs + SettingsConfig.InputOffsetSec * 1000f;
 
-    public void SetLaneType(NoteSpawner.NoteType t) => _laneType = t;
-
-    public void SetKeyBindConfig(KeyBindConfig config, int laneIndex)
+    public void SetLaneType(NoteSpawner.NoteType t)
     {
-        _keyBindConfig = config;
-        _laneIndex = laneIndex;
+        _laneType = t;
+        _slotIndex = ResolveSlotIndex();
     }
 
     private void Awake()
     {
         _rhythm = FindAnyObjectByType<RhythmConductor>();
+        _slotIndex = ResolveSlotIndex();
+    }
+
+    private int ResolveSlotIndex()
+    {
+        KeyCode[] defaults = _laneType == NoteSpawner.NoteType.Ground
+            ? SettingsConfig.DefaultGroundKeys
+            : SettingsConfig.DefaultUpperKeys;
+        for (int i = 0; i < defaults.Length; i++)
+            if (defaults[i] == _key) return i;
+        return Mathf.Clamp(_laneIndex, 0, SettingsConfig.LaneCount - 1);
     }
 
     public void RegisterTap(Note n)
