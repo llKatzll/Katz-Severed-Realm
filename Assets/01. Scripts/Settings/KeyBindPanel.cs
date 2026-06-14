@@ -15,8 +15,9 @@ public class KeyBindPanel : MonoBehaviour, IModalPanel
     [Header("Capture Prompt")]
     [SerializeField] private GameObject _capturePrompt;
 
-    [Header("Close")]
+    [Header("Buttons")]
     [SerializeField] private Button _closeButton;
+    [SerializeField] private Button _resetButton;
 
     private bool _capturing;
     private int _captureSlot = -1;
@@ -30,6 +31,14 @@ public class KeyBindPanel : MonoBehaviour, IModalPanel
             _slotButtons[i].onClick.AddListener(() => BeginCapture(slot));
         }
         if (_closeButton != null) _closeButton.onClick.AddListener(Close);
+        if (_resetButton != null) _resetButton.onClick.AddListener(ResetKeys);
+    }
+
+    private void ResetKeys()
+    {
+        CancelCapture();
+        SettingsConfig.ResetKeysToDefaults();
+        RefreshLabels();
     }
 
     private void OnEnable()

@@ -238,6 +238,11 @@ public static class SettingsConfig
         NoteSpeed = DefaultNoteSpeed;
         FpsCap = DefaultFpsCap;
 
+        Save();
+    }
+
+    public static void ResetKeysToDefaults()
+    {
         for (int i = 0; i < LaneCount; i++)
         {
             SetGroundKey(i, DefaultGroundKeys[i]);
