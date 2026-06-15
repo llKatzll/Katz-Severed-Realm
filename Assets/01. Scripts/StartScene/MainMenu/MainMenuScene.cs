@@ -15,11 +15,21 @@ public class MainMenuScene : MonoBehaviour
 
     private void OnEnable()
     {
+        if (_blackScreen != null) _blackScreen.gameObject.SetActive(true);
         SetAlpha(1f);
         StartFadeOut();
     }
 
     private void OnDisable()
+    {
+        if (_fadeCo != null)
+        {
+            StopCoroutine(_fadeCo);
+            _fadeCo = null;
+        }
+    }
+
+    public void CancelFade()
     {
         if (_fadeCo != null)
         {

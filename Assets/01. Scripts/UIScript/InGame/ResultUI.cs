@@ -87,6 +87,8 @@ public class ResultUI : MonoBehaviour
 
     private void OnExit()
     {
+        if (SfxManager.I != null) SfxManager.I.PlayReturn();
+
         if (InGameManager.I != null)
             InGameManager.I.OnExitButtonClicked();
     }

@@ -1715,7 +1715,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -82.2}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &930467872811445482
@@ -6027,7 +6027,6 @@ MonoBehaviour:
   _tickClip: {fileID: 8300000, guid: 274ea587c3cf03e439919c2abe3629aa, type: 3}
   _tickSourceA: {fileID: 0}
   _tickSourceB: {fileID: 0}
-  _keyBindConfig: {fileID: 11400000, guid: b1e206c9bc4a70c4f9dc26c26f069229, type: 2}
   _spinObject: {fileID: 3564483040664112938}
   _spinSpeedDeg: 130
   _resultGroup: {fileID: 4107175318948210960}
@@ -8307,7 +8306,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6225169359610574983
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8370,6 +8369,7 @@ MonoBehaviour:
   - {fileID: 4262856503535680985}
   _capturePrompt: {fileID: 8261601079137114371}
   _closeButton: {fileID: 2664977464642567648}
+  _resetButton: {fileID: 0}
 --- !u!1 &5245229414783800023
 GameObject:
   m_ObjectHideFlags: 0
@@ -13982,7 +13982,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 100}
+  m_AnchoredPosition: {x: 0, y: 17.5}
   m_SizeDelta: {x: 832, y: 468}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1727109424228938597

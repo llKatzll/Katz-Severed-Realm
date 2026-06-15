@@ -175,6 +175,7 @@ GameObject:
   - component: {fileID: 81797340}
   - component: {fileID: 81797339}
   - component: {fileID: 81797338}
+  - component: {fileID: 81797341}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -272,6 +273,19 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &81797341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 81797336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f8d9015f3c516e4392157ef966b44f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSfx
+  _includeChildren: 1
 --- !u!1 &128083107
 GameObject:
   m_ObjectHideFlags: 0
@@ -3269,7 +3283,7 @@ ParticleSystem:
         serializedVersion: 2
         key0: {r: 0, g: 0, b: 0, a: 1}
         key1: {r: 1, g: 1, b: 1, a: 1}
-        key2: {r: 1, g: 1, b: 1, a: 0}
+        key2: {r: 1, g: 1, b: 1, a: 1}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
         key5: {r: 0, g: 0, b: 0, a: 0}
@@ -3277,15 +3291,15 @@ ParticleSystem:
         key7: {r: 0, g: 0, b: 0, a: 0}
         ctime0: 8250
         ctime1: 18890
-        ctime2: 65535
+        ctime2: 50758
         ctime3: 65535
         ctime4: 0
         ctime5: 0
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 65535
-        atime2: 0
+        atime1: 61680
+        atime2: 65535
         atime3: 0
         atime4: 0
         atime5: 0
@@ -3293,8 +3307,8 @@ ParticleSystem:
         atime7: 0
         m_Mode: 0
         m_ColorSpace: 0
-        m_NumColorKeys: 2
-        m_NumAlphaKeys: 2
+        m_NumColorKeys: 4
+        m_NumAlphaKeys: 3
       minGradient:
         serializedVersion: 2
         key0: {r: 0, g: 0, b: 0, a: 1}
@@ -3307,7 +3321,7 @@ ParticleSystem:
         key7: {r: 0, g: 0, b: 0, a: 0}
         ctime0: 2544
         ctime1: 18119
-        ctime2: 44178
+        ctime2: 53199
         ctime3: 65535
         ctime4: 0
         ctime5: 0
@@ -3323,7 +3337,7 @@ ParticleSystem:
         atime7: 0
         m_Mode: 0
         m_ColorSpace: 0
-        m_NumColorKeys: 2
+        m_NumColorKeys: 4
         m_NumAlphaKeys: 2
   UVModule:
     serializedVersion: 2
@@ -4223,8 +4237,8 @@ ParticleSystem:
     y:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 35
-      minScalar: 40
+      scalar: 70
+      minScalar: 100
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -6763,6 +6777,7 @@ GameObject:
   - component: {fileID: 1225926713}
   - component: {fileID: 1225926712}
   - component: {fileID: 1225926711}
+  - component: {fileID: 1225926714}
   m_Layer: 0
   m_Name: AreYouSure Canvas
   m_TagString: Untagged
@@ -6856,6 +6871,19 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &1225926714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1225926709}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f8d9015f3c516e4392157ef966b44f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSfx
+  _includeChildren: 1
 --- !u!1 &1298001483
 GameObject:
   m_ObjectHideFlags: 0
@@ -18372,6 +18400,63 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1001 &6846726251837535834
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3439757779357428523, guid: 544c2350eb586ce42a8b91cf3705e7b8, type: 3}
+      propertyPath: m_Name
+      value: SfxManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 4264531583254459704, guid: 544c2350eb586ce42a8b91cf3705e7b8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4264531583254459704, guid: 544c2350eb586ce42a8b91cf3705e7b8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4264531583254459704, guid: 544c2350eb586ce42a8b91cf3705e7b8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4264531583254459704, guid: 544c2350eb586ce42a8b91cf3705e7b8, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4264531583254459704, guid: 544c2350eb586ce42a8b91cf3705e7b8, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4264531583254459704, guid: 544c2350eb586ce42a8b91cf3705e7b8, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4264531583254459704, guid: 544c2350eb586ce42a8b91cf3705e7b8, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4264531583254459704, guid: 544c2350eb586ce42a8b91cf3705e7b8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4264531583254459704, guid: 544c2350eb586ce42a8b91cf3705e7b8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4264531583254459704, guid: 544c2350eb586ce42a8b91cf3705e7b8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 544c2350eb586ce42a8b91cf3705e7b8, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -18385,3 +18470,4 @@ SceneRoots:
   - {fileID: 1440205738}
   - {fileID: 516831178}
   - {fileID: 59602486}
+  - {fileID: 6846726251837535834}

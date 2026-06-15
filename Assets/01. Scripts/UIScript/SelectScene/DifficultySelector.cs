@@ -35,7 +35,7 @@ public class DifficultySelector : MonoBehaviour
             if (btn.button != null)
             {
                 DifficultyType capturedType = btn.type;
-                btn.button.onClick.AddListener(() => SelectDifficulty(capturedType));
+                btn.button.onClick.AddListener(() => OnUserPickDifficulty(capturedType));
             }
 
             if (btn.buttonImage != null)
@@ -84,7 +84,7 @@ public class DifficultySelector : MonoBehaviour
             if (_buttons[newIndex].button != null && _buttons[newIndex].button.interactable)
             {
                 _selectedIndex = newIndex;
-                SelectDifficulty(_buttons[newIndex].type);
+                OnUserPickDifficulty(_buttons[newIndex].type);
                 return;
             }
         }
@@ -101,7 +101,7 @@ public class DifficultySelector : MonoBehaviour
             if (_buttons[newIndex].button != null && _buttons[newIndex].button.interactable)
             {
                 _selectedIndex = newIndex;
-                SelectDifficulty(_buttons[newIndex].type);
+                OnUserPickDifficulty(_buttons[newIndex].type);
                 return;
             }
         }
@@ -175,6 +175,12 @@ public class DifficultySelector : MonoBehaviour
 
         if (foundFirst)
             SelectDifficulty(firstAvailable);
+    }
+
+    private void OnUserPickDifficulty(DifficultyType type)
+    {
+        if (SfxManager.I != null) SfxManager.I.PlayDiff();
+        SelectDifficulty(type);
     }
 
     public void SelectDifficulty(DifficultyType type)

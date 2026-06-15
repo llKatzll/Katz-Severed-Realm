@@ -93,6 +93,7 @@ public class StartButtonEffect : MonoBehaviour
 
         if (_transitionRect != null)
         {
+            if (SfxManager.I != null) SfxManager.I.PlayTransition();
             SetTransitionY(_transitionWaitY);
             _transitionRect.gameObject.SetActive(true);
             yield return StartCoroutine(SlideTransition(_transitionWaitY, _transitionShowY, _transitionSlideTime, false));

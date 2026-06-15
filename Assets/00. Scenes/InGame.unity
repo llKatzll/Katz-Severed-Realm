@@ -245,7 +245,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LaneJudge
   _laneType: 1
-  _keyBindConfig: {fileID: 0}
   _laneIndex: 0
   _key: 111
   _userOffsetMs: 0
@@ -420,81 +419,6 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 18988912}
-  m_CullTransparentMesh: 1
---- !u!1 &55276492
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 55276493}
-  - component: {fileID: 55276495}
-  - component: {fileID: 55276494}
-  m_Layer: 5
-  m_Name: MyCat
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!224 &55276493
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 55276492}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1653508746}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -260, y: 0}
-  m_SizeDelta: {x: 200, y: 200}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &55276494
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 55276492}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 99d08a1b3b7a6a14dbcefc10e11a2e04, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &55276495
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 55276492}
   m_CullTransparentMesh: 1
 --- !u!1 &61631516
 GameObject:
@@ -893,8 +817,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06e2cced19d47d945a8c586b3aabdc91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DimensionNoteJudge
-  _keyBindConfig: {fileID: 11400000, guid: b1e206c9bc4a70c4f9dc26c26f069229, type: 2}
-  _fallbackKey: 32
   _userOffsetMs: 0
   _severanceMs: 35
   _cleanMs: 80
@@ -2578,6 +2500,63 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1001 &361944538
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3439757779357428523, guid: 544c2350eb586ce42a8b91cf3705e7b8, type: 3}
+      propertyPath: m_Name
+      value: SfxManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 4264531583254459704, guid: 544c2350eb586ce42a8b91cf3705e7b8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3.23705
+      objectReference: {fileID: 0}
+    - target: {fileID: 4264531583254459704, guid: 544c2350eb586ce42a8b91cf3705e7b8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4264531583254459704, guid: 544c2350eb586ce42a8b91cf3705e7b8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -18.34951
+      objectReference: {fileID: 0}
+    - target: {fileID: 4264531583254459704, guid: 544c2350eb586ce42a8b91cf3705e7b8, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4264531583254459704, guid: 544c2350eb586ce42a8b91cf3705e7b8, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4264531583254459704, guid: 544c2350eb586ce42a8b91cf3705e7b8, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4264531583254459704, guid: 544c2350eb586ce42a8b91cf3705e7b8, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4264531583254459704, guid: 544c2350eb586ce42a8b91cf3705e7b8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4264531583254459704, guid: 544c2350eb586ce42a8b91cf3705e7b8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4264531583254459704, guid: 544c2350eb586ce42a8b91cf3705e7b8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 544c2350eb586ce42a8b91cf3705e7b8, type: 3}
 --- !u!1 &369476863
 GameObject:
   m_ObjectHideFlags: 0
@@ -5776,7 +5755,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LaneJudge
   _laneType: 0
-  _keyBindConfig: {fileID: 0}
   _laneIndex: 0
   _key: 97
   _userOffsetMs: 0
@@ -7896,7 +7874,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LaneJudge
   _laneType: 1
-  _keyBindConfig: {fileID: 0}
   _laneIndex: 0
   _key: 112
   _userOffsetMs: 0
@@ -8571,6 +8548,7 @@ GameObject:
   - component: {fileID: 1124864249}
   - component: {fileID: 1124864248}
   - component: {fileID: 1124864252}
+  - component: {fileID: 1124864253}
   m_Layer: 5
   m_Name: InGame_SettingPanelCanvas
   m_TagString: Untagged
@@ -8697,6 +8675,19 @@ MonoBehaviour:
   _keyBindPanel: {fileID: 0}
   _freezeTimeWhileOpen: 0
   _registerToModalStack: 1
+--- !u!114 &1124864253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1124864247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f8d9015f3c516e4392157ef966b44f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSfx
+  _includeChildren: 1
 --- !u!1 &1130633021
 GameObject:
   m_ObjectHideFlags: 0
@@ -9572,7 +9563,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LaneJudge
   _laneType: 0
-  _keyBindConfig: {fileID: 0}
   _laneIndex: 0
   _key: 115
   _userOffsetMs: 0
@@ -10201,7 +10191,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LaneJudge
   _laneType: 1
-  _keyBindConfig: {fileID: 0}
   _laneIndex: 0
   _key: 119
   _userOffsetMs: 0
@@ -11535,7 +11524,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LaneJudge
   _laneType: 0
-  _keyBindConfig: {fileID: 0}
   _laneIndex: 0
   _key: 108
   _userOffsetMs: 0
@@ -12377,7 +12365,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LaneJudge
   _laneType: 1
-  _keyBindConfig: {fileID: 0}
   _laneIndex: 0
   _key: 113
   _userOffsetMs: 0
@@ -12448,7 +12435,6 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 55276493}
   - {fileID: 964053398}
   - {fileID: 434324712}
   - {fileID: 1065098731}
@@ -12649,7 +12635,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LaneJudge
   _laneType: 0
-  _keyBindConfig: {fileID: 0}
   _laneIndex: 0
   _key: 59
   _userOffsetMs: 0
@@ -14874,3 +14859,4 @@ SceneRoots:
   - {fileID: 2086672200}
   - {fileID: 805524406}
   - {fileID: 1124864251}
+  - {fileID: 361944538}

@@ -36,10 +36,15 @@ public class SongPreviewPlayer : MonoBehaviour
 
     public void StopPreview()
     {
+        FadeOut(_fadeOutTime);
+    }
+
+    public void FadeOut(float duration)
+    {
         if (_currentCoroutine != null)
             StopCoroutine(_currentCoroutine);
 
-        _currentCoroutine = StartCoroutine(FadeOutRoutine(_fadeOutTime));
+        _currentCoroutine = StartCoroutine(FadeOutRoutine(duration));
     }
 
     private IEnumerator PlayPreviewRoutine(AudioClip clip)

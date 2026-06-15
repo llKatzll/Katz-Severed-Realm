@@ -85,6 +85,7 @@ public class StartScene : MonoBehaviour
         if (!_canPressAnyKey) return;
         if (_isTransitioning) return;
         if (IsPopupActive()) return;
+        if (ModalStack.Count > 0) return;
 
         if (IsValidStartInput())
         {

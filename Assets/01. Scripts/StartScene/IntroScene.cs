@@ -47,6 +47,8 @@ public class IntroScene : MonoBehaviour
 
     public bool IsDone { get; private set; }
 
+    public static bool SkipIntroOnce = false;
+
     private void Awake()
     {
         ApplyInitialState();
@@ -54,8 +56,33 @@ public class IntroScene : MonoBehaviour
 
     private void OnEnable()
     {
-        if (_playOnStart && Application.isPlaying)
-            Play();
+        if (!Application.isPlaying) return;
+
+        if (SkipIntroOnce)
+        {
+            SkipIntroOnce = false;
+            SkipToReady();
+            return;
+        }
+
+        if (_playOnStart) Play();
+    }
+
+    private void SkipToReady()
+    {
+        if (_co != null) StopCoroutine(_co);
+
+        if (_signParticles != null)
+        {
+            _signParticles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            _signParticles.gameObject.SetActive(false);
+        }
+        if (_nameGraphic != null) _nameGraphic.gameObject.SetActive(false);
+        if (_alertImage != null) _alertImage.gameObject.SetActive(false);
+        if (_canvasRoot != null) _canvasRoot.SetActive(false);
+        if (_nextSceneObject != null) _nextSceneObject.SetActive(true);
+
+        IsDone = true;
     }
 
     public void Play()

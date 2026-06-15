@@ -21,7 +21,15 @@ public class SongSelectManager : MonoBehaviour
     [Header("Exit")]
     [SerializeField] private string _mainMenuSceneName = "MainMenu";
 
+    [Header("Exit Transition")]
+    [SerializeField] private RectTransform _transitionRect;
+    [SerializeField] private float _transitionSlideTime = 3f;
+    [SerializeField] private float _transitionWaitY = 1100f;
+    [SerializeField] private float _transitionShowY = 0f;
+    [SerializeField] private float _delayBeforeLoad = 0.5f;
+
     private SongBar _currentSelectedBar;
+    private bool _exiting;
 
     private void Awake()
     {
@@ -51,7 +59,53 @@ public class SongSelectManager : MonoBehaviour
 
     public void ExitToMainMenu()
     {
+        if (_exiting) return;
+        _exiting = true;
+        StartCoroutine(CoExitToMainMenu());
+    }
+
+    private System.Collections.IEnumerator CoExitToMainMenu()
+    {
+        if (_transitionRect != null)
+        {
+            if (SfxManager.I != null) SfxManager.I.PlayTransition();
+            if (_previewPlayer != null) _previewPlayer.FadeOut(_transitionSlideTime);
+            SetTransitionY(_transitionWaitY);
+            _transitionRect.gameObject.SetActive(true);
+            yield return StartCoroutine(SlideTransition(_transitionWaitY, _transitionShowY, _transitionSlideTime));
+        }
+
+        yield return new WaitForSeconds(_delayBeforeLoad);
+
         UnityEngine.SceneManagement.SceneManager.LoadScene(_mainMenuSceneName);
+    }
+
+    private System.Collections.IEnumerator SlideTransition(float fromY, float toY, float duration)
+    {
+        if (_transitionRect == null) yield break;
+
+        float t = 0f;
+        Vector2 pos = _transitionRect.anchoredPosition;
+
+        while (t < duration)
+        {
+            t += Time.unscaledDeltaTime;
+            float k = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(t / duration));
+            pos.y = Mathf.Lerp(fromY, toY, k);
+            _transitionRect.anchoredPosition = pos;
+            yield return null;
+        }
+
+        pos.y = toY;
+        _transitionRect.anchoredPosition = pos;
+    }
+
+    private void SetTransitionY(float y)
+    {
+        if (_transitionRect == null) return;
+        Vector2 pos = _transitionRect.anchoredPosition;
+        pos.y = y;
+        _transitionRect.anchoredPosition = pos;
     }
 
     public void OnSongBarSelected(SongBar bar)

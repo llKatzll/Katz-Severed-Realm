@@ -163,6 +163,8 @@ public class Scrolling : MonoBehaviour
             float direction = _invertWheel ? -scroll : scroll;
             _targetRotationZ += direction * _rotationPerSlot;
             _centerSongIndex += direction > 0 ? -1 : 1;
+
+            if (SfxManager.I != null) SfxManager.I.PlayWheel();
         }
     }
 

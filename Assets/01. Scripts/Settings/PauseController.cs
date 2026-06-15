@@ -164,26 +164,39 @@ public class PauseController : MonoBehaviour
 
     private void OnMusicSelect()
     {
-        Cleanup();
+        CleanupForExit();
         if (InGameManager.I != null)
             InGameManager.I.ExitToScene(_songSelectScene, true);
         else
+        {
+            Time.timeScale = 1f;
             SceneManager.LoadScene(_songSelectScene);
+        }
     }
 
     private void OnMainMenu()
     {
-        Cleanup();
+        CleanupForExit();
         if (InGameManager.I != null)
             InGameManager.I.ExitToScene(_mainMenuScene, true);
         else
+        {
+            Time.timeScale = 1f;
             SceneManager.LoadScene(_mainMenuScene);
+        }
     }
 
     private void Cleanup()
     {
         Time.timeScale = 1f;
         if (_conductor != null && _conductor.Paused) _conductor.Resume();
+        CancelCountdown();
+        HidePauseMenu();
+        _paused = false;
+    }
+
+    private void CleanupForExit()
+    {
         CancelCountdown();
         HidePauseMenu();
         _paused = false;

@@ -20,7 +20,7 @@ MonoBehaviour:
   audioOffsetSec: 0.0652
   charter: Kachesis
   mapper: Kachesis
-  songImage: {fileID: 21300000, guid: 99d08a1b3b7a6a14dbcefc10e11a2e04, type: 3}
+  songImage: {fileID: 21300000, guid: 4839cf4fd2ca3aa4e9d57ce1ac04b9ec, type: 3}
   previewClip: {fileID: 8300000, guid: 1154c512ec06b884e9b16bcbcccf5021, type: 3}
   fullClip: {fileID: 8300000, guid: 94d2987dc75b6ca428e0b23bff7ca73c, type: 3}
   difficulties:

@@ -144,6 +144,7 @@ public class InGameManager : MonoBehaviour
 
         if (_transitionRect != null)
         {
+            if (SfxManager.I != null) SfxManager.I.PlayTransition();
             yield return StartCoroutine(SlideTransition(_transitionShowY, _transitionHideY, _transitionSlideTime));
             _transitionRect.gameObject.SetActive(false);
         }
@@ -243,6 +244,7 @@ public class InGameManager : MonoBehaviour
 
         if (!fast) yield return new WaitForSecondsRealtime(_exitTransitionSec);
 
+        Time.timeScale = 1f;
         SceneManager.LoadScene(sceneName);
     }
 
