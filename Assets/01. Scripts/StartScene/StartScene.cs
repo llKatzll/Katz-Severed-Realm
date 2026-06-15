@@ -86,6 +86,7 @@ public class StartScene : MonoBehaviour
         if (_isTransitioning) return;
         if (IsPopupActive()) return;
         if (ModalStack.Count > 0) return;
+        if (ModalStack.LastClosedFrame == Time.frameCount) return;
 
         if (IsValidStartInput())
         {
