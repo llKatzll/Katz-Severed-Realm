@@ -83,7 +83,7 @@ public class CalibrationPanel : MonoBehaviour, IModalPanel
         _state = State.Idle;
         ResetUI();
         ApplyStateVisuals();
-        StartMusicFade(0f, _musicFadeOutSec);
+        StartMusicFade(0f, _musicFadeOutSec, false);
     }
 
     private void OnDisable()
@@ -92,7 +92,7 @@ public class CalibrationPanel : MonoBehaviour, IModalPanel
         Time.timeScale = _prevTimeScale;
         StopTicks();
         _state = State.Idle;
-        StartMusicFade(SettingsConfig.MusicVolume, _musicFadeInSec);
+        StartMusicFade(SettingsConfig.MusicVolume, _musicFadeInSec, true);
     }
 
     public void OnEscape()
@@ -339,7 +339,7 @@ public class CalibrationPanel : MonoBehaviour, IModalPanel
         return src;
     }
 
-    private void StartMusicFade(float targetLinear, float duration)
+    private void StartMusicFade(float targetLinear, float duration, bool confirmFromSettings)
     {
         var mixer = AudioMixerBinder.Mixer;
         if (mixer == null) return;
@@ -348,7 +348,7 @@ public class CalibrationPanel : MonoBehaviour, IModalPanel
 
         _fadeRunnerGo = new GameObject("CalibMusicFade");
         var runner = _fadeRunnerGo.AddComponent<MusicFadeRunner>();
-        runner.Run(mixer, targetLinear, duration);
+        runner.Run(mixer, targetLinear, duration, confirmFromSettings);
     }
 
     private class MusicFadeRunner : MonoBehaviour
@@ -356,12 +356,12 @@ public class CalibrationPanel : MonoBehaviour, IModalPanel
         private const string PARAM = "MusicVolume";
         private const float MIN_DB = -80f;
 
-        public void Run(AudioMixer mixer, float targetLinear, float duration)
+        public void Run(AudioMixer mixer, float targetLinear, float duration, bool confirmFromSettings)
         {
-            StartCoroutine(CoFade(mixer, targetLinear, duration));
+            StartCoroutine(CoFade(mixer, targetLinear, duration, confirmFromSettings));
         }
 
-        private IEnumerator CoFade(AudioMixer mixer, float targetLinear, float duration)
+        private IEnumerator CoFade(AudioMixer mixer, float targetLinear, float duration, bool confirmFromSettings)
         {
             float currentDb;
             if (!mixer.GetFloat(PARAM, out currentDb)) currentDb = 0f;
@@ -377,6 +377,7 @@ public class CalibrationPanel : MonoBehaviour, IModalPanel
             }
 
             SetLinear(mixer, targetLinear);
+            if (confirmFromSettings) AudioMixerBinder.Reapply();
             Destroy(gameObject);
         }
 

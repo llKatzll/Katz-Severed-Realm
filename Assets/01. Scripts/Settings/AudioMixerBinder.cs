@@ -36,6 +36,11 @@ public static class AudioMixerBinder
         if (cat == SettingsConfig.Category.Audio) ApplyAll();
     }
 
+    public static void Reapply()
+    {
+        ApplyAll();
+    }
+
     private static void ApplyAll()
     {
         if (_mixer == null) return;
