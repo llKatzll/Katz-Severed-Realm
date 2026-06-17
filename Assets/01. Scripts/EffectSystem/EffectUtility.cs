@@ -3,7 +3,7 @@ using UnityEngine;
 
 public static class EffectUtility
 {
-    public static string ToJson(EffectData data) => JsonUtility.ToJson(data, true);
+    public static string ToJson(EffectData data) => JsonUtility.ToJson(data, false);
 
     public static EffectData FromJson(string json)
         => string.IsNullOrEmpty(json) ? null : JsonUtility.FromJson<EffectData>(json);

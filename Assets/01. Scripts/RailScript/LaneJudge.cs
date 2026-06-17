@@ -320,6 +320,7 @@ public class LaneJudge : MonoBehaviour
             return true;
         }
 
+        if (SfxManager.I != null) SfxManager.I.PlayHit();
         SpawnHoldHeadFx(judge, laneType);
 
         if (ComboUI.I != null)
@@ -488,7 +489,10 @@ public class LaneJudge : MonoBehaviour
         RemoveTap(target);
 
         if (judge != JudgeType.Miss)
+        {
+            if (SfxManager.I != null) SfxManager.I.PlayHit();
             SpawnTapHitFx(judge, target.NoteType);
+        }
 
         Destroy(target.gameObject);
         return true;

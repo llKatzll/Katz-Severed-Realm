@@ -255,7 +255,10 @@ public class DimensionNoteJudge : MonoBehaviour
             if (ScoreManager.I != null) ScoreManager.I.ReportJudge(judge);
 
             if (judge != JudgeType.Miss)
+            {
+                if (SfxManager.I != null) SfxManager.I.PlayHit();
                 SpawnJudgedFx(_tapHitFxPrefab, hitRef, laneType, judge, _tapHitFxDestroySec);
+            }
 
             Destroy(n.gameObject);
             any = true;
@@ -317,6 +320,7 @@ public class DimensionNoteJudge : MonoBehaviour
 
             if (ScoreManager.I != null) ScoreManager.I.ReportJudge(judge);
 
+            if (SfxManager.I != null) SfxManager.I.PlayHit();
             SpawnJudgedFx(_holdHeadFxPrefab, hitRef, laneType, judge, _holdHeadFxDestroySec);
             h.StartHold();
             _activeHolds.Add(h);

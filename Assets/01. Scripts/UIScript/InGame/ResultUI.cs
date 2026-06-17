@@ -91,6 +91,9 @@ public class ResultUI : MonoBehaviour
             _exitButton.onClick.RemoveAllListeners();
             _exitButton.onClick.AddListener(OnExit);
         }
+
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
 
     private void OnExit()

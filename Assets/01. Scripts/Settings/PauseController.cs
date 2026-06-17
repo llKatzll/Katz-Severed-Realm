@@ -57,6 +57,9 @@ public class PauseController : MonoBehaviour
         if (_musicSelectButton != null) _musicSelectButton.onClick.AddListener(OnMusicSelect);
         if (_mainMenuButton != null) _mainMenuButton.onClick.AddListener(OnMainMenu);
         if (_closeButton != null) _closeButton.onClick.AddListener(OnResume);
+
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.None;
     }
 
     private void Update()
@@ -112,6 +115,8 @@ public class PauseController : MonoBehaviour
     {
         _paused = true;
         if (_pauseMenuPanel != null) _pauseMenuPanel.SetActive(true);
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
 
     private void HidePauseMenu()
@@ -143,6 +148,7 @@ public class PauseController : MonoBehaviour
         _paused = false;
         SetIcon(_pauseSpriteDefault);
         _countdownCoroutine = null;
+        Cursor.visible = false;
     }
 
     private void CancelCountdown()

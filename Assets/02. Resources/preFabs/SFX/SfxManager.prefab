@@ -148,3 +148,5 @@ MonoBehaviour:
   _diffClip: {fileID: 8300000, guid: a7677ccecf19f9c4b852141018c3af54, type: 3}
   _transitionClip: {fileID: 8300000, guid: b9864e9281513a64b88d2ef5642bf3d9, type: 3}
   _returnClip: {fileID: 8300000, guid: b9864e9281513a64b88d2ef5642bf3d9, type: 3}
+  _anomalyClip: {fileID: 8300000, guid: 517da79b8fd1a9d4bba55604d7e1f38e, type: 3}
+  _hitClip: {fileID: 8300000, guid: 7fa8b544970fa974cacab772a72622e0, type: 3}
