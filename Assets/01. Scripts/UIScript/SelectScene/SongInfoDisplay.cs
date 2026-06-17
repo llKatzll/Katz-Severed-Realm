@@ -27,8 +27,13 @@ public class SongInfoDisplay : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private int _maxNotesDefault = 1000;
 
+    [Header("Anomaly Score Color")]
+    [SerializeField] private Color _normalScoreColor = Color.white;
+    [SerializeField] private Color _noAnomalyScoreColor = new Color(0.6f, 0.8f, 1f);
+
     private SongData _currentSong;
     private DifficultyType _currentDifficulty;
+    private bool _anomalyOn = true;
 
     public void DisplaySong(SongData song, DifficultyType difficulty)
     {
@@ -48,6 +53,14 @@ public class SongInfoDisplay : MonoBehaviour
 
         _currentDifficulty = newDifficulty;
         UpdateDifficultyInfo(_currentSong, newDifficulty);
+    }
+
+    public void SetAnomaly(bool on)
+    {
+        if (_anomalyOn == on) return;
+        _anomalyOn = on;
+        if (_currentSong != null)
+            UpdateDifficultyInfo(_currentSong, _currentDifficulty);
     }
 
     private void UpdateBasicInfo(SongData song)
@@ -109,13 +122,16 @@ public class SongInfoDisplay : MonoBehaviour
         if (_mapperText != null)
             _mapperText.text = "Effecter : " + mapper;
 
-        int recordScore = ScoreRecord.GetHighScore(song.songName, difficulty);
-        float recordAcc = ScoreRecord.GetAccuracy(song.songName, difficulty);
-        int recordTotal = ScoreRecord.GetTotalNoteCount(song.songName, difficulty);
+        int recordScore = ScoreRecord.GetHighScore(song.songName, difficulty, _anomalyOn);
+        float recordAcc = ScoreRecord.GetAccuracy(song.songName, difficulty, _anomalyOn);
+        int recordTotal = ScoreRecord.GetTotalNoteCount(song.songName, difficulty, _anomalyOn);
         int rankNoteCount = recordTotal > 0 ? recordTotal : _maxNotesDefault;
 
         if (_scoreText != null)
+        {
             _scoreText.text = recordScore.ToString("00,000,000");
+            _scoreText.color = _anomalyOn ? _normalScoreColor : _noAnomalyScoreColor;
+        }
 
         if (_rankText != null)
         {

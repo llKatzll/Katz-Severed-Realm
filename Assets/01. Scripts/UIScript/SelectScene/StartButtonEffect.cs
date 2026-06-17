@@ -89,6 +89,7 @@ public class StartButtonEffect : MonoBehaviour
                 SongSelectManager.I.GetCurrentSong(),
                 SongSelectManager.I.GetCurrentDifficulty()
             );
+            GameManager.I.SetAnomaly(SongSelectManager.I.IsAnomalyOn());
         }
 
         if (_transitionRect != null)

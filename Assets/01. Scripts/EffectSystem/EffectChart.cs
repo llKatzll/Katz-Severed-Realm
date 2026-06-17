@@ -57,6 +57,20 @@ public class EffectChart : MonoBehaviour
         return null;
     }
 
+    public EffectTrigger FindTriggerCovering(double beat, int lane, float tolerance = 0.0001f)
+    {
+        for (int i = 0; i < _data.triggers.Count; i++)
+        {
+            var t = _data.triggers[i];
+            if (t == null) continue;
+            if (t.lane != lane) continue;
+            double start = t.beat - tolerance;
+            double end = t.beat + t.inBeats + tolerance;
+            if (beat >= start && beat <= end) return t;
+        }
+        return null;
+    }
+
     public bool HasCameraConflict(double beatStart, double beatEnd)
     {
         for (int i = 0; i < _data.triggers.Count; i++)

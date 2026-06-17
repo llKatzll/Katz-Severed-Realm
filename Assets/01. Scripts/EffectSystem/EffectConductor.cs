@@ -39,6 +39,8 @@ public class EffectConductor : MonoBehaviour
     {
         public GameObject go;
         public double stopDsp;
+        public string presetId;
+        public bool manual;
     }
 
     private void Awake()
@@ -58,6 +60,14 @@ public class EffectConductor : MonoBehaviour
             Debug.LogWarning("[EffectConductor] No selected song");
             return;
         }
+
+        if (!GameManager.I.AnomalyEnabled)
+        {
+            _data = null;
+            _armed = false;
+            return;
+        }
+
         string songName = GameManager.I.SelectedSong.songName;
         string diff = GameManager.I.SelectedDifficulty.ToString();
         LoadEffectChart(songName, diff);
@@ -323,6 +333,12 @@ public class EffectConductor : MonoBehaviour
 
     private void DispatchParticle(EffectTrigger trig, EffectPresetSO preset, double secPerBeat)
     {
+        if (trig.kind == TriggerKind.Off)
+        {
+            StopManualParticle(preset.presetId);
+            return;
+        }
+
         if (preset.particlePrefab == null) return;
 
         Vector3 pos = preset.particlePrefab.transform.position + preset.spawnOffset;
@@ -339,6 +355,8 @@ public class EffectConductor : MonoBehaviour
             go = Instantiate(preset.particlePrefab, pos, rot);
         }
 
+        bool manual = trig.kind == TriggerKind.On;
+
         double durationSec;
         if (trig.kind == TriggerKind.Sustained && trig.inBeats > 0.0001)
             durationSec = trig.inBeats * secPerBeat;
@@ -348,8 +366,22 @@ public class EffectConductor : MonoBehaviour
         _activeParticles.Add(new RuntimeParticle
         {
             go = go,
-            stopDsp = RhythmConductor.Now + durationSec
+            stopDsp = manual ? double.MaxValue : RhythmConductor.Now + durationSec,
+            presetId = preset.presetId,
+            manual = manual
         });
+    }
+
+    private void StopManualParticle(string presetId)
+    {
+        for (int i = _activeParticles.Count - 1; i >= 0; i--)
+        {
+            var p = _activeParticles[i];
+            if (!p.manual) continue;
+            if (p.presetId != presetId) continue;
+            ReleaseParticle(p.go);
+            _activeParticles.RemoveAt(i);
+        }
     }
 
     private void ReleaseParticle(GameObject go)

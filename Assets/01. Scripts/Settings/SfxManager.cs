@@ -10,6 +10,7 @@ public class SfxManager : MonoBehaviour
     [SerializeField] private AudioClip _diffClip;
     [SerializeField] private AudioClip _transitionClip;
     [SerializeField] private AudioClip _returnClip;
+    [SerializeField] private AudioClip _anomalyClip;
 
     private const string SfxGroupName = "SFX";
 
@@ -52,4 +53,5 @@ public class SfxManager : MonoBehaviour
     public void PlayDiff() { Play(_diffClip); }
     public void PlayTransition() { Play(_transitionClip); }
     public void PlayReturn() { Play(_returnClip); }
+    public void PlayAnomaly() { Play(_anomalyClip); }
 }

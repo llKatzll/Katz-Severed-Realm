@@ -134,6 +134,7 @@ public class StartScene : MonoBehaviour
         SetMaskAlpha(0f);
         _canPressAnyKey = true;
         StartPressFx();
+        if (BgmManager.I != null) BgmManager.I.PlayMenuBgm();
     }
 
     private void StartTransitionToMainMenu()

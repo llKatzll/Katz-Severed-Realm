@@ -24,6 +24,10 @@ public class ResultUI : MonoBehaviour
     [Header("Paused Mark")]
     [SerializeField] private GameObject _pausedMark;
 
+    [Header("Anomaly Score Color")]
+    [SerializeField] private Color _normalScoreColor = Color.white;
+    [SerializeField] private Color _noAnomalyScoreColor = new Color(0.6f, 0.8f, 1f);
+
     public void Populate()
     {
         SongData song = GameManager.I != null ? GameManager.I.SelectedSong : null;
@@ -49,6 +53,7 @@ public class ResultUI : MonoBehaviour
         }
 
         bool usedPause = ScoreManager.I != null && ScoreManager.I.UsedPause;
+        bool anomaly = GameManager.I != null && GameManager.I.AnomalyEnabled;
 
         if (usedPause)
             score = 0;
@@ -57,7 +62,7 @@ public class ResultUI : MonoBehaviour
 
         if (song != null && !usedPause)
         {
-            ScoreRecord.SaveIfBetter(song.songName, diff, score, accuracy, totalNotes);
+            ScoreRecord.SaveIfBetter(song.songName, diff, anomaly, score, accuracy, totalNotes);
         }
 
         if (_pausedMark != null)
@@ -70,7 +75,10 @@ public class ResultUI : MonoBehaviour
         }
 
         if (_scoreText != null)
+        {
             _scoreText.text = score.ToString("00,000,000");
+            _scoreText.color = anomaly ? _normalScoreColor : _noAnomalyScoreColor;
+        }
 
         if (_maxComboNumText != null)
             _maxComboNumText.text = maxCombo.ToString();

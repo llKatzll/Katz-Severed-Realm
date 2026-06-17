@@ -2121,7 +2121,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &284133387
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6861,6 +6861,8 @@ MonoBehaviour:
   _accNumText: {fileID: 906688715}
   _exitButton: {fileID: 1104281234}
   _pausedMark: {fileID: 1156667010}
+  _normalScoreColor: {r: 1, g: 1, b: 1, a: 1}
+  _noAnomalyScoreColor: {r: 0.6, g: 0.8, b: 1, a: 1}
 --- !u!1 &932129932
 GameObject:
   m_ObjectHideFlags: 0
@@ -14031,7 +14033,7 @@ Animator:
   m_GameObject: {fileID: 2026075039}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: f04d73715095ca64dafe05090193a5fd, type: 2}
+  m_Controller: {fileID: 0}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

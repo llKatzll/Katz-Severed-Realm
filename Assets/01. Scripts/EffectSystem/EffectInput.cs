@@ -27,7 +27,11 @@ public class EffectInput : MonoBehaviour
     {
         if (IsPointerOverUI()) return;
         if (Input.GetMouseButtonDown(0)) HandleLeftClick();
-        else if (Input.GetMouseButtonDown(1)) HandleRightClick();
+        else if (Input.GetMouseButtonDown(1))
+        {
+            if (IsCtrlHeld()) HandleIdentify();
+            else HandleRightClick();
+        }
     }
 
     private bool IsPointerOverUI()
@@ -212,6 +216,26 @@ public class EffectInput : MonoBehaviour
         float tol = Mathf.Max(0.25f, 1f / Mathf.Max(1, bsd));
         _chart.RemoveTriggerAt(beat, lane, tol);
         ResetPending();
+    }
+
+    private void HandleIdentify()
+    {
+        if (_chart == null) return;
+        if (!TryGetLaneBeat(out int lane, out double beat)) return;
+
+        int bsd = _timeline != null ? _timeline.Bsd : 4;
+        float tol = Mathf.Max(0.25f, 1f / Mathf.Max(1, bsd));
+        var trig = _chart.FindTriggerCovering(beat, lane, tol);
+        if (trig == null) return;
+
+        var preset = EffectPresetCache.Get(trig.presetId);
+        string label = preset != null ? preset.displayName : trig.presetId;
+        Debug.Log("[EffectNote] " + label + " (kind " + trig.kind + ", lane " + lane + ", beat " + trig.beat + ")");
+    }
+
+    private bool IsCtrlHeld()
+    {
+        return Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
     }
 
     private void ResetPending()

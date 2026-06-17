@@ -30,6 +30,8 @@ public class AnomalyToggle : MonoBehaviour
     private bool _isAnomalyOn = true;
     private Coroutine _flashCo;
 
+    public event System.Action<bool> OnChanged;
+
     private void Start()
     {
         if (_onButton != null)
@@ -44,14 +46,18 @@ public class AnomalyToggle : MonoBehaviour
     {
         if (_isAnomalyOn) return;
         _isAnomalyOn = true;
+        if (SfxManager.I != null) SfxManager.I.PlayAnomaly();
         PlayFlash();
+        OnChanged?.Invoke(_isAnomalyOn);
     }
 
     private void OnClickOff()
     {
         if (!_isAnomalyOn) return;
         _isAnomalyOn = false;
+        if (SfxManager.I != null) SfxManager.I.PlayAnomaly();
         PlayFlash();
+        OnChanged?.Invoke(_isAnomalyOn);
     }
 
     private void PlayFlash()

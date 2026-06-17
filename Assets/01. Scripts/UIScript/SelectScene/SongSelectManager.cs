@@ -10,6 +10,7 @@ public class SongSelectManager : MonoBehaviour
     [SerializeField] private SongInfoDisplay _infoDisplay;
     [SerializeField] private DifficultySelector _difficultySelector;
     [SerializeField] private SongPreviewPlayer _previewPlayer;
+    [SerializeField] private AnomalyToggle _anomalyToggle;
 
     [Header("Song Bars")]
     [SerializeField] private SongBar[] _songBars;
@@ -47,6 +48,13 @@ public class SongSelectManager : MonoBehaviour
         {
             _difficultySelector.OnDifficultySelected += OnDifficultyChanged;
         }
+
+        if (_anomalyToggle != null)
+        {
+            _anomalyToggle.OnChanged += OnAnomalyChanged;
+            if (_infoDisplay != null)
+                _infoDisplay.SetAnomaly(_anomalyToggle.IsAnomalyOn());
+        }
     }
 
     private void OnDestroy()
@@ -54,6 +62,11 @@ public class SongSelectManager : MonoBehaviour
         if (_difficultySelector != null)
         {
             _difficultySelector.OnDifficultySelected -= OnDifficultyChanged;
+        }
+
+        if (_anomalyToggle != null)
+        {
+            _anomalyToggle.OnChanged -= OnAnomalyChanged;
         }
     }
 
@@ -167,6 +180,14 @@ public class SongSelectManager : MonoBehaviour
 
     }
 
+    private void OnAnomalyChanged(bool on)
+    {
+        if (_infoDisplay != null)
+        {
+            _infoDisplay.SetAnomaly(on);
+        }
+    }
+
     public void OnStartButtonPressed()
     {
         if (_currentSong == null)
@@ -179,4 +200,5 @@ public class SongSelectManager : MonoBehaviour
 
     public SongData GetCurrentSong() => _currentSong;
     public DifficultyType GetCurrentDifficulty() => _currentDifficulty;
+    public bool IsAnomalyOn() => _anomalyToggle != null ? _anomalyToggle.IsAnomalyOn() : true;
 }

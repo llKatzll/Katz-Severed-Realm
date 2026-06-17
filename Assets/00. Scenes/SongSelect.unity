@@ -2635,6 +2635,8 @@ MonoBehaviour:
   _rankText: {fileID: 780124296}
   _accuracyText: {fileID: 1354740651}
   _maxNotesDefault: 1000
+  _normalScoreColor: {r: 1, g: 1, b: 1, a: 1}
+  _noAnomalyScoreColor: {r: 0.6, g: 0.8, b: 1, a: 1}
 --- !u!1 &690434632
 GameObject:
   m_ObjectHideFlags: 0
@@ -5378,6 +5380,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5750363434216235239, guid: 544c2350eb586ce42a8b91cf3705e7b8, type: 3}
+      propertyPath: _anomalyClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 517da79b8fd1a9d4bba55604d7e1f38e, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6484,6 +6490,7 @@ MonoBehaviour:
   _infoDisplay: {fileID: 678940650}
   _difficultySelector: {fileID: 120860305}
   _previewPlayer: {fileID: 1624874619}
+  _anomalyToggle: {fileID: 1386446924}
   _songBars:
   - {fileID: 55302356}
   - {fileID: 1593860113}
@@ -7092,7 +7099,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: MODIFIERS
+  m_text: 'MODIFIERS
+
+    (W.I.P)'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -7101,8 +7110,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4287269514
+  m_fontColor: {r: 0.54088044, g: 0.54088044, b: 0.54088044, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
