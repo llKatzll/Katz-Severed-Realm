@@ -111,6 +111,52 @@ public static class ChartUtility
         return new NoteData(beat, lane, (ChartLaneType)laneType, (ChartNoteType)noteType, holdEnd);
     }
 
+    private const int MaxLane = 3;
+
+    private static bool IsFinite(float v) => !float.IsNaN(v) && !float.IsInfinity(v);
+
+    private static bool Sanitize(ChartData d, string filePath)
+    {
+        string fn = Path.GetFileName(filePath);
+
+        if (!IsFinite(d.bpm) || d.bpm <= 0f)
+        {
+            Debug.LogWarning("[ChartUtility] Reject (bad bpm " + d.bpm + "): " + fn);
+            return false;
+        }
+
+        if (!IsFinite(d.audioOffset)) d.audioOffset = 0f;
+
+        if (d.notes == null)
+        {
+            d.notes = new List<NoteData>();
+            return true;
+        }
+
+        int removed = 0;
+        List<NoteData> kept = new List<NoteData>(d.notes.Count);
+        for (int i = 0; i < d.notes.Count; i++)
+        {
+            NoteData n = d.notes[i];
+            if (n == null) { removed++; continue; }
+            if (!IsFinite(n.beat)) { removed++; continue; }
+            if (n.lane < 0 || n.lane > MaxLane) { removed++; continue; }
+            if (!System.Enum.IsDefined(typeof(ChartLaneType), n.laneType)) { removed++; continue; }
+            if (!System.Enum.IsDefined(typeof(ChartNoteType), n.noteType)) { removed++; continue; }
+            if (!IsFinite(n.holdEndBeat)) n.holdEndBeat = 0f;
+            if (n.noteType == ChartNoteType.Hold && n.holdEndBeat <= n.beat) { removed++; continue; }
+            kept.Add(n);
+        }
+
+        if (removed > 0)
+        {
+            d.notes = kept;
+            Debug.LogWarning("[ChartUtility] Sanitized " + fn + ": dropped " + removed + " invalid note(s)");
+        }
+
+        return true;
+    }
+
     public static bool SaveToFile(ChartData data, string filePath)
     {
         try
@@ -138,7 +184,9 @@ public static class ChartUtility
         {
             string json = File.ReadAllText(filePath);
             ChartData data = FromJson(json);
-            if (data != null) data.SortAll();
+            if (data == null) return null;
+            if (!Sanitize(data, filePath)) return null;
+            data.SortAll();
             return data;
         }
         catch (System.Exception e)

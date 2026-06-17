@@ -24,9 +24,6 @@ public class SongInfoDisplay : MonoBehaviour
     [SerializeField] private TMP_Text _rankText;
     [SerializeField] private TMP_Text _accuracyText;
 
-    [Header("Settings")]
-    [SerializeField] private int _maxNotesDefault = 1000;
-
     [Header("Anomaly Score Color")]
     [SerializeField] private Color _normalScoreColor = Color.white;
     [SerializeField] private Color _noAnomalyScoreColor = new Color(0.6f, 0.8f, 1f);
@@ -124,8 +121,6 @@ public class SongInfoDisplay : MonoBehaviour
 
         int recordScore = ScoreRecord.GetHighScore(song.songName, difficulty, _anomalyOn);
         float recordAcc = ScoreRecord.GetAccuracy(song.songName, difficulty, _anomalyOn);
-        int recordTotal = ScoreRecord.GetTotalNoteCount(song.songName, difficulty, _anomalyOn);
-        int rankNoteCount = recordTotal > 0 ? recordTotal : _maxNotesDefault;
 
         if (_scoreText != null)
         {
@@ -135,7 +130,7 @@ public class SongInfoDisplay : MonoBehaviour
 
         if (_rankText != null)
         {
-            string rank = RankUtility.GetRank(recordScore, rankNoteCount);
+            string rank = ScoreRecord.GetRank(song.songName, difficulty, _anomalyOn);
             _rankText.text = rank;
             _rankText.color = RankUtility.GetRankColor(rank);
         }
