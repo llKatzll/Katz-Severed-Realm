@@ -5408,7 +5408,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 758665376}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5d440aefa41da8a43b73ec670ad4dd74, type: 3}
   m_Name: 
@@ -9088,16 +9088,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NoteSpawner
   _conductor: {fileID: 1038989767}
-  _defaultTapPrefab: {fileID: -356125614831666881, guid: 50cdd462fe53c1544856849cd077ead3, type: 3}
-  _defaultHoldPrefab: {fileID: -1344721013972580664, guid: 0be61d4d42f4647469d510dfabf776b3, type: 3}
-  _dimensionTapPrefabGround: {fileID: -356125614831666881, guid: 532b15ddc4752294687176137ebfb6ec, type: 3}
-  _dimensionHoldPrefabGround: {fileID: -1344721013972580664, guid: 2882e918eb692cb4ca4215570eb89137, type: 3}
-  _dimensionTapPrefabUpper: {fileID: 9015790616304044342, guid: 980ae86e70acf3a49a6518c77b12a754, type: 3}
-  _dimensionHoldPrefabUpper: {fileID: -1344721013972580664, guid: 4b03b4ee7c4f92d41a3423e111867dce, type: 3}
-  _sortGroundNote: 0
-  _sortGroundDN: 1
-  _sortUpperNote: 2
-  _sortUpperDN: 3
   _lanes:
   - _laneName: Ground1
     _noteType: 0
@@ -9179,14 +9169,6 @@ MonoBehaviour:
     _tapPrefab: {fileID: 9015790616304044342, guid: 1fe615d7e15ae534ab718c41ff8abb9b, type: 3}
     _holdPrefab: {fileID: 899932709157541386, guid: 7537e552b47ad574586741a4f6006b09, type: 3}
     _yOffsetLocal: 0
-  _noteSpeed: 1.25
-  _autoSpawn: 1
-  _spawnIntervalBeats: 0.5
-  _spawnRandomSingleLane: 1
-  _avoidSameLaneTwice: 1
-  _spawnForm: 5
-  _preventHoldOverlapOnSameLane: 1
-  _holdBeats: 0.5
 --- !u!1 &1191700353
 GameObject:
   m_ObjectHideFlags: 0

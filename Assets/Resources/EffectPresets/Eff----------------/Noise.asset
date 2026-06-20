@@ -16,7 +16,7 @@ MonoBehaviour:
   displayName: Noise
   category: 0
   triggerType: 1
-  defaultDurationSec: 2
+  defaultDurationSec: 20
   particlePrefab: {fileID: 1559603833608754719, guid: 8065b038bac35c640a01cbdd8f9d8120, type: 3}
   spawnOffset: {x: 0, y: 0, z: 0}
   animationClip: {fileID: 0}
