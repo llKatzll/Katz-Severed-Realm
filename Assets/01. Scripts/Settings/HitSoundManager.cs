@@ -7,6 +7,8 @@ public class HitSoundManager : MonoBehaviour
     [SerializeField] private AudioSource _source;
     [SerializeField] private AudioClip _hitClip;
 
+    private const string HitGroupName = "Hit";
+
     private void Awake()
     {
         if (I != null && I != this)
@@ -15,6 +17,21 @@ public class HitSoundManager : MonoBehaviour
             return;
         }
         I = this;
+
+        if (_source == null) _source = GetComponent<AudioSource>();
+        if (_source != null) _source.playOnAwake = false;
+    }
+
+    private void Start()
+    {
+        EnsureOutput();
+    }
+
+    private void EnsureOutput()
+    {
+        if (_source == null) return;
+        var group = AudioMixerBinder.GetGroup(HitGroupName);
+        if (group != null) _source.outputAudioMixerGroup = group;
     }
 
     public void PlayHit()

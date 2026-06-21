@@ -14,6 +14,9 @@ public class SfxManager : MonoBehaviour
     [SerializeField] private AudioClip _hitClip;
 
     private const string SfxGroupName = "SFX";
+    private const string HitGroupName = "Hit";
+
+    private AudioSource _hitSource;
 
     private void Awake()
     {
@@ -27,6 +30,9 @@ public class SfxManager : MonoBehaviour
 
         if (_source == null) _source = GetComponent<AudioSource>();
         if (_source != null) _source.playOnAwake = false;
+
+        _hitSource = gameObject.AddComponent<AudioSource>();
+        _hitSource.playOnAwake = false;
     }
 
     private void Start()
@@ -36,11 +42,17 @@ public class SfxManager : MonoBehaviour
 
     private void EnsureOutput()
     {
-        if (_source == null) return;
-        if (_source.outputAudioMixerGroup != null) return;
+        if (_source != null && _source.outputAudioMixerGroup == null)
+        {
+            var group = AudioMixerBinder.GetGroup(SfxGroupName);
+            if (group != null) _source.outputAudioMixerGroup = group;
+        }
 
-        var group = AudioMixerBinder.GetGroup(SfxGroupName);
-        if (group != null) _source.outputAudioMixerGroup = group;
+        if (_hitSource != null && _hitSource.outputAudioMixerGroup == null)
+        {
+            var hitGroup = AudioMixerBinder.GetGroup(HitGroupName);
+            if (hitGroup != null) _hitSource.outputAudioMixerGroup = hitGroup;
+        }
     }
 
     private void Play(AudioClip clip)
@@ -55,5 +67,10 @@ public class SfxManager : MonoBehaviour
     public void PlayTransition() { Play(_transitionClip); }
     public void PlayReturn() { Play(_returnClip); }
     public void PlayAnomaly() { Play(_anomalyClip); }
-    public void PlayHit() { Play(_hitClip); }
+
+    public void PlayHit()
+    {
+        if (_hitSource == null || _hitClip == null) return;
+        _hitSource.PlayOneShot(_hitClip);
+    }
 }
