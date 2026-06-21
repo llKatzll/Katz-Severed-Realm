@@ -15,6 +15,9 @@ public class VolumeFxProxy : MonoBehaviour
     public Color bloomTint = Color.white;
     public float bloomDirtIntensity = 0f;
 
+    [Header("Bloom Global Scale")]
+    public float bloomScale = 1f;
+
     [Header("Color Adjustments")]
     public float postExposure = 0f;
     public float contrast = 0f;
@@ -174,7 +177,7 @@ public class VolumeFxProxy : MonoBehaviour
     {
         if (_bloom == null) return;
         _bloom.threshold.value = bloomThreshold;
-        _bloom.intensity.value = bloomIntensity;
+        _bloom.intensity.value = bloomIntensity * Mathf.Max(0f, bloomScale);
         _bloom.scatter.value = bloomScatter;
         _bloom.tint.value = bloomTint;
         _bloom.dirtIntensity.value = bloomDirtIntensity;
