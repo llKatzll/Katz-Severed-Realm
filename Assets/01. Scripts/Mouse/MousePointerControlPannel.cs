@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MousePointerControlPannel : MonoBehaviour
 {
@@ -20,6 +21,22 @@ public class MousePointerControlPannel : MonoBehaviour
     [SerializeField] private float _followDistance = 5f;
     [SerializeField] private float _smooth = 25f;
     [SerializeField] private bool _useUnscaledTime = true;
+
+    [Header("Software Cursor")]
+    [SerializeField] private bool _useSoftwareCursor = true;
+    [SerializeField] private RectTransform _cursorIcon;
+
+    [Header("Cursor Trail")]
+    [SerializeField] private bool _useCursorTrail = true;
+    [SerializeField] private int _trailCount = 4;
+    [SerializeField] private float _trailSmooth = 18f;
+    [Range(0f, 1f)]
+    [SerializeField] private float _trailStartAlpha = 0.6f;
+    [Range(0f, 1f)]
+    [SerializeField] private float _trailEndAlpha = 0.05f;
+
+    private RectTransform[] _trailParts;
+    private bool _trailBuilt;
 
     private static MousePointerControlPannel _instance;
 
@@ -62,6 +79,8 @@ public class MousePointerControlPannel : MonoBehaviour
 
     private void LateUpdate()
     {
+        UpdateCursorIcon();
+
         if (!_enabledForThisScene) return;
         if (_particleTf == null) return;
 
@@ -114,8 +133,93 @@ public class MousePointerControlPannel : MonoBehaviour
 
     private void ApplyCursorState(bool visible, CursorLockMode lockMode)
     {
-        Cursor.visible = visible;
         Cursor.lockState = lockMode;
+
+        if (_useSoftwareCursor && _cursorIcon != null)
+        {
+            Cursor.visible = false;
+            _cursorIcon.gameObject.SetActive(visible);
+            SetTrailActive(visible);
+        }
+        else
+        {
+            Cursor.visible = visible;
+            if (_cursorIcon != null) _cursorIcon.gameObject.SetActive(false);
+            SetTrailActive(false);
+        }
+    }
+
+    private void UpdateCursorIcon()
+    {
+        if (_cursorIcon == null) return;
+        if (!_cursorIcon.gameObject.activeSelf) return;
+
+        Vector3 mouse = Input.mousePosition;
+        _cursorIcon.position = mouse;
+
+        if (!_useCursorTrail) return;
+        EnsureTrail();
+        if (_trailParts == null) return;
+
+        float dt = _useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
+        float k = 1f - Mathf.Exp(-_trailSmooth * dt);
+
+        Vector3 leader = mouse;
+        for (int i = 0; i < _trailParts.Length; i++)
+        {
+            RectTransform part = _trailParts[i];
+            if (part == null) continue;
+            part.position = Vector3.Lerp(part.position, leader, k);
+            leader = part.position;
+        }
+    }
+
+    private void EnsureTrail()
+    {
+        if (_trailBuilt) return;
+        if (!_useCursorTrail || _cursorIcon == null || _trailCount <= 0) return;
+
+        _trailParts = new RectTransform[_trailCount];
+        Transform parent = _cursorIcon.parent;
+
+        for (int i = 0; i < _trailCount; i++)
+        {
+            GameObject clone = Instantiate(_cursorIcon.gameObject, parent);
+            clone.name = "CursorTrail_" + i;
+
+            RectTransform rt = clone.GetComponent<RectTransform>();
+            rt.position = _cursorIcon.position;
+
+            Graphic g = clone.GetComponent<Graphic>();
+            if (g != null)
+            {
+                g.raycastTarget = false;
+                float t = _trailCount > 1 ? (float)i / (_trailCount - 1) : 0f;
+                Color c = g.color;
+                c.a = Mathf.Lerp(_trailStartAlpha, _trailEndAlpha, t);
+                g.color = c;
+            }
+
+            _trailParts[i] = rt;
+        }
+
+        _cursorIcon.SetAsLastSibling();
+        _trailBuilt = true;
+    }
+
+    private void SetTrailActive(bool on)
+    {
+        if (on) EnsureTrail();
+        if (_trailParts == null) return;
+
+        Vector3 mouse = Input.mousePosition;
+        for (int i = 0; i < _trailParts.Length; i++)
+        {
+            RectTransform part = _trailParts[i];
+            if (part == null) continue;
+            if (on) part.position = mouse;
+            if (part.gameObject.activeSelf != on) part.gameObject.SetActive(on);
+        }
     }
 
     private void EnsureParticle()
