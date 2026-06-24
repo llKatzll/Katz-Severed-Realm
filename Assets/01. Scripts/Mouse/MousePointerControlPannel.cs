@@ -131,6 +131,18 @@ public class MousePointerControlPannel : MonoBehaviour
         return false;
     }
 
+    public static void SetVisible(bool visible)
+    {
+        if (_instance != null) { _instance.SetVisibleInternal(visible); return; }
+        Cursor.visible = visible;
+    }
+
+    private void SetVisibleInternal(bool visible)
+    {
+        CursorLockMode lockMode = _enabledForThisScene ? _lockModeOnEnabledScenes : _lockModeOnExcludedScenes;
+        ApplyCursorState(visible, lockMode);
+    }
+
     private void ApplyCursorState(bool visible, CursorLockMode lockMode)
     {
         Cursor.lockState = lockMode;

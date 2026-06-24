@@ -58,7 +58,7 @@ public class PauseController : MonoBehaviour
         if (_mainMenuButton != null) _mainMenuButton.onClick.AddListener(OnMainMenu);
         if (_closeButton != null) _closeButton.onClick.AddListener(OnResume);
 
-        Cursor.visible = false;
+        MousePointerControlPannel.SetVisible(false);
         Cursor.lockState = CursorLockMode.None;
     }
 
@@ -115,7 +115,7 @@ public class PauseController : MonoBehaviour
     {
         _paused = true;
         if (_pauseMenuPanel != null) _pauseMenuPanel.SetActive(true);
-        Cursor.visible = true;
+        MousePointerControlPannel.SetVisible(true);
         Cursor.lockState = CursorLockMode.None;
     }
 
@@ -148,7 +148,7 @@ public class PauseController : MonoBehaviour
         _paused = false;
         SetIcon(_pauseSpriteDefault);
         _countdownCoroutine = null;
-        Cursor.visible = false;
+        MousePointerControlPannel.SetVisible(false);
     }
 
     private void CancelCountdown()
