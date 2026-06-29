@@ -46,6 +46,7 @@ public class DimensionNoteJudge : MonoBehaviour
     private static readonly int IdEmissionColor = Shader.PropertyToID("_EmissionColor");
     private static readonly int IdColorBlend = Shader.PropertyToID("_ColorBlend");
     private readonly List<ParticleSystemVertexStream> _streams = new List<ParticleSystemVertexStream>(16);
+    private readonly List<ParticleSystem> _pssList = new List<ParticleSystem>(16);
 
     private const double GROUP_TOLERANCE_MS = 2.0;
 
@@ -138,9 +139,11 @@ public class DimensionNoteJudge : MonoBehaviour
     {
         if (target == null) return;
 
-        JudgeType judge = JudgeType.Severance;
+        JudgeType judge = AutoPlay.RollJudge();
         NoteSpawner.NoteType laneType = target.NoteType;
         Transform hitRef = target.HitPointRef;
+
+        if (SfxManager.I != null) SfxManager.I.PlayHit();
 
         if (ComboUI.I != null) ComboUI.I.OnTapResult(judge.ToString(), false);
         if (ScoreManager.I != null) ScoreManager.I.ReportJudge(judge);
@@ -153,9 +156,11 @@ public class DimensionNoteJudge : MonoBehaviour
     {
         if (h == null) return;
 
-        JudgeType judge = JudgeType.Severance;
+        JudgeType judge = AutoPlay.RollJudge();
         NoteSpawner.NoteType laneType = h.NoteType;
         Transform hitRef = h.HitPointRef;
+
+        if (SfxManager.I != null) SfxManager.I.PlayHit();
 
         if (ComboUI.I != null)
         {
@@ -174,7 +179,7 @@ public class DimensionNoteJudge : MonoBehaviour
     {
         if (h == null || h.IsFailed) return;
 
-        JudgeType judge = JudgeType.Severance;
+        JudgeType judge = AutoPlay.RollJudge();
         NoteSpawner.NoteType laneType = h.NoteType;
         Transform hitRef = h.HitPointRef;
 
@@ -421,10 +426,10 @@ public class DimensionNoteJudge : MonoBehaviour
 
         if (_mpb == null) _mpb = new MaterialPropertyBlock();
 
-        var pss = fx.GetComponentsInChildren<ParticleSystem>(true);
-        for (int i = 0; i < pss.Length; i++)
+        fx.GetComponentsInChildren(true, _pssList);
+        for (int i = 0; i < _pssList.Count; i++)
         {
-            var ps = pss[i];
+            var ps = _pssList[i];
             if (ps == null) continue;
 
             var main = ps.main;

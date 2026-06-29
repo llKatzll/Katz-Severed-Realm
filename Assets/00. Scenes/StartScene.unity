@@ -1674,7 +1674,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &838924846
 Transform:
   m_ObjectHideFlags: 0
@@ -1705,21 +1705,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MousePointerControlPannel
   _excludeSceneNames:
   - InGame
-  _hideCursorOnEnabledScenes: 0
+  _hideCursorOnEnabledScenes: 1
   _lockModeOnEnabledScenes: 0
   _showCursorOnExcludedScenes: 1
   _lockModeOnExcludedScenes: 0
   _cursorParticlePrefab: {fileID: 0}
   _followDistance: 10
-  _smooth: 200
+  _smooth: 0
   _useUnscaledTime: 1
-  _useSoftwareCursor: 1
-  _cursorIcon: {fileID: 2007603833}
-  _useCursorTrail: 1
-  _trailCount: 8
-  _trailSmooth: 70
-  _trailStartAlpha: 0.8
-  _trailEndAlpha: 0.01
 --- !u!1 &923565186
 GameObject:
   m_ObjectHideFlags: 0

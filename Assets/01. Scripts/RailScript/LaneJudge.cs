@@ -59,6 +59,7 @@ public class LaneJudge : MonoBehaviour
 
     private MaterialPropertyBlock _mpb;
     private readonly List<ParticleSystemVertexStream> _streams = new List<ParticleSystemVertexStream>(16);
+    private readonly List<ParticleSystem> _pssList = new List<ParticleSystem>(16);
 
 
     private KeyCode ActiveKey => _laneType == NoteSpawner.NoteType.Ground
@@ -191,8 +192,10 @@ public class LaneJudge : MonoBehaviour
     {
         if (target == null) return;
 
-        JudgeType judge = JudgeType.Severance;
+        JudgeType judge = AutoPlay.RollJudge();
         NoteSpawner.NoteType laneType = target.NoteType;
+
+        if (SfxManager.I != null) SfxManager.I.PlayHit();
 
         if (ComboUI.I != null) ComboUI.I.OnTapResult(judge.ToString(), false);
         if (ScoreManager.I != null) ScoreManager.I.ReportJudge(judge);
@@ -205,9 +208,10 @@ public class LaneJudge : MonoBehaviour
     {
         if (_hold == null) return;
 
-        JudgeType judge = JudgeType.Severance;
+        JudgeType judge = AutoPlay.RollJudge();
         NoteSpawner.NoteType laneType = _hold.NoteType;
 
+        if (SfxManager.I != null) SfxManager.I.PlayHit();
         SpawnHoldHeadFx(judge, laneType);
 
         if (ComboUI.I != null)
@@ -228,7 +232,7 @@ public class LaneJudge : MonoBehaviour
     {
         if (_hold == null) return;
 
-        JudgeType judge = JudgeType.Severance;
+        JudgeType judge = AutoPlay.RollJudge();
         NoteSpawner.NoteType laneType = _hold.NoteType;
 
         SpawnHoldTailFx(judge, laneType);
@@ -553,10 +557,10 @@ public class LaneJudge : MonoBehaviour
 
         if (_mpb == null) _mpb = new MaterialPropertyBlock();
 
-        var pss = fx.GetComponentsInChildren<ParticleSystem>(true);
-        for (int i = 0; i < pss.Length; i++)
+        fx.GetComponentsInChildren(true, _pssList);
+        for (int i = 0; i < _pssList.Count; i++)
         {
-            var ps = pss[i];
+            var ps = _pssList[i];
             if (ps == null) continue;
 
             var main = ps.main;
