@@ -25,6 +25,7 @@ public class FxPoolManager : MonoBehaviour
     private readonly Dictionary<int, GameObject> _keyToPrefab = new Dictionary<int, GameObject>();
     private readonly Dictionary<int, int> _instanceToKey = new Dictionary<int, int>();
     private Transform _root;
+    private readonly List<ParticleSystem> _pssList = new List<ParticleSystem>(16);
 
     private void Awake()
     {
@@ -104,10 +105,10 @@ public class FxPoolManager : MonoBehaviour
         go.transform.rotation = rot;
         go.SetActive(true);
 
-        var pss = go.GetComponentsInChildren<ParticleSystem>(true);
-        for (int i = 0; i < pss.Length; i++)
+        go.GetComponentsInChildren(true, _pssList);
+        for (int i = 0; i < _pssList.Count; i++)
         {
-            var ps = pss[i];
+            var ps = _pssList[i];
             if (ps == null) continue;
             ps.Clear(true);
             ps.Play(true);
@@ -135,10 +136,10 @@ public class FxPoolManager : MonoBehaviour
             return;
         }
 
-        var pss = go.GetComponentsInChildren<ParticleSystem>(true);
-        for (int i = 0; i < pss.Length; i++)
+        go.GetComponentsInChildren(true, _pssList);
+        for (int i = 0; i < _pssList.Count; i++)
         {
-            var ps = pss[i];
+            var ps = _pssList[i];
             if (ps == null) continue;
             ps.Stop(true, ParticleSystemStopBehavior.StopEmitting);
             ps.Clear(true);

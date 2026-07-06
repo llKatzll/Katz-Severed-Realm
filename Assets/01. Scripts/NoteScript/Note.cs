@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Note : MonoBehaviour
@@ -29,6 +30,9 @@ public class Note : MonoBehaviour
     protected float _hitS;
     protected float _despawnS;
     protected float _moveSignS;
+
+    private readonly List<Renderer> _rendList = new List<Renderer>(8);
+    private readonly List<ParticleSystem> _pssList = new List<ParticleSystem>(8);
 
     public NoteSpawner.NoteType NoteType => _noteType;
     public Transform HitPointRef => _hitPointRef;
@@ -118,11 +122,11 @@ public class Note : MonoBehaviour
 
     public void ApplyColor(Color color)
     {
-        var renderers = GetComponentsInChildren<Renderer>(true);
-        for (int i = 0; i < renderers.Length; i++)
+        GetComponentsInChildren(true, _rendList);
+        for (int i = 0; i < _rendList.Count; i++)
         {
-            if (renderers[i] == null) continue;
-            var mat = renderers[i].material;
+            if (_rendList[i] == null) continue;
+            var mat = _rendList[i].material;
             if (mat == null) continue;
 
             mat.color = color;
@@ -141,22 +145,22 @@ public class Note : MonoBehaviour
             }
         }
 
-        var particles = GetComponentsInChildren<ParticleSystem>(true);
-        for (int i = 0; i < particles.Length; i++)
+        GetComponentsInChildren(true, _pssList);
+        for (int i = 0; i < _pssList.Count; i++)
         {
-            if (particles[i] == null) continue;
-            var main = particles[i].main;
+            if (_pssList[i] == null) continue;
+            var main = _pssList[i].main;
             main.startColor = new ParticleSystem.MinMaxGradient(color);
         }
     }
 
     public void SetSortingOrder(int order)
     {
-        var renderers = GetComponentsInChildren<Renderer>(true);
-        for (int i = 0; i < renderers.Length; i++)
+        GetComponentsInChildren(true, _rendList);
+        for (int i = 0; i < _rendList.Count; i++)
         {
-            if (renderers[i] != null)
-                renderers[i].sortingOrder = order;
+            if (_rendList[i] != null)
+                _rendList[i].sortingOrder = order;
         }
     }
 
