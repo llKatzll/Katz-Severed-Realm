@@ -32,7 +32,6 @@ public class Note : MonoBehaviour
     protected float _moveSignS;
 
     private readonly List<Renderer> _rendList = new List<Renderer>(8);
-    private readonly List<ParticleSystem> _pssList = new List<ParticleSystem>(8);
 
     public NoteSpawner.NoteType NoteType => _noteType;
     public Transform HitPointRef => _hitPointRef;
@@ -118,40 +117,6 @@ public class Note : MonoBehaviour
             _despawnLocal = _space.InverseTransformPoint(_despawnPointRef.position);
         else
             _despawnLocal = _hitLocal;
-    }
-
-    public void ApplyColor(Color color)
-    {
-        GetComponentsInChildren(true, _rendList);
-        for (int i = 0; i < _rendList.Count; i++)
-        {
-            if (_rendList[i] == null) continue;
-            var mat = _rendList[i].material;
-            if (mat == null) continue;
-
-            mat.color = color;
-
-            if (mat.HasProperty("_BaseColor"))
-                mat.SetColor("_BaseColor", color);
-            if (mat.HasProperty("_Color"))
-                mat.SetColor("_Color", color);
-            if (mat.HasProperty("_TintColor"))
-                mat.SetColor("_TintColor", color);
-            if (mat.HasProperty("_EmissionColor"))
-            {
-                mat.EnableKeyword("_EMISSION");
-                mat.SetColor("_EmissionColor", color);
-                mat.globalIlluminationFlags = MaterialGlobalIlluminationFlags.None;
-            }
-        }
-
-        GetComponentsInChildren(true, _pssList);
-        for (int i = 0; i < _pssList.Count; i++)
-        {
-            if (_pssList[i] == null) continue;
-            var main = _pssList[i].main;
-            main.startColor = new ParticleSystem.MinMaxGradient(color);
-        }
     }
 
     public void SetSortingOrder(int order)
