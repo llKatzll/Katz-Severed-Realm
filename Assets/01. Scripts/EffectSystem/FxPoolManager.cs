@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -26,6 +25,17 @@ public class FxPoolManager : MonoBehaviour
     private readonly Dictionary<int, int> _instanceToKey = new Dictionary<int, int>();
     private Transform _root;
     private readonly List<ParticleSystem> _pssList = new List<ParticleSystem>(16);
+
+    private struct PendingReturn
+    {
+        public GameObject go;
+        public int instId;
+        public int gen;
+        public float due;
+    }
+
+    private readonly List<PendingReturn> _pending = new List<PendingReturn>(32);
+    private readonly Dictionary<int, int> _genByInstance = new Dictionary<int, int>();
 
     private void Awake()
     {
@@ -114,12 +124,12 @@ public class FxPoolManager : MonoBehaviour
             ps.Play(true);
         }
 
-        _instanceToKey[go.GetInstanceID()] = key;
+        int instId = go.GetInstanceID();
+        _instanceToKey[instId] = key;
+        BumpGen(instId);
 
         if (returnAfter > 0f)
-        {
-            StartCoroutine(ReturnAfter(go, returnAfter));
-        }
+            Schedule(go, instId, returnAfter);
 
         return go;
     }
@@ -128,6 +138,7 @@ public class FxPoolManager : MonoBehaviour
     {
         if (go == null) return;
         int instId = go.GetInstanceID();
+        BumpGen(instId);
 
         int key;
         if (!_instanceToKey.TryGetValue(instId, out key))
@@ -169,12 +180,45 @@ public class FxPoolManager : MonoBehaviour
     {
         if (go == null) return;
         if (delay <= 0f) { Return(go); return; }
-        StartCoroutine(ReturnAfter(go, delay));
+        Schedule(go, go.GetInstanceID(), delay);
     }
 
-    private IEnumerator ReturnAfter(GameObject go, float delay)
+    private int BumpGen(int instId)
     {
-        yield return new WaitForSeconds(delay);
-        Return(go);
+        int g;
+        _genByInstance.TryGetValue(instId, out g);
+        g++;
+        _genByInstance[instId] = g;
+        return g;
+    }
+
+    private void Schedule(GameObject go, int instId, float delay)
+    {
+        int g;
+        _genByInstance.TryGetValue(instId, out g);
+        _pending.Add(new PendingReturn { go = go, instId = instId, gen = g, due = Time.time + delay });
+    }
+
+    private void Update()
+    {
+        if (_pending.Count == 0) return;
+
+        float now = Time.time;
+        for (int i = _pending.Count - 1; i >= 0; i--)
+        {
+            var p = _pending[i];
+            if (p.go == null)
+            {
+                _pending.RemoveAt(i);
+                continue;
+            }
+            if (now < p.due) continue;
+
+            _pending.RemoveAt(i);
+
+            int g;
+            if (_genByInstance.TryGetValue(p.instId, out g) && g == p.gen)
+                Return(p.go);
+        }
     }
 }
