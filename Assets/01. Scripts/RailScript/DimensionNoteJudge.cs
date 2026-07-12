@@ -47,6 +47,9 @@ public class DimensionNoteJudge : MonoBehaviour
     private static readonly int IdColorBlend = Shader.PropertyToID("_ColorBlend");
     private readonly List<ParticleSystemVertexStream> _streams = new List<ParticleSystemVertexStream>(16);
     private readonly List<ParticleSystem> _pssList = new List<ParticleSystem>(16);
+    private readonly Gradient _fxGradient = new Gradient();
+    private readonly GradientColorKey[] _fxColorKeys = new GradientColorKey[2];
+    private readonly GradientAlphaKey[] _fxAlphaKeys = new GradientAlphaKey[2];
 
     private const double GROUP_TOLERANCE_MS = 2.0;
 
@@ -418,6 +421,16 @@ public class DimensionNoteJudge : MonoBehaviour
         return c;
     }
 
+    private Gradient BuildFadeGradient(Color c)
+    {
+        _fxColorKeys[0] = new GradientColorKey(c, 0f);
+        _fxColorKeys[1] = new GradientColorKey(c, 1f);
+        _fxAlphaKeys[0] = new GradientAlphaKey(c.a, 0f);
+        _fxAlphaKeys[1] = new GradientAlphaKey(0f, 1f);
+        _fxGradient.SetKeys(_fxColorKeys, _fxAlphaKeys);
+        return _fxGradient;
+    }
+
     private void ApplyFxColor(GameObject fx, Color c)
     {
         if (fx == null) return;
@@ -437,14 +450,7 @@ public class DimensionNoteJudge : MonoBehaviour
 
             var col = ps.colorOverLifetime;
             if (col.enabled)
-            {
-                Gradient g = new Gradient();
-                g.SetKeys(
-                    new[] { new GradientColorKey(c, 0f), new GradientColorKey(c, 1f) },
-                    new[] { new GradientAlphaKey(c.a, 0f), new GradientAlphaKey(0f, 1f) }
-                );
-                col.color = new ParticleSystem.MinMaxGradient(g);
-            }
+                col.color = new ParticleSystem.MinMaxGradient(BuildFadeGradient(c));
 
             var colSpeed = ps.colorBySpeed;
             if (colSpeed.enabled)
@@ -452,14 +458,7 @@ public class DimensionNoteJudge : MonoBehaviour
 
             var trails = ps.trails;
             if (trails.enabled)
-            {
-                Gradient tg = new Gradient();
-                tg.SetKeys(
-                    new[] { new GradientColorKey(c, 0f), new GradientColorKey(c, 1f) },
-                    new[] { new GradientAlphaKey(c.a, 0f), new GradientAlphaKey(0f, 1f) }
-                );
-                trails.colorOverLifetime = new ParticleSystem.MinMaxGradient(tg);
-            }
+                trails.colorOverLifetime = new ParticleSystem.MinMaxGradient(BuildFadeGradient(c));
 
             var r = ps.GetComponent<ParticleSystemRenderer>();
             if (r == null) continue;
