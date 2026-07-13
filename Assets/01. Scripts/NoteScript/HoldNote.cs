@@ -31,10 +31,18 @@ public class HoldNote : Note
 
     private float _savedBodyLen = -1f;
 
+    private float _bodyMeshLenZ = 0.1f;
+
     private void Awake()
     {
         if (_body != null)
+        {
             _bodyBaseScale = _body.localScale;
+
+            float minZ, maxZ;
+            TryGetMeshZ(_body, out minZ, out maxZ);
+            _bodyMeshLenZ = Mathf.Max(0.0001f, maxZ - minZ);
+        }
 
         IsActive = false;
         IsFailed = false;
@@ -369,12 +377,8 @@ public class HoldNote : Note
 
         if (_body != null)
         {
-            float minZ, maxZ;
-            TryGetMeshZ(_body, out minZ, out maxZ);
-            float meshLenZ = Mathf.Max(0.0001f, (maxZ - minZ));
-
             Vector3 sc = _bodyBaseScale;
-            sc.z = Mathf.Max(0.0001f, currentBodyLen / meshLenZ);
+            sc.z = Mathf.Max(0.0001f, currentBodyLen / _bodyMeshLenZ);
             _body.localScale = sc;
 
             _body.localPosition = bodyCenter;
