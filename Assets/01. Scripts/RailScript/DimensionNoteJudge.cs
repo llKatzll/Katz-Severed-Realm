@@ -148,7 +148,7 @@ public class DimensionNoteJudge : MonoBehaviour
 
         if (SfxManager.I != null) SfxManager.I.PlayHit();
 
-        if (ComboUI.I != null) ComboUI.I.OnTapResult(judge.ToString(), false);
+        if (ComboUI.I != null) ComboUI.I.OnTapResult(judge.ToLabel(), false);
         if (ScoreManager.I != null) ScoreManager.I.ReportJudge(judge);
 
         SpawnJudgedFx(_tapHitFxPrefab, hitRef, laneType, judge, _tapHitFxDestroySec);
@@ -169,7 +169,7 @@ public class DimensionNoteJudge : MonoBehaviour
         {
             float bpm = 120f;
             if (_rhythm != null) bpm = (float)_rhythm.Bpm;
-            ComboUI.I.OnHoldStart(judge.ToString(), false, bpm, DimensionKey);
+            ComboUI.I.OnHoldStart(judge.ToLabel(), false, bpm, DimensionKey);
         }
         if (ScoreManager.I != null) ScoreManager.I.ReportJudge(judge);
 
@@ -188,7 +188,7 @@ public class DimensionNoteJudge : MonoBehaviour
 
         SpawnJudgedFx(_holdTailFxPrefab, hitRef, laneType, judge, _holdTailFxDestroySec);
 
-        if (ComboUI.I != null) ComboUI.I.OnHoldEnd(judge.ToString(), false);
+        if (ComboUI.I != null) ComboUI.I.OnHoldEnd(judge.ToLabel(), false);
         if (ScoreManager.I != null) ScoreManager.I.ReportJudge(judge);
 
         h.SuccessAndDestroy();
@@ -257,7 +257,7 @@ public class DimensionNoteJudge : MonoBehaviour
             if (ComboUI.I != null)
             {
                 bool breaks = (judge == JudgeType.Ruin || judge == JudgeType.Miss);
-                ComboUI.I.OnTapResult(judge.ToString(), breaks);
+                ComboUI.I.OnTapResult(judge.ToLabel(), breaks);
             }
 
             if (ScoreManager.I != null) ScoreManager.I.ReportJudge(judge);
@@ -323,7 +323,7 @@ public class DimensionNoteJudge : MonoBehaviour
                 if (_rhythm != null) bpm = (float)_rhythm.Bpm;
 
                 bool breaks = (judge == JudgeType.Ruin || judge == JudgeType.Miss);
-                ComboUI.I.OnHoldStart(judge.ToString(), breaks, bpm, DimensionKey);
+                ComboUI.I.OnHoldStart(judge.ToLabel(), breaks, bpm, DimensionKey);
             }
 
             if (ScoreManager.I != null) ScoreManager.I.ReportJudge(judge);
@@ -372,7 +372,7 @@ public class DimensionNoteJudge : MonoBehaviour
         if (ComboUI.I != null)
         {
             bool breaks = (judge == JudgeType.Ruin || judge == JudgeType.Miss);
-            ComboUI.I.OnHoldEnd(judge.ToString(), breaks);
+            ComboUI.I.OnHoldEnd(judge.ToLabel(), breaks);
         }
 
         if (ScoreManager.I != null) ScoreManager.I.ReportJudge(judge);

@@ -200,7 +200,7 @@ public class LaneJudge : MonoBehaviour
 
         if (SfxManager.I != null) SfxManager.I.PlayHit();
 
-        if (ComboUI.I != null) ComboUI.I.OnTapResult(judge.ToString(), false);
+        if (ComboUI.I != null) ComboUI.I.OnTapResult(judge.ToLabel(), false);
         if (ScoreManager.I != null) ScoreManager.I.ReportJudge(judge);
 
         SpawnTapHitFx(judge, laneType);
@@ -221,7 +221,7 @@ public class LaneJudge : MonoBehaviour
         {
             float bpm = 120f;
             if (_rhythm != null) bpm = (float)_rhythm.Bpm;
-            ComboUI.I.OnHoldStart(judge.ToString(), false, bpm, ActiveKey);
+            ComboUI.I.OnHoldStart(judge.ToLabel(), false, bpm, ActiveKey);
         }
         if (ScoreManager.I != null) ScoreManager.I.ReportJudge(judge);
 
@@ -240,7 +240,7 @@ public class LaneJudge : MonoBehaviour
 
         SpawnHoldTailFx(judge, laneType);
 
-        if (ComboUI.I != null) ComboUI.I.OnHoldEnd(judge.ToString(), false);
+        if (ComboUI.I != null) ComboUI.I.OnHoldEnd(judge.ToLabel(), false);
         if (ScoreManager.I != null) ScoreManager.I.ReportJudge(judge);
 
         StopHoldLoopFx();
@@ -336,7 +336,7 @@ public class LaneJudge : MonoBehaviour
             if (_rhythm != null) bpm = (float)_rhythm.Bpm;
 
             bool breaks = (judge == JudgeType.Ruin || judge == JudgeType.Miss);
-            ComboUI.I.OnHoldStart(judge.ToString(), breaks, bpm, ActiveKey);
+            ComboUI.I.OnHoldStart(judge.ToLabel(), breaks, bpm, ActiveKey);
         }
 
         if (ScoreManager.I != null) ScoreManager.I.ReportJudge(judge);
@@ -391,7 +391,7 @@ public class LaneJudge : MonoBehaviour
         if (ComboUI.I != null)
         {
             bool breaks = (judge == JudgeType.Ruin || judge == JudgeType.Miss);
-            ComboUI.I.OnHoldEnd(judge.ToString(), breaks);
+            ComboUI.I.OnHoldEnd(judge.ToLabel(), breaks);
         }
 
         if (ScoreManager.I != null) ScoreManager.I.ReportJudge(judge);
@@ -488,7 +488,7 @@ public class LaneJudge : MonoBehaviour
         if (ComboUI.I != null)
         {
             bool breaks = (judge == JudgeType.Ruin || judge == JudgeType.Miss);
-            ComboUI.I.OnTapResult(judge.ToString(), breaks);
+            ComboUI.I.OnTapResult(judge.ToLabel(), breaks);
         }
 
         if (ScoreManager.I != null) ScoreManager.I.ReportJudge(judge);

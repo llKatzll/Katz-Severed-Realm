@@ -158,6 +158,6 @@ public class ComboUI : MonoBehaviour
         if (shown <= 0)
             _comboText.text = "";
         else
-            _comboText.text = shown.ToString();
+            _comboText.SetText("{0}", shown);
     }
 }
