@@ -33,13 +33,52 @@ public class Note : MonoBehaviour
 
     private readonly List<Renderer> _rendList = new List<Renderer>(8);
 
+    private System.Action<Note> _despawnListener;
+    private bool _pooled;
+    private bool _despawnDone;
+    private int _poolKey;
+
     public NoteSpawner.NoteType NoteType => _noteType;
     public Transform HitPointRef => _hitPointRef;
     public bool IsDimensionNote { get; private set; }
+    public int PoolKey => _poolKey;
 
     public void MarkAsDimensionNote()
     {
         IsDimensionNote = true;
+    }
+
+    public void MarkPooled(int poolKey)
+    {
+        _pooled = true;
+        _poolKey = poolKey;
+    }
+
+    public void SetDespawnListener(System.Action<Note> listener)
+    {
+        _despawnListener = listener;
+    }
+
+    public virtual void ResetForSpawn()
+    {
+        IsDimensionNote = false;
+        _despawnListener = null;
+        _despawnDone = false;
+    }
+
+    public void Despawn()
+    {
+        if (_despawnDone) return;
+        _despawnDone = true;
+
+        var listener = _despawnListener;
+        _despawnListener = null;
+        if (listener != null) listener(this);
+
+        if (_pooled && NotePoolManager.I != null)
+            NotePoolManager.I.Return(this);
+        else
+            Destroy(gameObject);
     }
 
     public void InitFollow(
@@ -150,7 +189,7 @@ public class Note : MonoBehaviour
 
         if (finished)
         {
-            Destroy(gameObject);
+            Despawn();
             return;
         }
 

@@ -43,6 +43,21 @@ public class ChartNoteSpawner : MonoBehaviour
     private void Awake()
     {
         _noteSpeed = SettingsConfig.NoteSpeed;
+
+        NotePoolManager pool = NotePoolManager.Ensure();
+        if (pool != null)
+        {
+            pool.Prewarm(_tapPrefab, 32);
+            pool.Prewarm(_dimensionTapPrefabGround, 8);
+            pool.Prewarm(_dimensionTapPrefabUpper, 8);
+        }
+    }
+
+    private Note SpawnPooledTap(Note prefab)
+    {
+        if (NotePoolManager.I != null)
+            return NotePoolManager.I.Spawn(prefab);
+        return Instantiate(prefab);
     }
 
     private void Start()
@@ -159,7 +174,8 @@ public class ChartNoteSpawner : MonoBehaviour
         Note prefab = _tapPrefab != null ? _tapPrefab : lane._tapPrefab;
         if (prefab == null) return;
 
-        Note note = Instantiate(prefab);
+        Note note = SpawnPooledTap(prefab);
+        if (note == null) return;
         note.InitFollow(lane._hitPoint, lane._spawnPoint, lane._hitPoint, lane._despawnPoint,
             travelSec, lane._noteType, lane._yOffsetLocal);
 
@@ -203,7 +219,8 @@ public class ChartNoteSpawner : MonoBehaviour
             : (_dimensionTapPrefabUpper != null ? _dimensionTapPrefabUpper : _tapPrefab);
         if (prefab == null) return;
 
-        Note note = Instantiate(prefab);
+        Note note = SpawnPooledTap(prefab);
+        if (note == null) return;
         note.MarkAsDimensionNote();
         note.InitFollow(lane._hitPoint, lane._spawnPoint, lane._hitPoint, lane._despawnPoint,
             travelSec, lane._noteType, lane._yOffsetLocal + _dimensionYOffsetExtra);

@@ -50,6 +50,7 @@ public class LaneJudge : MonoBehaviour
     private readonly List<HoldNote> _holdQueue = new List<HoldNote>(8);
     private RhythmConductor _rhythm;
     private int _slotIndex;
+    private Action<Note> _tapDespawnHandler;
 
     private static readonly int IdColor = Shader.PropertyToID("_Color");
     private static readonly int IdBaseColor = Shader.PropertyToID("_BaseColor");
@@ -81,6 +82,12 @@ public class LaneJudge : MonoBehaviour
     {
         _rhythm = FindAnyObjectByType<RhythmConductor>();
         _slotIndex = ResolveSlotIndex();
+        _tapDespawnHandler = OnTapDespawned;
+    }
+
+    private void OnTapDespawned(Note n)
+    {
+        RemoveTap(n);
     }
 
     private int ResolveSlotIndex()
@@ -96,6 +103,7 @@ public class LaneJudge : MonoBehaviour
     public void RegisterTap(Note n)
     {
         if (n == null) return;
+        n.SetDespawnListener(_tapDespawnHandler);
         _tapNotes.Add(n);
     }
 
@@ -204,7 +212,7 @@ public class LaneJudge : MonoBehaviour
         if (ScoreManager.I != null) ScoreManager.I.ReportJudge(judge);
 
         SpawnTapHitFx(judge, laneType);
-        Destroy(target.gameObject);
+        target.Despawn();
     }
 
     private void AutoStartHold()
@@ -501,7 +509,7 @@ public class LaneJudge : MonoBehaviour
             SpawnTapHitFx(judge, target.NoteType);
         }
 
-        Destroy(target.gameObject);
+        target.Despawn();
         return true;
     }
 

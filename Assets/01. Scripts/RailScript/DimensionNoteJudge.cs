@@ -38,6 +38,7 @@ public class DimensionNoteJudge : MonoBehaviour
     private readonly List<HoldNote> _holds = new List<HoldNote>(8);
     private readonly List<HoldNote> _activeHolds = new List<HoldNote>(8);
     private RhythmConductor _rhythm;
+    private Action<Note> _tapDespawnHandler;
 
     private MaterialPropertyBlock _mpb;
     private static readonly int IdColor = Shader.PropertyToID("_Color");
@@ -66,11 +67,21 @@ public class DimensionNoteJudge : MonoBehaviour
         }
         I = this;
         _rhythm = FindAnyObjectByType<RhythmConductor>();
+        _tapDespawnHandler = OnTapDespawned;
+    }
+
+    private void OnTapDespawned(Note n)
+    {
+        for (int i = _tapNotes.Count - 1; i >= 0; i--)
+        {
+            if (_tapNotes[i] == n) _tapNotes.RemoveAt(i);
+        }
     }
 
     public void RegisterTap(Note n)
     {
         if (n == null) return;
+        n.SetDespawnListener(_tapDespawnHandler);
         _tapNotes.Add(n);
     }
 
@@ -152,7 +163,7 @@ public class DimensionNoteJudge : MonoBehaviour
         if (ScoreManager.I != null) ScoreManager.I.ReportJudge(judge);
 
         SpawnJudgedFx(_tapHitFxPrefab, hitRef, laneType, judge, _tapHitFxDestroySec);
-        Destroy(target.gameObject);
+        target.Despawn();
     }
 
     private void AutoStartHold(HoldNote h)
@@ -268,7 +279,7 @@ public class DimensionNoteJudge : MonoBehaviour
                 SpawnJudgedFx(_tapHitFxPrefab, hitRef, laneType, judge, _tapHitFxDestroySec);
             }
 
-            Destroy(n.gameObject);
+            n.Despawn();
             any = true;
         }
 
