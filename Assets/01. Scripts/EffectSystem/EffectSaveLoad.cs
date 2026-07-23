@@ -28,9 +28,9 @@ public class EffectSaveLoad : MonoBehaviour
         }
 
         var data = _chart.Data;
-        if (data == null || data.triggers == null || data.triggers.Count == 0)
+        if (data == null || data.triggers == null)
         {
-            Debug.Log("[EffectSaveLoad] No triggers to save (skip)");
+            Debug.LogWarning("[EffectSaveLoad] No effect data");
             return;
         }
 

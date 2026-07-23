@@ -19,6 +19,8 @@ public class AutoPlayToggle : MonoBehaviour
 
     private void Update()
     {
+        if (ModalStack.Count > 0) return;
+
         if (Input.GetKeyDown(_toggleKey))
         {
             AutoPlay.IsOn = !AutoPlay.IsOn;

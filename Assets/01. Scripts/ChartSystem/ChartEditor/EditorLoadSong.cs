@@ -20,10 +20,13 @@ public class EditorLoadSong : MonoBehaviour
 
     public SongData CurrentSong { get; private set; }
 
+    private EffectSaveLoad _effectSaveLoad;
+
     private void Awake()
     {
         if (_chart == null) _chart = GetComponent<EditorChart>();
         if (_playback == null) _playback = GetComponent<EditorPlayback>();
+        _effectSaveLoad = FindAnyObjectByType<EffectSaveLoad>();
     }
 
     private void Start()
@@ -98,5 +101,8 @@ public class EditorLoadSong : MonoBehaviour
         {
             _chart.NewChart(songName, difficulty, CurrentSong.bpm);
         }
+
+        if (_effectSaveLoad == null) _effectSaveLoad = FindAnyObjectByType<EffectSaveLoad>();
+        if (_effectSaveLoad != null) _effectSaveLoad.ReloadCurrent();
     }
 }

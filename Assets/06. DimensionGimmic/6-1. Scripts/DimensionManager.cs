@@ -19,7 +19,6 @@ public class DimensionManager : MonoBehaviour
     [Header("Switch Settings")]
     [SerializeField] private SwitchMode _switchMode = SwitchMode.Hold;
     [SerializeField] private KeyCode _switchKey = KeyCode.Space;
-    //[SerializeField] private KeyCode _switchKey1 = KeyCode.Space; �ߺ��̸� �������� ���ϰԲ�
 
     //Lifetime set later.
     [Header("Indicator Settings")]
@@ -215,6 +214,8 @@ public class DimensionManager : MonoBehaviour
 
     private void HandleDebugTriggers()
     {
+        if (!Debug.isDebugBuild) return;
+
         if (Input.GetKeyDown(_debugTriggerSeparationKey))
         {
             TriggerIndicator(DimensionType.Separation);

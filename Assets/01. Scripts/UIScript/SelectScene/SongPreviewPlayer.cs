@@ -41,6 +41,8 @@ public class SongPreviewPlayer : MonoBehaviour
 
     public void FadeOut(float duration)
     {
+        _currentSong = null;
+
         if (_currentCoroutine != null)
             StopCoroutine(_currentCoroutine);
 

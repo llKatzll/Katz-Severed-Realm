@@ -64,11 +64,16 @@ public class PauseController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && CanHandleEsc())
             HandleEsc();
 
         if (_armed && Time.unscaledTime - _armedTime > _doubleTapWindowSec)
             Disarm();
+    }
+
+    private bool CanHandleEsc()
+    {
+        return ModalStack.Count == 0 && ModalStack.LastClosedFrame != Time.frameCount;
     }
 
     private void HandleEsc()

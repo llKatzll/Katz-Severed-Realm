@@ -160,9 +160,9 @@ public class Scrolling : MonoBehaviour
 
         if (Mathf.Abs(scroll) > 0.01f)
         {
-            float direction = _invertWheel ? -scroll : scroll;
+            float direction = Mathf.Sign(_invertWheel ? -scroll : scroll);
             _targetRotationZ += direction * _rotationPerSlot;
-            _centerSongIndex += direction > 0 ? -1 : 1;
+            _centerSongIndex += direction > 0f ? -1 : 1;
 
             if (SfxManager.I != null) SfxManager.I.PlayWheel();
         }

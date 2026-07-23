@@ -245,7 +245,7 @@ public class CalibrationPanel : MonoBehaviour, IModalPanel
     {
         if (_state != State.Done || !_hasResult) return;
 
-        SettingsConfig.AudioOffsetSec = (_resultMs - _displayBiasMs) / 1000f;
+        SettingsConfig.AudioOffsetSec = _resultMs / 1000f;
         SettingsConfig.Save();
         Close();
     }
@@ -347,6 +347,7 @@ public class CalibrationPanel : MonoBehaviour, IModalPanel
         if (_fadeRunnerGo != null) Destroy(_fadeRunnerGo);
 
         _fadeRunnerGo = new GameObject("CalibMusicFade");
+        DontDestroyOnLoad(_fadeRunnerGo);
         var runner = _fadeRunnerGo.AddComponent<MusicFadeRunner>();
         runner.Run(mixer, targetLinear, duration, confirmFromSettings);
     }

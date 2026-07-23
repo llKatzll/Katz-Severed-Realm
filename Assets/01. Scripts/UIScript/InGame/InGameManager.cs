@@ -192,7 +192,7 @@ public class InGameManager : MonoBehaviour
         }
 
         yield return StartCoroutine(FadeCanvasGroup(_songRevealGroup, 1f, 0f, _goFadeOutSec));
-        _songRevealGroup.gameObject.SetActive(false);
+        if (_songRevealGroup != null) _songRevealGroup.gameObject.SetActive(false);
 
         SongData song = GameManager.I != null ? GameManager.I.SelectedSong : null;
         if (_conductor != null && song != null)
