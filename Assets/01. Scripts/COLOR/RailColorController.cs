@@ -123,12 +123,6 @@ public class RailColorController : MonoBehaviour
                 : new Color(0.5f, 2.5f, 4f, 1f);
         }
 
-        //Debug is Color workin
-        //Debug.Log($"RailColorController [{name}] railType={_railType} " +
-        //  $"RuntimePalette={(RuntimeColorPalette.I != null)} " +
-        //  $"DimensionMgr={(DimensionManager.I != null)} " +
-        //  $"color={color}");
-
         ApplyColor(color);
     }
 
